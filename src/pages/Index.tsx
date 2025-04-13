@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowDown, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import Header from '@/components/Header';
 import DataViz3D from '@/components/DataViz3D';
 import ProjectCard from '@/components/ProjectCard';
 import SkillsSection from '@/components/SkillsSection';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const Index = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -83,20 +83,17 @@ const Index = () => {
   
   return (
     <div className="bg-black relative min-h-screen overflow-x-hidden">
-      {/* Mouse blob effect */}
       <div 
         id="mouse-blob" 
         className="fixed w-80 h-80 rounded-full bg-radial-glow pointer-events-none -translate-x-1/2 -translate-y-1/2 opacity-60 z-0"
       ></div>
       
-      {/* Background grid */}
       <div 
         className="fixed inset-0 bg-grid-pattern bg-[length:30px_30px] opacity-5 pointer-events-none z-0"
       ></div>
       
       <Header />
       
-      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
         <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center z-10">
           <div className="w-full md:w-1/2 mb-10 md:mb-0 relative z-10">
@@ -136,7 +133,6 @@ const Index = () => {
         </button>
       </section>
       
-      {/* Story Section */}
       <section 
         ref={scrollRef}
         id="story" 
@@ -204,7 +200,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Skills Section */}
       <section 
         id="skills" 
         className="py-20 relative"
@@ -221,7 +216,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Projects Section */}
       <section 
         id="projects" 
         className="py-20 relative"
@@ -250,7 +244,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* About Section */}
       <section 
         id="about" 
         className="py-20 relative"
@@ -267,9 +260,11 @@ const Index = () => {
             <div className="flex flex-col md:flex-row gap-8">
               <div className="w-full md:w-1/3">
                 <div className="aspect-square overflow-hidden rounded-lg border-2 border-neon-blue/30 neon-border">
-                  <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                    <span className="text-5xl text-neon-blue">A</span>
-                  </div>
+                  <img 
+                    src="/lovable-uploads/6f95a394-2f70-4adb-9882-a3a774b96785.png" 
+                    alt="Ajith Annavarapu" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 
                 <div className="flex justify-center mt-6 space-x-4">
@@ -321,7 +316,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Contact Section */}
       <section 
         id="contact" 
         className="py-20 relative"
@@ -397,7 +391,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Footer */}
       <footer className="py-6 border-t border-white/10">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">

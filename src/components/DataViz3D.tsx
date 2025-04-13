@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
@@ -64,9 +63,17 @@ interface EdgeProps {
 const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
   const materialRef = useRef<THREE.LineBasicMaterial>(null);
   
+  // Create a material outside of JSX
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: color,
+    transparent: true,
+    opacity: 0.7
+  });
+  
+  // Update opacity in animation frame
   useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
+    if (lineMaterial) {
+      lineMaterial.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
     }
   });
   
@@ -79,18 +86,10 @@ const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
   // Create geometry from points
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
-  return (
-    <primitive object={new THREE.Line(
-      lineGeometry,
-      <lineBasicMaterial 
-        ref={materialRef} 
-        color={color} 
-        transparent 
-        opacity={0.7} 
-        attach="material"
-      />
-    )} />
-  );
+  // Create and return the line as a primitive object
+  const line = new THREE.Line(lineGeometry, lineMaterial);
+  
+  return <primitive object={line} />;
 };
 
 interface DataNetworkProps {
