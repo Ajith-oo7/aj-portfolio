@@ -438,16 +438,6 @@ const Index = () => {
                     Send me an email
                   </Button>
                 </a>
-                
-                <div className="mt-6 text-center">
-                  <p className="text-gray-400 text-sm">
-                    or download my resume
-                  </p>
-                  <Button variant="outline" className="mt-2 border-white/20 hover:border-white/50 text-white">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Download Resume
-                  </Button>
-                </div>
               </div>
             </div>
           </div>
