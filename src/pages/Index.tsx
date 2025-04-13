@@ -426,7 +426,7 @@ const Index = () => {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-white font-mono text-xl mb-4 md:mb-0">
-              <span className="text-gradient font-bold">A</span>
+              <span className="text-gradient font-bold">AA</span>
               <span className="text-neon-blue">.</span>
             </div>
             
