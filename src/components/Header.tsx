@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -71,21 +73,29 @@ const Header: React.FC = () => {
               {item}
             </a>
           ))}
-          <Button 
-            onClick={() => scrollToSection('contact')} 
-            className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
-          >
-            Get in Touch
-          </Button>
+          <div className="flex items-center space-x-3">
+            <ThemeToggle />
+            <LanguageSwitcher />
+            <Button 
+              onClick={() => scrollToSection('contact')} 
+              className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
+            >
+              Get in Touch
+            </Button>
+          </div>
         </nav>
 
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden text-white"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="md:hidden flex items-center space-x-3">
+          <ThemeToggle />
+          <LanguageSwitcher />
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="text-white"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {isMobileMenuOpen && (
