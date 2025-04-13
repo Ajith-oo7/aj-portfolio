@@ -20,11 +20,23 @@ const Header: React.FC = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
+    // Close mobile menu first
+    setIsMobileMenuOpen(false);
+    
+    // Add a small delay to ensure UI updates before scrolling
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerOffset = 80; // Account for fixed header height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   return (
@@ -43,10 +55,7 @@ const Header: React.FC = () => {
           {['Story', 'Skills', 'Projects', 'About', 'Contact'].map(item => (
             <a
               key={item}
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection(item.toLowerCase());
-              }}
+              onClick={() => scrollToSection(item.toLowerCase())}
               href={`#${item.toLowerCase()}`}
               className="text-white opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide cursor-pointer"
             >
@@ -76,10 +85,7 @@ const Header: React.FC = () => {
             {['Story', 'Skills', 'Projects', 'About', 'Contact'].map(item => (
               <a
                 key={item}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(item.toLowerCase());
-                }}
+                onClick={() => scrollToSection(item.toLowerCase())}
                 href={`#${item.toLowerCase()}`}
                 className="text-white py-2 opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide"
               >
