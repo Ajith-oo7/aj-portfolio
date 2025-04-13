@@ -17,12 +17,10 @@ const DataNode: React.FC<NodeProps> = ({ position, size = 0.3, color = '#1EAEDB'
   const [hovered, setHovered] = useState(false);
   
   useFrame((state) => {
-    if (ref.current) {
-      if (pulse) {
-        ref.current.scale.x = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
-        ref.current.scale.y = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
-        ref.current.scale.z = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
-      }
+    if (ref.current && pulse) {
+      ref.current.scale.x = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
+      ref.current.scale.y = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
+      ref.current.scale.z = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
     }
   });
   
@@ -64,11 +62,11 @@ interface EdgeProps {
 }
 
 const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
-  const ref = useRef<THREE.Line>(null);
+  const ref = useRef<THREE.LineBasicMaterial>(null);
   
   useFrame((state) => {
     if (ref.current) {
-      ref.current.material.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
+      ref.current.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
     }
   });
   
@@ -76,8 +74,8 @@ const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
   return (
-    <line ref={ref} geometry={lineGeometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.7} />
+    <line geometry={lineGeometry}>
+      <lineBasicMaterial ref={ref} color={color} transparent opacity={0.7} />
     </line>
   );
 };
@@ -154,21 +152,46 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   );
 };
 
+// Fallback component to handle errors in 3D rendering
+const Fallback = () => (
+  <div className="w-full h-full flex items-center justify-center">
+    <div className="text-white text-center">
+      <div className="text-2xl mb-2">Interactive Visualization</div>
+      <div className="text-sm opacity-70">3D visualization could not be loaded</div>
+    </div>
+  </div>
+);
+
 const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
+  // Using an error boundary pattern for React Three Fiber
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return <Fallback />;
+  }
+
   return (
     <div className={`w-full h-full ${className || ''}`}>
-      <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
+      <Canvas 
+        camera={{ position: [0, 0, 6], fov: 45 }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(new THREE.Color(0, 0, 0, 0));
+        }}
+        onError={() => setHasError(true)}
+      >
         <color attach="background" args={['#00000000']} />
         <ambientLight intensity={0.2} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8B5CF6" />
-        <DataNetwork />
-        <OrbitControls 
-          enableZoom={false}
-          enablePan={false}
-          autoRotate={false}
-          rotateSpeed={0.5}
-        />
+        <React.Suspense fallback={null}>
+          <DataNetwork />
+          <OrbitControls 
+            enableZoom={false}
+            enablePan={false}
+            autoRotate={false}
+            rotateSpeed={0.5}
+          />
+        </React.Suspense>
       </Canvas>
     </div>
   );
