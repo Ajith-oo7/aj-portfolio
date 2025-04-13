@@ -45,7 +45,6 @@ const Index = () => {
     const handleMouseMove = (e: MouseEvent) => {
       const blob = document.getElementById('mouse-blob');
       if (blob) {
-        // Use requestAnimationFrame for smoother updates
         requestAnimationFrame(() => {
           blob.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
         });
@@ -148,7 +147,7 @@ const Index = () => {
             <div className="flex flex-wrap gap-4">
               <Button 
                 className="bg-neon-blue hover:bg-neon-blue/80 text-white"
-                onClick={() => scrollToSection('skills')}
+                onClick={() => scrollToSection('experience')}
               >
                 Explore My Work
               </Button>
