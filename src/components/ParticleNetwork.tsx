@@ -14,8 +14,7 @@ interface ParticleNetworkProps {
 
 const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
   const particlesRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   useEffect(() => {
     if (typeof window !== "undefined" && particlesRef.current) {
@@ -27,6 +26,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
       script.onload = () => {
         if (window.particlesJS) {
           initParticles();
+          setIsLoaded(true);
         }
       };
       
@@ -40,12 +40,12 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
     }
   }, []);
   
-  const initParticles = (intense = false) => {
+  const initParticles = () => {
     if (particlesRef.current && window.particlesJS) {
       window.particlesJS(particlesRef.current.id, {
         particles: {
           number: { 
-            value: intense ? 200 : 120, 
+            value: 120, 
             density: { enable: true, value_area: 800 } 
           },
           color: { 
@@ -91,25 +91,38 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
           }
         },
         interactivity: {
-          detect_on: "canvas",
+          detect_on: "window", // Changed from "canvas" to "window" for better detection
           events: {
             onhover: { 
               enable: true, 
-              mode: "repulse"
+              mode: "grab" // Changed to "grab" for nice connection lines on hover
             },
             onclick: { 
               enable: true, 
-              mode: "push"
+              mode: "push" // Keep "push" to add particles on click
             },
             resize: true
           },
           modes: {
+            grab: {
+              distance: 140,
+              line_linked: {
+                opacity: 0.8
+              }
+            },
             repulse: {
               distance: 100,
               duration: 0.4
             },
             push: {
               particles_nb: 4
+            },
+            bubble: {
+              distance: 100,
+              size: 6,
+              duration: 0.4,
+              opacity: 0.8,
+              speed: 3
             }
           }
         },
@@ -122,13 +135,14 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
     <div 
       id="particles-js" 
       ref={particlesRef} 
-      className={`fixed inset-0 z-0 pointer-events-none ${className || ''}`}
+      className={`fixed inset-0 z-0 ${className || ''}`}
       style={{ 
         width: '100%', 
         height: '100%',
         position: 'fixed',
         top: 0,
-        left: 0
+        left: 0,
+        pointerEvents: 'auto' // Allow interaction with particles
       }}
     ></div>
   );
