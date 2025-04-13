@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,9 +18,9 @@ import { Send, Loader2 } from 'lucide-react';
 import emailjs from 'emailjs-com';
 
 // EmailJS configuration constants
-const EMAILJS_SERVICE_ID = 'service_id'; // Replace with your actual Service ID
-const EMAILJS_TEMPLATE_ID = 'template_id'; // Replace with your actual Template ID
-const EMAILJS_USER_ID = 'user_id'; // Replace with your actual User ID
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+const EMAILJS_USER_ID = import.meta.env.VITE_EMAILJS_USER_ID || '';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -55,6 +54,17 @@ const ContactForm: React.FC = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    // Validate EmailJS credentials before submission
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_USER_ID) {
+      toast({
+        title: "Configuration Error",
+        description: "EmailJS credentials are not configured. Please contact the site administrator.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
