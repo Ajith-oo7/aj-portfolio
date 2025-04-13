@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Database, 
@@ -40,7 +39,7 @@ const skills = [
     proficiency: [92, 89, 87, 80, 85, 82, 78, 75, 76]
   },
   {
-    category: 'AI',
+    category: 'Artificial Intelligence',
     icon: <BrainCircuit className="w-6 h-6 text-neon-green" />,
     skills: [
       'Large Language Models (LLMs)', 
