@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
@@ -62,21 +62,34 @@ interface EdgeProps {
 }
 
 const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
-  const ref = useRef<THREE.LineBasicMaterial>(null);
+  const materialRef = useRef<THREE.LineBasicMaterial>(null);
   
   useFrame((state) => {
-    if (ref.current) {
-      ref.current.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
+    if (materialRef.current) {
+      materialRef.current.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
     }
   });
   
-  const points = [new THREE.Vector3(...start), new THREE.Vector3(...end)];
+  // Create points for the line
+  const points = [
+    new THREE.Vector3(...start),
+    new THREE.Vector3(...end)
+  ];
+  
+  // Create geometry from points
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
   return (
-    <line geometry={lineGeometry}>
-      <lineBasicMaterial ref={ref} color={color} transparent opacity={0.7} />
-    </line>
+    <primitive object={new THREE.Line(
+      lineGeometry,
+      <lineBasicMaterial 
+        ref={materialRef} 
+        color={color} 
+        transparent 
+        opacity={0.7} 
+        attach="material"
+      />
+    )} />
   );
 };
 
@@ -175,11 +188,11 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
       <Canvas 
         camera={{ position: [0, 0, 6], fov: 45 }}
         onCreated={({ gl }) => {
-          gl.setClearColor(new THREE.Color(0, 0, 0, 0));
+          gl.setClearColor(new THREE.Color('#000000'));
         }}
         onError={() => setHasError(true)}
       >
-        <color attach="background" args={['#00000000']} />
+        <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.2} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8B5CF6" />
