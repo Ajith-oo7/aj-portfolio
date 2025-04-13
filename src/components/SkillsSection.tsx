@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Database, 
@@ -39,7 +40,7 @@ const skills = [
     proficiency: [92, 89, 87, 80, 85, 82, 78, 75, 76]
   },
   {
-    category: 'AI & Machine Learning',
+    category: 'AI',
     icon: <BrainCircuit className="w-6 h-6 text-neon-green" />,
     skills: [
       'Large Language Models (LLMs)', 
@@ -47,13 +48,11 @@ const skills = [
       'Prompt Engineering', 
       'RAG (Retrieval Augmented Generation)',
       'Neural Networks',
-      'Computer Vision',
       'NLP & Text Processing',
       'Vector Databases',
-      'AI Model Deployment',
-      'ML Ops'
+      'AI Model Deployment'
     ],
-    proficiency: [88, 85, 86, 83, 82, 80, 85, 84, 82, 81]
+    proficiency: [88, 85, 86, 83, 82, 85, 84, 82]
   },
   {
     category: 'Machine Learning Algorithms',
