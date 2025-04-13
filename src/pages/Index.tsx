@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowDown, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,12 +10,25 @@ import ExperienceSection from '@/components/ExperienceSection';
 import CertificationsSection from '@/components/CertificationsSection';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import ScrollProgressIndicator from '@/components/ScrollProgressIndicator';
-import InteractiveSkillsVisualization from '@/components/InteractiveSkillsVisualization';
-import InteractiveTimeline from '@/components/InteractiveTimeline';
 import ContactForm from '@/components/ContactForm';
 import ProjectDetailModal from '@/components/ProjectDetailModal';
 
-const projectsData = [
+type ProjectDetail = {
+  id: string;
+  title: string;
+  description: string;
+  longDescription: string;
+  techStack: string[];
+  challenges: string[];
+  solutions: string[];
+  outcomes: string[];
+  demoLink: string;
+  githubLink: string;
+  imageSrc: string;
+  color: "blue" | "purple" | "pink";
+};
+
+const projectsData: ProjectDetail[] = [
   {
     id: 'real-time-data-pipeline',
     title: 'Real-time Data Pipeline',
@@ -44,7 +56,7 @@ const projectsData = [
     demoLink: '#',
     githubLink: '#',
     imageSrc: '',
-    color: 'blue'
+    color: "blue"
   },
   {
     id: 'data-warehouse-optimization',
@@ -73,7 +85,7 @@ const projectsData = [
     demoLink: '#',
     githubLink: '#',
     imageSrc: '',
-    color: 'purple'
+    color: "purple"
   },
   {
     id: 'machine-learning-pipeline',
@@ -102,7 +114,7 @@ const projectsData = [
     demoLink: '#',
     githubLink: '#',
     imageSrc: '',
-    color: 'pink'
+    color: "pink"
   },
   {
     id: 'data-quality-framework',
@@ -131,7 +143,7 @@ const projectsData = [
     demoLink: '#',
     githubLink: '#',
     imageSrc: '',
-    color: 'blue'
+    color: "blue"
   },
   {
     id: 'iot-analytics-platform',
@@ -160,7 +172,7 @@ const projectsData = [
     demoLink: '#',
     githubLink: '#',
     imageSrc: '',
-    color: 'purple'
+    color: "purple"
   },
   {
     id: 'sentiment-analysis-dashboard',
@@ -189,7 +201,7 @@ const projectsData = [
     demoLink: '#',
     githubLink: '#',
     imageSrc: '',
-    color: 'pink'
+    color: "pink"
   }
 ];
 
@@ -312,7 +324,7 @@ const Index = () => {
         </button>
       </section>
       
-      {/* My Journey Section with Interactive Timeline */}
+      {/* My Journey Section - Removed Interactive Timeline */}
       <section 
         id="story" 
         className="py-20 relative"
@@ -325,11 +337,19 @@ const Index = () => {
             </p>
           </div>
           
-          <InteractiveTimeline />
+          {/* Journey content goes here (simpler content) */}
+          <div className="neo-blur border border-white/10 rounded-lg p-8">
+            <p className="text-gray-300 mb-6">
+              My journey in the data field began with a fascination for extracting insights from raw information. Starting with a solid foundation in computer science, I quickly developed expertise in data engineering and analytics, working across various domains and technologies.
+            </p>
+            <p className="text-gray-300">
+              Along this path, I've continually expanded my skills, adapting to emerging technologies and methodologies, and building a comprehensive toolkit that allows me to tackle complex data challenges with confidence and creativity.
+            </p>
+          </div>
         </div>
       </section>
       
-      {/* Skills Section with Interactive Visualization */}
+      {/* Skills Section - Removed Interactive Visualization */}
       <section 
         id="skills" 
         className="py-20 relative"
@@ -340,11 +360,6 @@ const Index = () => {
             <p className="text-gray-400 max-w-2xl mx-auto">
               A comprehensive toolkit built through years of experience and continuous learning.
             </p>
-          </div>
-          
-          <div className="mb-16">
-            <h3 className="text-xl font-semibold text-white mb-6">Interactive Skills Map</h3>
-            <InteractiveSkillsVisualization />
           </div>
           
           <SkillsSection />
