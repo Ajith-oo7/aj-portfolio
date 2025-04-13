@@ -26,12 +26,12 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <div className="text-white font-mono text-2xl flex items-center">
-          <span className="font-bold mr-1 relative">
+        <div className="text-white font-mono text-2xl flex items-center space-x-1">
+          <span className="font-bold relative inline-block">
             <span className="text-gradient text-glow">A</span>
-            <span className="absolute -top-1 left-3 text-neon-purple opacity-70 blur-[1px]">A</span>
+            <span className="absolute -top-1 left-0 text-neon-purple opacity-70 blur-[1px]">A</span>
           </span>
-          <span className="font-bold relative">
+          <span className="font-bold relative inline-block">
             <span className="text-gradient text-glow">A</span>
             <span className="absolute -top-1 left-0 text-neon-pink opacity-70 blur-[1px]">A</span>
           </span>
