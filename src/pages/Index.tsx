@@ -143,7 +143,10 @@ const Index = () => {
               I help organizations harness the full potential of their data.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button className="bg-neon-blue hover:bg-neon-blue/80 text-white">
+              <Button 
+                className="bg-neon-blue hover:bg-neon-blue/80 text-white"
+                onClick={() => scrollToSection('skills')}
+              >
                 Explore My Work
               </Button>
               <Button 
