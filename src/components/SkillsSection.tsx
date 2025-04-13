@@ -6,39 +6,52 @@ import {
   Server, 
   BarChart4, 
   Cloud,
-  Workflow
+  Workflow,
+  Bot,
+  Braces,
+  GitBranch
 } from 'lucide-react';
 
 const skills = [
   {
-    category: 'Data Engineering',
-    icon: <Database className="w-6 h-6 text-neon-blue" />,
-    skills: ['ETL/ELT Pipelines', 'Data Warehousing', 'Data Modeling', 'Data Integration', 'Data Governance']
+    category: 'Languages & Databases',
+    icon: <Code className="w-6 h-6 text-neon-blue" />,
+    skills: ['Python', 'SQL (Postgres, MS-SQL, MySQL)']
   },
   {
-    category: 'Programming',
-    icon: <Code className="w-6 h-6 text-neon-purple" />,
-    skills: ['Python', 'SQL', 'Scala', 'R', 'Shell Scripting']
+    category: 'Cloud & DevOps',
+    icon: <Cloud className="w-6 h-6 text-neon-purple" />,
+    skills: ['AWS (Glue, Lambda, S3, EC2, EMR, ECR)', 'API Gateway', 'KMS', 'SageMaker', 'QuickSight', 'CloudWatch', 'IAM', 'DMS', 'Redshift', 'Docker', 'Git', 'CI/CD']
   },
   {
-    category: 'Big Data Technologies',
-    icon: <Server className="w-6 h-6 text-neon-pink" />,
-    skills: ['Apache Spark', 'Hadoop', 'Kafka', 'Hive', 'Presto']
+    category: 'Big Data & ETL',
+    icon: <Database className="w-6 h-6 text-neon-pink" />,
+    skills: ['Snowflake', 'Databricks', 'PySpark', 'Informatica', 'Delta Lake', 'Snowpipe', 'Unity Catalog', 'Z-Ordering', 'Auto-Optimize']
+  },
+  {
+    category: 'Machine Learning',
+    icon: <Bot className="w-6 h-6 text-neon-orange" />,
+    skills: ['Decision Trees', 'K-means', 'SVM', 'Random Forest', 'Linear Regression', 'XGBoost', 'Generative AI', 'LLMs', 'TensorFlow', 'PyTorch', 'Keras']
   },
   {
     category: 'Data Analysis & Visualization',
-    icon: <BarChart4 className="w-6 h-6 text-neon-orange" />,
-    skills: ['Tableau', 'Power BI', 'Matplotlib', 'Pandas', 'NumPy']
+    icon: <BarChart4 className="w-6 h-6 text-neon-blue" />,
+    skills: ['Tableau', 'Matplotlib', 'Plotly', 'Seaborn', 'Excel', 'A/B Testing', 'Prompt Engineering', 'RAG']
   },
   {
-    category: 'Cloud Platforms',
-    icon: <Cloud className="w-6 h-6 text-neon-blue" />,
-    skills: ['AWS (S3, Redshift, EMR)', 'Azure', 'GCP', 'Snowflake', 'Databricks']
+    category: 'Data Science Libraries',
+    icon: <Braces className="w-6 h-6 text-neon-purple" />,
+    skills: ['Scikit-learn', 'NumPy', 'Pandas', 'SciPy', 'Langchain', 'Streamlit']
   },
   {
     category: 'Workflow Orchestration',
-    icon: <Workflow className="w-6 h-6 text-neon-purple" />,
-    skills: ['Airflow', 'Prefect', 'Luigi', 'Control-M', 'dbt']
+    icon: <Workflow className="w-6 h-6 text-neon-pink" />,
+    skills: ['Jenkins', 'n8n', 'Hadoop', 'Apache Airflow']
+  },
+  {
+    category: 'Version Control',
+    icon: <GitBranch className="w-6 h-6 text-neon-orange" />,
+    skills: ['Git', 'AWS Cloud Source Repositories']
   }
 ];
 
