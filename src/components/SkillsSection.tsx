@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Database, 
@@ -29,8 +30,8 @@ const skills = [
   {
     category: 'Cloud & DevOps',
     icon: <Cloud className="w-6 h-6 text-neon-purple" />,
-    skills: ['AWS (Glue, Lambda, S3, EC2, EMR, ECR)', 'API Gateway', 'KMS', 'SageMaker', 'QuickSight', 'CloudWatch', 'IAM', 'DMS', 'Redshift', 'Docker', 'Git', 'CI/CD'],
-    proficiency: [88, 85, 82, 87, 80, 89, 90, 75, 82, 88, 92, 84]
+    skills: ['AWS (Glue, Lambda, S3, EC2, EMR, ECR)', 'API Gateway', 'KMS', 'SageMaker', 'CloudWatch', 'IAM', 'DMS', 'Redshift', 'CI/CD'],
+    proficiency: [88, 85, 82, 87, 89, 90, 75, 82, 84]
   },
   {
     category: 'Big Data & ETL',
@@ -62,8 +63,8 @@ const skills = [
   {
     category: 'Data Analysis & Visualization',
     icon: <BarChart4 className="w-6 h-6 text-neon-blue" />,
-    skills: ['Tableau', 'Matplotlib', 'Plotly', 'Seaborn', 'Excel', 'A/B Testing'],
-    proficiency: [91, 88, 85, 87, 94, 89]
+    skills: ['Tableau', 'Matplotlib', 'Plotly', 'Seaborn', 'Excel', 'A/B Testing', 'QuickSight', 'PowerBI'],
+    proficiency: [91, 88, 85, 87, 94, 89, 82, 84]
   },
   {
     category: 'Data Science Libraries',
@@ -74,8 +75,8 @@ const skills = [
   {
     category: 'Workflow Orchestration',
     icon: <Workflow className="w-6 h-6 text-neon-pink" />,
-    skills: ['Jenkins', 'n8n', 'Hadoop', 'Apache Airflow'],
-    proficiency: [85, 78, 82, 89]
+    skills: ['Jenkins', 'n8n', 'Hadoop', 'Apache Airflow', 'Docker'],
+    proficiency: [85, 78, 82, 89, 88]
   },
   {
     category: 'Version Control',
