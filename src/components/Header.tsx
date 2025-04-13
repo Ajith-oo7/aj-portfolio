@@ -31,7 +31,8 @@ const Header: React.FC = () => {
       console.log(`Found element:`, element);
       
       if (element) {
-        const headerOffset = 80; // Account for fixed header height
+        // Increased header offset to ensure sections are properly aligned
+        const headerOffset = 100; // Increased from 80 to 100 for better alignment
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
