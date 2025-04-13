@@ -26,15 +26,12 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <div className="text-white font-mono text-2xl flex items-center space-x-1">
-          <span className="font-bold relative inline-block">
-            <span className="text-gradient text-glow">A</span>
-            <span className="absolute -top-1 left-0 text-neon-purple opacity-70 blur-[1px]">A</span>
-          </span>
-          <span className="font-bold relative inline-block">
-            <span className="text-gradient text-glow">A</span>
-            <span className="absolute -top-1 left-0 text-neon-pink opacity-70 blur-[1px]">A</span>
-          </span>
+        <div className="text-white font-mono text-2xl flex items-center">
+          <div className="logo-container relative">
+            <span className="text-gradient font-bold tracking-tighter">AA</span>
+            <span className="text-neon-purple opacity-70 blur-[2px] absolute top-0 left-0 font-bold tracking-tighter">AA</span>
+            <span className="text-neon-pink opacity-50 blur-[3px] absolute top-0.5 left-0.5 font-bold tracking-tighter">AA</span>
+          </div>
         </div>
 
         <nav className="hidden md:flex items-center space-x-8">

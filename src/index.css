@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,7 +99,13 @@
   }
   
   .text-gradient {
-    @apply bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent;
+    @apply bg-gradient-to-br from-neon-blue via-neon-purple to-neon-pink bg-clip-text text-transparent;
+  }
+  
+  .logo-container {
+    position: relative;
+    display: inline-block;
+    filter: drop-shadow(0 0 8px rgba(30, 174, 219, 0.4));
   }
   
   .aa-logo-effect {
