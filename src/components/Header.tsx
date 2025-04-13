@@ -20,23 +20,31 @@ const Header: React.FC = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
+    console.log(`Attempting to scroll to section: ${sectionId}`);
+    
     // Close mobile menu first
     setIsMobileMenuOpen(false);
     
     // Add a small delay to ensure UI updates before scrolling
     setTimeout(() => {
       const element = document.getElementById(sectionId);
+      console.log(`Found element:`, element);
+      
       if (element) {
         const headerOffset = 80; // Account for fixed header height
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
+        
+        console.log(`Scrolling to position: ${offsetPosition}`);
+        
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         });
+      } else {
+        console.error(`Element with ID "${sectionId}" not found`);
       }
-    }, 100);
+    }, 300); // Increased delay for better reliability
   };
 
   return (
