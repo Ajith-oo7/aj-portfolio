@@ -121,15 +121,6 @@ const SkillsSection: React.FC = () => {
                       >
                         <div className="text-xs">
                           <span className="font-bold">{skill}</span>
-                          <div className="flex items-center mt-1">
-                            <div className="h-1.5 w-24 bg-gray-800 rounded-full mr-2">
-                              <div 
-                                className="h-full bg-gradient-to-r from-neon-blue to-neon-purple rounded-full" 
-                                style={{ width: `${category.proficiency[skillIdx]}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-gray-400">{category.proficiency[skillIdx]}%</span>
-                          </div>
                         </div>
                       </TooltipContent>
                     </Tooltip>
