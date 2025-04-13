@@ -268,13 +268,26 @@ const Index = () => {
                 </div>
                 
                 <div className="flex justify-center mt-6 space-x-4">
-                  <a href="#" className="text-white hover:text-neon-blue transition-colors">
+                  <a 
+                    href="https://github.com/Ajith-oo7" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-white hover:text-neon-blue transition-colors"
+                  >
                     <Github size={20} />
                   </a>
-                  <a href="#" className="text-white hover:text-neon-blue transition-colors">
+                  <a 
+                    href="https://www.linkedin.com/in/aajith7/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-white hover:text-neon-blue transition-colors"
+                  >
                     <Linkedin size={20} />
                   </a>
-                  <a href="#" className="text-white hover:text-neon-blue transition-colors">
+                  <a 
+                    href="mailto:ajith.anna5599@gmail.com" 
+                    className="text-white hover:text-neon-blue transition-colors"
+                  >
                     <Mail size={20} />
                   </a>
                 </div>
@@ -307,7 +320,7 @@ const Index = () => {
                   </div>
                   <div className="flex items-center">
                     <div className="w-24 text-sm text-gray-400">Email:</div>
-                    <a href="mailto:ajith@example.com" className="text-neon-blue hover:underline">ajith@example.com</a>
+                    <a href="mailto:ajith.anna5599@gmail.com" className="text-neon-blue hover:underline">ajith.anna5599@gmail.com</a>
                   </div>
                 </div>
               </div>
@@ -342,8 +355,8 @@ const Index = () => {
                     <Mail className="w-5 h-5 text-neon-blue mt-1 mr-3" />
                     <div>
                       <h4 className="text-white font-medium">Email</h4>
-                      <a href="mailto:ajith@example.com" className="text-gray-400 hover:text-neon-blue">
-                        ajith@example.com
+                      <a href="mailto:ajith.anna5599@gmail.com" className="text-gray-400 hover:text-neon-blue">
+                        ajith.anna5599@gmail.com
                       </a>
                     </div>
                   </div>
