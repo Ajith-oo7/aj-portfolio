@@ -107,7 +107,7 @@ const SkillsSection: React.FC = () => {
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIdx) => (
                   <TooltipProvider key={skillIdx}>
-                    <Tooltip>
+                    <Tooltip delayDuration={100}>
                       <TooltipTrigger asChild>
                         <Badge 
                           variant="outline" 
@@ -116,7 +116,10 @@ const SkillsSection: React.FC = () => {
                           {skill}
                         </Badge>
                       </TooltipTrigger>
-                      <TooltipContent className="bg-black/90 border-neon-purple/50">
+                      <TooltipContent 
+                        sideOffset={5}
+                        className="bg-black/90 border-neon-purple/50 z-50"
+                      >
                         <div className="text-xs">
                           <span className="font-bold">{skill}</span>
                           <div className="flex items-center mt-1">
