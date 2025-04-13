@@ -18,8 +18,7 @@ const Index = () => {
     const handleMouseMove = (e: MouseEvent) => {
       const blob = document.getElementById('mouse-blob');
       if (blob) {
-        blob.style.left = `${e.clientX}px`;
-        blob.style.top = `${e.clientY}px`;
+        blob.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
       }
     };
     
@@ -85,7 +84,8 @@ const Index = () => {
     <div className="bg-black relative min-h-screen overflow-x-hidden">
       <div 
         id="mouse-blob" 
-        className="fixed w-96 h-96 rounded-full bg-radial-glow pointer-events-none -translate-x-1/2 -translate-y-1/2 opacity-80 z-0"
+        className="fixed w-72 h-72 rounded-full bg-radial-glow pointer-events-none opacity-70 z-0"
+        style={{ transform: 'translate(-50%, -50%)' }}
       ></div>
       
       <div 
@@ -119,7 +119,7 @@ const Index = () => {
               </Button>
             </div>
           </div>
-          <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative">
+          <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative backdrop-blur-sm bg-black/30 rounded-xl border border-white/5 p-2">
             <DataViz3D className="animate-float" />
           </div>
         </div>

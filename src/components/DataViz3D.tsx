@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
@@ -67,7 +68,8 @@ const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
   const lineMaterial = new THREE.LineBasicMaterial({
     color: color,
     transparent: true,
-    opacity: 0.7
+    opacity: 0.7,
+    linewidth: 2
   });
   
   // Update opacity in animation frame
@@ -99,20 +101,20 @@ interface DataNetworkProps {
 }
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
-  nodeCount = 12,
-  connections = 15,
+  nodeCount = 14,
+  connections = 20,
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
   
   // Generate nodes in a spherical pattern
   const nodes: NodeProps[] = [];
-  const skills = ['SQL', 'Python', 'Spark', 'ETL', 'AWS', 'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 'Tableau', 'ML', 'Data'];
+  const skills = ['SQL', 'Python', 'Spark', 'ETL', 'AWS', 'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 'Tableau', 'ML', 'Data', 'dbt', 'Snowflake'];
   
   for (let i = 0; i < nodeCount; i++) {
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
-    const radius = 2.5 + Math.random() * 0.5;
+    const radius = 2.2 + Math.random() * 0.3;
     
     const x = radius * Math.sin(phi) * Math.cos(theta);
     const y = radius * Math.sin(phi) * Math.sin(theta);
@@ -124,9 +126,9 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     nodes.push({
       position: [x, y, z],
       color,
-      size: 0.15 + Math.random() * 0.15,
+      size: 0.15 + Math.random() * 0.1,
       label: skills[i % skills.length],
-      pulse: Math.random() > 0.7,
+      pulse: Math.random() > 0.5,
     });
   }
   
@@ -186,15 +188,23 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
     <div className={`w-full h-full ${className || ''}`}>
       <Canvas 
         camera={{ position: [0, 0, 6], fov: 45 }}
+        gl={{ 
+          antialias: true,
+          powerPreference: 'high-performance',
+          alpha: true
+        }}
         onCreated={({ gl }) => {
-          gl.setClearColor(new THREE.Color('#000000'));
+          gl.setClearColor(new THREE.Color('#000000'), 0);
+          gl.outputEncoding = THREE.sRGBEncoding;
         }}
         onError={() => setHasError(true)}
+        shadows
       >
         <color attach="background" args={['#000000']} />
-        <ambientLight intensity={0.2} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8B5CF6" />
+        <fog attach="fog" args={['#000000', 5, 15]} />
+        <ambientLight intensity={0.3} />
+        <pointLight position={[10, 10, 10]} intensity={1.5} castShadow />
+        <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
         <React.Suspense fallback={null}>
           <DataNetwork />
           <OrbitControls 
@@ -202,6 +212,8 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
             enablePan={false}
             autoRotate={false}
             rotateSpeed={0.5}
+            minPolarAngle={Math.PI / 3}
+            maxPolarAngle={Math.PI / 1.5}
           />
         </React.Suspense>
       </Canvas>
