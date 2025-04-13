@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react';
 
 // Add type definition for particlesJS
@@ -48,15 +49,15 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
       window.particlesJS(particlesRef.current.id, {
         particles: {
           number: { 
-            value: 120, 
+            value: 40, // Reduced to 40 as specified
             density: { enable: true, value_area: 800 } 
           },
           color: { 
-            value: ["#1EAEDB", "#8B5CF6", "#D946EF", "#0EA5E9", "#22D3EE"] 
+            value: ["#D946EF", "#8B5CF6", "#9b87f5", "#7E69AB", "#6E59A5"] // Pink/purple tones
           },
           shape: { type: "circle" },
           opacity: { 
-            value: 0.5, 
+            value: 0.6, 
             random: true, 
             anim: { 
               enable: true, 
@@ -78,7 +79,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
           line_linked: {
             enable: true,
             distance: 150,
-            color: "#1EAEDB",
+            color: "#D946EF", // Pink connection lines
             opacity: 0.4,
             width: 1
           },
@@ -94,15 +95,15 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
           }
         },
         interactivity: {
-          detect_on: "window", // Changed from "canvas" to "window" for better detection
+          detect_on: "window", // Detect on entire window
           events: {
             onhover: { 
               enable: true, 
-              mode: "grab" // Changed to "grab" for nice connection lines on hover
+              mode: "grab" // "Grabbing" effect connecting particles to cursor
             },
             onclick: { 
               enable: true, 
-              mode: "push" // Keep "push" to add particles on click
+              mode: "push" // Add particles on click
             },
             resize: true
           },
@@ -118,7 +119,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
               duration: 0.4
             },
             push: {
-              particles_nb: 4
+              particles_nb: 4 // Add 4 particles on click
             },
             bubble: {
               distance: 100,
