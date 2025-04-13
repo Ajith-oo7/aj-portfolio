@@ -352,8 +352,13 @@ const Index = () => {
                     <Linkedin className="w-5 h-5 text-neon-blue mt-1 mr-3" />
                     <div>
                       <h4 className="text-white font-medium">LinkedIn</h4>
-                      <a href="#" className="text-gray-400 hover:text-neon-blue">
-                        linkedin.com/in/ajith-annavarapu
+                      <a 
+                        href="https://www.linkedin.com/in/aajith7/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-neon-blue"
+                      >
+                        linkedin.com/in/aajith7
                       </a>
                     </div>
                   </div>
@@ -362,8 +367,13 @@ const Index = () => {
                     <Github className="w-5 h-5 text-neon-blue mt-1 mr-3" />
                     <div>
                       <h4 className="text-white font-medium">GitHub</h4>
-                      <a href="#" className="text-gray-400 hover:text-neon-blue">
-                        github.com/ajith-annavarapu
+                      <a 
+                        href="https://github.com/Ajith-oo7" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-neon-blue"
+                      >
+                        github.com/Ajith-oo7
                       </a>
                     </div>
                   </div>
