@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 
 // Add type definition for particlesJS
@@ -10,9 +9,13 @@ declare global {
 
 interface ParticleNetworkProps {
   className?: string;
+  id?: string;
 }
 
-const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
+const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ 
+  className, 
+  id = 'particle-1' 
+}) => {
   const particlesRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -133,7 +136,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
   
   return (
     <div 
-      id="particles-js" 
+      id={id} 
       ref={particlesRef} 
       className={`fixed inset-0 z-0 ${className || ''}`}
       style={{ 
