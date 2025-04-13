@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,11 +26,8 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <div className="text-white font-mono text-2xl flex items-center">
-          <div className="logo-container relative">
-            <span className="text-gradient font-bold tracking-tighter">AA</span>
-            <span className="text-neon-purple opacity-70 blur-[2px] absolute top-0 left-0 font-bold tracking-tighter">AA</span>
-            <span className="text-neon-pink opacity-50 blur-[3px] absolute top-0.5 left-0.5 font-bold tracking-tighter">AA</span>
-          </div>
+          <span className="text-gradient font-bold">AA</span>
+          <span className="text-neon-blue">.</span>
         </div>
 
         <nav className="hidden md:flex items-center space-x-8">
@@ -58,7 +54,6 @@ const Header: React.FC = () => {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md py-4 shadow-lg">
           <nav className="container mx-auto px-4 flex flex-col space-y-4">
