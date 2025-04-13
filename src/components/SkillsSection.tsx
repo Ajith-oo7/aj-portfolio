@@ -11,6 +11,8 @@ import {
   Braces,
   GitBranch
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 const skills = [
   {
@@ -61,20 +63,24 @@ const SkillsSection: React.FC = () => {
       {skills.map((category, idx) => (
         <div 
           key={idx}
-          className="neo-blur border border-white/10 rounded-lg p-6 transition-all duration-300 hover:border-neon-blue/30 hover:neon-border"
+          className="neo-blur border border-white/10 rounded-lg p-6 transition-all duration-300 hover:border-neon-blue/30 hover:neon-border flex flex-col h-full"
         >
           <div className="flex items-center mb-4">
             {category.icon}
             <h3 className="ml-2 text-lg font-semibold text-white">{category.category}</h3>
           </div>
-          <ul className="space-y-2">
+          <Separator className="mb-4 bg-white/10" />
+          <div className="flex flex-wrap gap-2 flex-grow">
             {category.skills.map((skill, skillIdx) => (
-              <li key={skillIdx} className="flex items-center text-gray-300">
-                <div className="w-1.5 h-1.5 rounded-full bg-neon-blue mr-2"></div>
+              <Badge 
+                key={skillIdx} 
+                variant="outline" 
+                className="bg-black/50 text-gray-300 border-white/10 py-1 px-2 text-xs"
+              >
                 {skill}
-              </li>
+              </Badge>
             ))}
-          </ul>
+          </div>
         </div>
       ))}
     </div>
