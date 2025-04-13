@@ -378,9 +378,7 @@ const Index = () => {
                   robust and scalable data systems that transform raw data into valuable insights.
                 </p>
                 <p className="text-gray-300 mb-4">
-                  When I'm not immersed in data, you'll find me exploring new hiking trails, experimenting with 
-                  cooking recipes, or diving into a good sci-fi novel. I believe in continuous learning and 
-                  staying curious about the world around us.
+                  When I'm not immersed in data, you'll find me exploring new hiking trails, Vibe Coding, experimenting with cooking recipes, or diving into a good thriller movie. I believe in continuous learning and staying curious about the world around us.
                 </p>
                 <p className="text-gray-300 mb-6">
                   I'm always open to new challenges and collaborations. If you're working on an interesting 
