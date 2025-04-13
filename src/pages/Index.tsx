@@ -85,7 +85,7 @@ const Index = () => {
     <div className="bg-black relative min-h-screen overflow-x-hidden">
       <div 
         id="mouse-blob" 
-        className="fixed w-80 h-80 rounded-full bg-radial-glow pointer-events-none -translate-x-1/2 -translate-y-1/2 opacity-60 z-0"
+        className="fixed w-96 h-96 rounded-full bg-radial-glow pointer-events-none -translate-x-1/2 -translate-y-1/2 opacity-80 z-0"
       ></div>
       
       <div 
