@@ -19,7 +19,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <div className="text-white font-mono text-xl">
           <span className="text-gradient font-bold">A</span>
-          <span className="text-neon-blue">A.</span>
+          <span className="text-neon-blue"></span>
         </div>
         
         <nav className="hidden md:flex items-center space-x-8">
