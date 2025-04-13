@@ -16,6 +16,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Send, Loader2 } from 'lucide-react';
+import emailjs from 'emailjs-com';
+
+// EmailJS configuration constants
+const EMAILJS_SERVICE_ID = 'service_id'; // Replace with your actual Service ID
+const EMAILJS_TEMPLATE_ID = 'template_id'; // Replace with your actual Template ID
+const EMAILJS_USER_ID = 'user_id'; // Replace with your actual User ID
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -51,18 +57,43 @@ const ContactForm: React.FC = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    console.log("Form submitted:", data);
-    toast({
-      title: "Message sent!",
-      description: "Thanks for reaching out. I'll get back to you soon.",
-      duration: 5000,
-    });
-    
-    form.reset();
-    setIsSubmitting(false);
+    try {
+      // Prepare the template parameters for EmailJS
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        subject: data.subject,
+        message: data.message
+      };
+      
+      // Send the email using EmailJS
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_USER_ID
+      );
+      
+      console.log('Email sent successfully:', response);
+      
+      toast({
+        title: "Message sent!",
+        description: "Thanks for reaching out. I'll get back to you soon.",
+        duration: 5000,
+      });
+      
+      form.reset();
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      toast({
+        title: "Message failed to send",
+        description: "There was an error sending your message. Please try again later.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -134,7 +165,7 @@ const ContactForm: React.FC = () => {
                 <Textarea 
                   placeholder="Your message..." 
                   {...field} 
-                  className="min-h-[150px] bg-black/50 border-white/20 focus:border-neon-blue/50 text-white"
+                  className="min-h-[150px] bg-black/50 border-white/20 focus:border-neon-blue/50 text-white resize-y"
                 />
               </FormControl>
               <FormMessage />
