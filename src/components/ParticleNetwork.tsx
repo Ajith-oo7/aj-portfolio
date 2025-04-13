@@ -32,35 +32,9 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
       
       document.body.appendChild(script);
       
-      // Add event listeners for mouse interactions
-      const handleMouseEnter = () => setIsHovering(true);
-      const handleMouseLeave = () => setIsHovering(false);
-      const handleClick = () => {
-        setIsClicked(true);
-        setTimeout(() => setIsClicked(false), 1500);
-        
-        // Reinitialize particles with more intensity when clicked
-        if (window.particlesJS) {
-          initParticles(true);
-          // Return to normal state after 1.5 seconds
-          setTimeout(() => initParticles(false), 1500);
-        }
-      };
-      
-      if (particlesRef.current) {
-        particlesRef.current.addEventListener('mouseenter', handleMouseEnter);
-        particlesRef.current.addEventListener('mouseleave', handleMouseLeave);
-        particlesRef.current.addEventListener('click', handleClick);
-      }
-      
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
-        }
-        if (particlesRef.current) {
-          particlesRef.current.removeEventListener('mouseenter', handleMouseEnter);
-          particlesRef.current.removeEventListener('mouseleave', handleMouseLeave);
-          particlesRef.current.removeEventListener('click', handleClick);
         }
       };
     }
@@ -71,43 +45,43 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
       window.particlesJS(particlesRef.current.id, {
         particles: {
           number: { 
-            value: intense ? 120 : 80, 
-            density: { enable: true, value_area: 1200 } 
+            value: intense ? 200 : 120, 
+            density: { enable: true, value_area: 800 } 
           },
           color: { 
             value: ["#1EAEDB", "#8B5CF6", "#D946EF", "#0EA5E9", "#22D3EE"] 
           },
           shape: { type: "circle" },
           opacity: { 
-            value: intense ? 0.8 : 0.6, 
+            value: 0.5, 
             random: true, 
             anim: { 
               enable: true, 
-              speed: intense ? 3 : 1, 
-              opacity_min: 0.3, 
+              speed: 1, 
+              opacity_min: 0.1, 
               sync: false 
             } 
           },
           size: { 
-            value: intense ? 5 : 3, 
+            value: 3, 
             random: true, 
             anim: { 
               enable: true, 
-              speed: intense ? 5 : 2, 
-              size_min: 0.3, 
+              speed: 2, 
+              size_min: 0.1, 
               sync: false 
             } 
           },
           line_linked: {
             enable: true,
-            distance: intense ? 120 : 150,
-            color: intense ? "#22D3EE" : "#1EAEDB",
-            opacity: intense ? 0.6 : 0.3,
-            width: intense ? 2 : 1
+            distance: 150,
+            color: "#1EAEDB",
+            opacity: 0.4,
+            width: 1
           },
           move: {
             enable: true,
-            speed: intense ? 5 : 2,
+            speed: 2,
             direction: "none",
             random: true,
             straight: false,
@@ -121,33 +95,21 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
           events: {
             onhover: { 
               enable: true, 
-              mode: intense ? "bubble" : isHovering ? "bubble" : "grab",
-              parallax: { enable: true, force: 80, smooth: 10 }
+              mode: "repulse"
             },
             onclick: { 
               enable: true, 
-              mode: intense ? "push" : "repulse"
+              mode: "push"
             },
             resize: true
           },
           modes: {
-            grab: {
-              distance: 180,
-              line_linked: { opacity: 0.8 }
-            },
-            bubble: {
-              distance: 200,
-              size: intense ? 10 : 6,
-              duration: 2,
-              opacity: 0.8,
-              speed: 3
-            },
             repulse: {
-              distance: intense ? 300 : 250,
-              duration: 2
+              distance: 100,
+              duration: 0.4
             },
             push: {
-              particles_nb: intense ? 8 : 4
+              particles_nb: 4
             }
           }
         },
@@ -160,12 +122,13 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
     <div 
       id="particles-js" 
       ref={particlesRef} 
-      className={`absolute inset-0 z-0 transition-all duration-300 cursor-pointer
-        ${isHovering ? 'opacity-100' : 'opacity-85'} 
-        ${isClicked ? 'scale-105' : 'scale-100'}
-        ${className || ''}`}
+      className={`fixed inset-0 z-0 pointer-events-none ${className || ''}`}
       style={{ 
-        transition: 'all 0.3s ease-out',
+        width: '100%', 
+        height: '100%',
+        position: 'fixed',
+        top: 0,
+        left: 0
       }}
     ></div>
   );
