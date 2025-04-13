@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Database, 
@@ -24,8 +23,8 @@ const skills = [
   {
     category: 'Languages & Databases',
     icon: <Code className="w-6 h-6 text-neon-blue" />,
-    skills: ['Python', 'SQL (Postgres, MS-SQL, MySQL)'],
-    proficiency: [90, 85]
+    skills: ['Python', 'SQL (Postgres, MS-SQL, MySQL)', 'Java', 'C', 'React', 'Cassandra'],
+    proficiency: [90, 85, 88, 82, 87, 80]
   },
   {
     category: 'Cloud & DevOps',
@@ -145,4 +144,3 @@ const SkillsSection: React.FC = () => {
 };
 
 export default SkillsSection;
-
