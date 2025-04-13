@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowDown, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -321,7 +320,7 @@ const Index = () => {
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <div className="w-24 text-sm text-gray-400">Location:</div>
-                    <div className="text-white">San Francisco, CA</div>
+                    <div className="text-white">Irving, TX</div>
                   </div>
                   <div className="flex items-center">
                     <div className="w-24 text-sm text-gray-400">Education:</div>
