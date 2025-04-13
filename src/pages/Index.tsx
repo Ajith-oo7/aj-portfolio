@@ -15,6 +15,30 @@ const Index = () => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
   
+  const scrollToSection = (sectionId: string) => {
+    console.log(`Attempting to scroll to section from Index: ${sectionId}`);
+    
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      console.log(`Found element:`, element);
+      
+      if (element) {
+        const headerOffset = 80; // Account for fixed header height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        console.log(`Scrolling to position: ${offsetPosition}`);
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      } else {
+        console.error(`Element with ID "${sectionId}" not found`);
+      }
+    }, 300); // Delay for better reliability
+  };
+  
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const blob = document.getElementById('mouse-blob');
@@ -122,7 +146,11 @@ const Index = () => {
               <Button className="bg-neon-blue hover:bg-neon-blue/80 text-white">
                 Explore My Work
               </Button>
-              <Button variant="outline" className="border-white/20 hover:border-white/50 text-white">
+              <Button 
+                onClick={() => scrollToSection('contact')} 
+                variant="outline" 
+                className="border-white/20 hover:border-white/50 text-white"
+              >
                 Get in Touch
               </Button>
             </div>
@@ -142,7 +170,6 @@ const Index = () => {
       </section>
       
       <section 
-        ref={scrollRef}
         id="story" 
         className="py-20 relative"
       >
@@ -402,10 +429,12 @@ const Index = () => {
               </div>
               
               <div>
-                <Button className="w-full bg-neon-blue hover:bg-neon-blue/80 text-white py-6 text-lg">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Send me an email
-                </Button>
+                <a href="mailto:ajith.anna5599@gmail.com">
+                  <Button className="w-full bg-neon-blue hover:bg-neon-blue/80 text-white py-6 text-lg">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Send me an email
+                  </Button>
+                </a>
                 
                 <div className="mt-6 text-center">
                   <p className="text-gray-400 text-sm">
