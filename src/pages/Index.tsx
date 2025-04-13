@@ -144,6 +144,9 @@ const Index = () => {
               With expertise in building robust data pipelines and scalable data systems, 
               I help organizations harness the full potential of their data.
             </p>
+            <p className="text-gray-300 mb-6">
+              I'm always open to new challenges and collaborations. If you're working on an interesting project that requires data expertise, A.I or even Vibe Coding. I'd love to hear about it!
+            </p>
             <div className="flex flex-wrap gap-4">
               <Button 
                 className="bg-neon-blue hover:bg-neon-blue/80 text-white"
