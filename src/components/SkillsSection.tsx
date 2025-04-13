@@ -9,12 +9,16 @@ import {
   Workflow,
   Bot,
   Braces,
-  GitBranch
+  GitBranch,
+  Brain,
+  Zap,
+  BrainCircuit
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from '@/components/ui/progress';
 
 const skills = [
   {
@@ -36,16 +40,33 @@ const skills = [
     proficiency: [92, 89, 87, 80, 85, 82, 78, 75, 76]
   },
   {
-    category: 'Machine Learning',
-    icon: <Bot className="w-6 h-6 text-neon-orange" />,
-    skills: ['Decision Trees', 'K-means', 'SVM', 'Random Forest', 'Linear Regression', 'XGBoost', 'Generative AI', 'LLMs', 'TensorFlow', 'PyTorch', 'Keras'],
-    proficiency: [88, 87, 85, 90, 92, 88, 85, 82, 79, 78, 80]
+    category: 'AI & Machine Learning',
+    icon: <BrainCircuit className="w-6 h-6 text-neon-green" />,
+    skills: [
+      'Large Language Models (LLMs)', 
+      'Generative AI', 
+      'Prompt Engineering', 
+      'RAG (Retrieval Augmented Generation)',
+      'Neural Networks',
+      'Computer Vision',
+      'NLP & Text Processing',
+      'Vector Databases',
+      'AI Model Deployment',
+      'ML Ops'
+    ],
+    proficiency: [88, 85, 86, 83, 82, 80, 85, 84, 82, 81]
+  },
+  {
+    category: 'Machine Learning Algorithms',
+    icon: <Brain className="w-6 h-6 text-neon-orange" />,
+    skills: ['Decision Trees', 'K-means', 'SVM', 'Random Forest', 'Linear Regression', 'XGBoost', 'TensorFlow', 'PyTorch', 'Keras'],
+    proficiency: [88, 87, 85, 90, 92, 88, 79, 78, 80]
   },
   {
     category: 'Data Analysis & Visualization',
     icon: <BarChart4 className="w-6 h-6 text-neon-blue" />,
-    skills: ['Tableau', 'Matplotlib', 'Plotly', 'Seaborn', 'Excel', 'A/B Testing', 'Prompt Engineering', 'RAG'],
-    proficiency: [91, 88, 85, 87, 94, 89, 86, 83]
+    skills: ['Tableau', 'Matplotlib', 'Plotly', 'Seaborn', 'Excel', 'A/B Testing'],
+    proficiency: [91, 88, 85, 87, 94, 89]
   },
   {
     category: 'Data Science Libraries',
@@ -124,3 +145,4 @@ const SkillsSection: React.FC = () => {
 };
 
 export default SkillsSection;
+
