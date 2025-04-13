@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Add type definition for particlesJS
 declare global {
@@ -14,6 +14,7 @@ interface ParticleNetworkProps {
 
 const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
   const particlesRef = useRef<HTMLDivElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
   
   useEffect(() => {
     if (typeof window !== "undefined" && particlesRef.current) {
@@ -26,11 +27,11 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
         if (window.particlesJS) {
           window.particlesJS(particlesRef.current?.id, {
             particles: {
-              number: { value: 40, density: { enable: true, value_area: 1200 } },
-              color: { value: ["#1EAEDB", "#8B5CF6", "#D946EF"] },
+              number: { value: 60, density: { enable: true, value_area: 1200 } },
+              color: { value: ["#1EAEDB", "#8B5CF6", "#D946EF", "#0EA5E9"] },
               shape: { type: "circle" },
-              opacity: { value: 0.5, random: true },
-              size: { value: 2, random: true },
+              opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1, opacity_min: 0.3, sync: false } },
+              size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.3, sync: false } },
               line_linked: {
                 enable: true,
                 distance: 150,
@@ -40,28 +41,44 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
               },
               move: {
                 enable: true,
-                speed: 1.5,
+                speed: 2,
                 direction: "none",
                 random: true,
                 straight: false,
                 out_mode: "out",
-                bounce: false
+                bounce: false,
+                attract: { enable: true, rotateX: 600, rotateY: 1200 }
               }
             },
             interactivity: {
               detect_on: "canvas",
               events: {
-                onhover: { enable: true, mode: "grab" }, // Lines connect when hovering
-                onclick: { enable: true, mode: "push" }, // Add particles on click
+                onhover: { 
+                  enable: true, 
+                  mode: "bubble",
+                  parallax: { enable: true, force: 60, smooth: 10 }
+                },
+                onclick: { enable: true, mode: "repulse" }, // Particles repulse on click for a cool effect
                 resize: true
               },
               modes: {
                 grab: {
-                  distance: 140,
+                  distance: 180,
                   line_linked: { opacity: 0.8 }
                 },
+                bubble: {
+                  distance: 200,
+                  size: 6,
+                  duration: 2,
+                  opacity: 0.8,
+                  speed: 3
+                },
+                repulse: {
+                  distance: 250,
+                  duration: 2
+                },
                 push: {
-                  particles_nb: 3
+                  particles_nb: 4
                 }
               }
             },
@@ -72,9 +89,22 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
       
       document.body.appendChild(script);
       
+      // Add event listeners for mouse interactions
+      const handleMouseEnter = () => setIsHovering(true);
+      const handleMouseLeave = () => setIsHovering(false);
+      
+      if (particlesRef.current) {
+        particlesRef.current.addEventListener('mouseenter', handleMouseEnter);
+        particlesRef.current.addEventListener('mouseleave', handleMouseLeave);
+      }
+      
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
+        }
+        if (particlesRef.current) {
+          particlesRef.current.removeEventListener('mouseenter', handleMouseEnter);
+          particlesRef.current.removeEventListener('mouseleave', handleMouseLeave);
         }
       };
     }
@@ -84,7 +114,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ className }) => {
     <div 
       id="particles-js" 
       ref={particlesRef} 
-      className={`absolute inset-0 z-0 ${className || ''}`}
+      className={`absolute inset-0 z-0 transition-all duration-300 ${isHovering ? 'opacity-100' : 'opacity-80'} ${className || ''}`}
     ></div>
   );
 };
