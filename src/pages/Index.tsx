@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { ArrowDown, Mail, Github, Linkedin, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import Header from '@/components/Header';
 import DataViz3D from '@/components/DataViz3D';
 import ProjectCard from '@/components/ProjectCard';
 import SkillsSection from '@/components/SkillsSection';
+import ParticleNetwork from '@/components/ParticleNetwork';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const Index = () => {
@@ -18,7 +20,10 @@ const Index = () => {
     const handleMouseMove = (e: MouseEvent) => {
       const blob = document.getElementById('mouse-blob');
       if (blob) {
-        blob.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        // Use requestAnimationFrame for smoother updates
+        requestAnimationFrame(() => {
+          blob.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        });
       }
     };
     
@@ -82,9 +87,13 @@ const Index = () => {
   
   return (
     <div className="bg-black relative min-h-screen overflow-x-hidden">
+      {/* Particle network background */}
+      <ParticleNetwork />
+      
+      {/* Mouse blob effect - smaller and more responsive */}
       <div 
         id="mouse-blob" 
-        className="fixed w-72 h-72 rounded-full bg-radial-glow pointer-events-none opacity-70 z-0"
+        className="fixed w-48 h-48 rounded-full bg-radial-glow pointer-events-none opacity-60 z-0"
         style={{ transform: 'translate(-50%, -50%)' }}
       ></div>
       

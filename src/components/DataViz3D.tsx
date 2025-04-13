@@ -195,7 +195,8 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
         }}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color('#000000'), 0);
-          gl.outputEncoding = THREE.sRGBEncoding;
+          // Fix: Use the correct encoding property available in Three.js v0.160.0
+          gl.outputColorSpace = THREE.SRGBColorSpace;
         }}
         onError={() => setHasError(true)}
         shadows
