@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,14 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -34,14 +43,21 @@ const Header: React.FC = () => {
           {['Story', 'Skills', 'Projects', 'About', 'Contact'].map(item => (
             <a
               key={item}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection(item.toLowerCase());
+              }}
               href={`#${item.toLowerCase()}`}
-              className="text-white opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide"
+              className="text-white opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide cursor-pointer"
             >
               {item}
             </a>
           ))}
-          <Button className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium">
-            Resume
+          <Button 
+            onClick={() => scrollToSection('contact')} 
+            className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
+          >
+            Get in Touch
           </Button>
         </nav>
 
@@ -60,15 +76,21 @@ const Header: React.FC = () => {
             {['Story', 'Skills', 'Projects', 'About', 'Contact'].map(item => (
               <a
                 key={item}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.toLowerCase());
+                }}
                 href={`#${item.toLowerCase()}`}
                 className="text-white py-2 opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide"
-                onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item}
               </a>
             ))}
-            <Button className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium w-full">
-              Resume
+            <Button 
+              onClick={() => scrollToSection('contact')} 
+              className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium w-full"
+            >
+              Get in Touch
             </Button>
           </nav>
         </div>
