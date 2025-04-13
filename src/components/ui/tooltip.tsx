@@ -6,10 +6,9 @@ import { cn } from "@/lib/utils"
 
 const TooltipProvider = TooltipPrimitive.Provider
 
-const Tooltip = ({ delayDuration = 0, skipDelayDuration = 0, ...props }: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> & { delayDuration?: number, skipDelayDuration?: number }) => (
+const Tooltip = ({ delayDuration = 0, ...props }: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>) => (
   <TooltipPrimitive.Root 
     delayDuration={delayDuration} 
-    skipDelayDuration={skipDelayDuration}
     {...props}
   />
 )

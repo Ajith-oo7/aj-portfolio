@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Database, 
@@ -106,7 +105,7 @@ const SkillsSection: React.FC = () => {
               <Separator className="mb-4 bg-white/10" />
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIdx) => (
-                  <TooltipProvider key={skillIdx} delayDuration={0} skipDelayDuration={0}>
+                  <TooltipProvider key={skillIdx} delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Badge 
