@@ -6,6 +6,8 @@ import DataViz3D from '@/components/DataViz3D';
 import ProjectCard from '@/components/ProjectCard';
 import SkillsSection from '@/components/SkillsSection';
 import ParticleNetwork from '@/components/ParticleNetwork';
+import ExperienceSection from '@/components/ExperienceSection';
+import CertificationsSection from '@/components/CertificationsSection';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const Index = () => {
@@ -126,6 +128,7 @@ const Index = () => {
       
       <Header />
       
+      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
         <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center z-10">
           <div className="w-full md:w-1/2 mb-10 md:mb-0 relative z-10">
@@ -172,6 +175,7 @@ const Index = () => {
         </button>
       </section>
       
+      {/* My Journey Section */}
       <section 
         id="story" 
         className="py-20 relative"
@@ -238,6 +242,7 @@ const Index = () => {
         </div>
       </section>
       
+      {/* Skills Section */}
       <section 
         id="skills" 
         className="py-20 relative"
@@ -254,6 +259,41 @@ const Index = () => {
         </div>
       </section>
       
+      {/* Experience Section */}
+      <section 
+        id="experience" 
+        className="py-20 relative"
+      >
+        <div className="container mx-auto max-w-6xl px-4 z-10 relative">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gradient mb-4">Work Experience</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              My professional journey and the impact I've made.
+            </p>
+          </div>
+          
+          <ExperienceSection />
+        </div>
+      </section>
+      
+      {/* Certifications Section */}
+      <section 
+        id="certifications" 
+        className="py-20 relative"
+      >
+        <div className="container mx-auto max-w-6xl px-4 z-10 relative">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gradient mb-4">Certifications</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Professional certifications and achievements.
+            </p>
+          </div>
+          
+          <CertificationsSection />
+        </div>
+      </section>
+      
+      {/* Projects Section */}
       <section 
         id="projects" 
         className="py-20 relative"
@@ -282,6 +322,7 @@ const Index = () => {
         </div>
       </section>
       
+      {/* About Me Section */}
       <section 
         id="about" 
         className="py-20 relative"
@@ -367,6 +408,7 @@ const Index = () => {
         </div>
       </section>
       
+      {/* Contact Section */}
       <section 
         id="contact" 
         className="py-20 relative"
@@ -444,6 +486,7 @@ const Index = () => {
         </div>
       </section>
       
+      {/* Footer */}
       <footer className="py-6 border-t border-white/10">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
