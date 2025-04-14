@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Float, Sparkles, Environment as DreiEnvironment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -108,43 +108,6 @@ const DataEdge: React.FC<EdgeProps> = ({
   width = 0.05,
   speed = 1
 }) => {
-  const ref = useRef<THREE.Line>(null);
-  
-  const shaderMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      color: { value: new THREE.Color(color) },
-      time: { value: 0 },
-      width: { value: width }
-    },
-    vertexShader: `
-      uniform float time;
-      varying vec3 vPosition;
-      void main() {
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform vec3 color;
-      uniform float time;
-      uniform float width;
-      varying vec3 vPosition;
-      void main() {
-        float intensity = 0.5 + 0.5 * sin(vPosition.x * 10.0 + time * 2.0);
-        vec3 glowColor = mix(color, vec3(1.0), 0.3 * intensity);
-        gl_FragColor = vec4(glowColor, 0.2 + 0.6 * intensity);
-      }
-    `,
-    transparent: true,
-    blending: THREE.AdditiveBlending
-  });
-  
-  useFrame((state) => {
-    if (shaderMaterial) {
-      shaderMaterial.uniforms.time.value = state.clock.getElapsedTime() * speed;
-    }
-  });
-  
   const points = [
     new THREE.Vector3(...start),
     new THREE.Vector3(...end)
@@ -157,7 +120,6 @@ const DataEdge: React.FC<EdgeProps> = ({
   ).multiplyScalar(0.5);
   
   // Push the midpoint out to follow the globe's curvature
-  const midPointLength = midPoint.length();
   midPoint.normalize().multiplyScalar(2.8 + Math.random() * 0.2);
   
   const curve = new THREE.QuadraticBezierCurve3(
@@ -170,7 +132,11 @@ const DataEdge: React.FC<EdgeProps> = ({
   
   return (
     <mesh geometry={tubeGeometry}>
-      <primitive object={shaderMaterial} attach="material" />
+      <meshBasicMaterial
+        color={color}
+        transparent={true}
+        opacity={0.6}
+      />
     </mesh>
   );
 };
@@ -197,6 +163,25 @@ const GlobeBase = () => {
         wireframe={true}
       />
     </mesh>
+  );
+};
+
+// Custom OrbitControls wrapper to ensure it has access to camera
+const ControlsWrapper = () => {
+  const { camera, gl } = useThree();
+  return (
+    <OrbitControls 
+      args={[camera, gl.domElement]}
+      enableZoom={true}
+      enablePan={false}
+      autoRotate={false}
+      rotateSpeed={0.5}
+      zoomSpeed={0.8}
+      minDistance={4}
+      maxDistance={12}
+      minPolarAngle={Math.PI / 4}
+      maxPolarAngle={3 * Math.PI / 4}
+    />
   );
 };
 
@@ -419,17 +404,7 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
         <CustomEnvironment />
         <React.Suspense fallback={null}>
           <DataNetwork />
-          <OrbitControls 
-            enableZoom={true}
-            enablePan={false}
-            autoRotate={false}
-            rotateSpeed={0.5}
-            zoomSpeed={0.8}
-            minDistance={4}
-            maxDistance={12}
-            minPolarAngle={Math.PI / 4}
-            maxPolarAngle={3 * Math.PI / 4}
-          />
+          <ControlsWrapper />
         </React.Suspense>
       </Canvas>
     </div>
