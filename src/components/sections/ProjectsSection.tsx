@@ -25,9 +25,23 @@ const ProjectsSection: React.FC = () => {
           throw new Error(error.message);
         }
         
-        // If we got data from Supabase, use it. Otherwise, fall back to the hardcoded data
+        // If we got data from Supabase, transform it to match ProjectDetail interface
         if (data && data.length > 0) {
-          setProjects(data as ProjectDetail[]);
+          const transformedProjects: ProjectDetail[] = data.map(project => ({
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            longDescription: project.long_description,
+            techStack: project.tech_stack,
+            challenges: project.challenges,
+            solutions: project.solutions,
+            outcomes: project.outcomes,
+            demoLink: project.demo_link || '',
+            githubLink: project.github_link || '',
+            imageSrc: project.image_src || '',
+            color: (project.color as 'blue' | 'purple' | 'pink') || 'blue'
+          }));
+          setProjects(transformedProjects);
         } else {
           setProjects(projectsData);
         }
