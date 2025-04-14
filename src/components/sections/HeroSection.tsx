@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import DataViz3D from '@/components/DataViz3D';
+import EnhancedParticleNetwork from '@/components/EnhancedParticleNetwork';
 import { useTranslation } from '@/context/TranslationContext';
 
 interface HeroSectionProps {
@@ -11,6 +12,17 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }) => {
   const { t } = useTranslation();
+  
+  const skills = [
+    { name: 'Python', category: 'Languages', proficiency: 90, color: '#1EAEDB' },
+    { name: 'SQL', category: 'Languages', proficiency: 85, color: '#8B5CF6' },
+    { name: 'Java', category: 'Languages', proficiency: 88, color: '#D946EF' },
+    { name: 'React', category: 'Frontend', proficiency: 87, color: '#F97316' },
+    { name: 'AWS', category: 'Cloud', proficiency: 88, color: '#10B981' },
+    { name: 'Snowflake', category: 'Big Data', proficiency: 92, color: '#EC4899' },
+    { name: 'Databricks', category: 'Big Data', proficiency: 89, color: '#0EA5E9' },
+    { name: 'LLMs', category: 'AI', proficiency: 88, color: '#F59E0B' }
+  ];
   
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
@@ -48,7 +60,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
           </div>
         </div>
         <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative backdrop-blur-sm bg-black/30 rounded-xl border border-white/5 p-2">
-          <DataViz3D className="animate-float" />
+          <div className="w-full h-full relative overflow-hidden rounded-lg">
+            <EnhancedParticleNetwork 
+              id="hero-particles" 
+              className="animate-float" 
+              skills={skills} 
+            />
+          </div>
         </div>
       </div>
       

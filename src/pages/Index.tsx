@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Header from '@/components/Header';
-import ParticleNetwork from '@/components/ParticleNetwork';
+import EnhancedParticleNetwork from '@/components/EnhancedParticleNetwork';
 import ScrollProgressIndicator from '@/components/ScrollProgressIndicator';
 import HeroSection from '@/components/sections/HeroSection';
 import JourneySection from '@/components/sections/JourneySection';
@@ -44,6 +44,21 @@ const Index = () => {
     }, 300); // Delay for better reliability
   };
   
+  const backgroundSkills = [
+    { name: 'Data Engineering', category: 'Core', proficiency: 95, color: '#1EAEDB' },
+    { name: 'Machine Learning', category: 'AI', proficiency: 90, color: '#8B5CF6' },
+    { name: 'Cloud Architecture', category: 'Infrastructure', proficiency: 88, color: '#D946EF' },
+    { name: 'Business Intelligence', category: 'Analytics', proficiency: 92, color: '#F97316' },
+    { name: 'Big Data', category: 'Data', proficiency: 94, color: '#10B981' },
+    { name: 'LLMs', category: 'AI', proficiency: 85, color: '#EC4899' },
+    { name: 'Python', category: 'Languages', proficiency: 93, color: '#0EA5E9' },
+    { name: 'SQL', category: 'Languages', proficiency: 96, color: '#F59E0B' },
+    { name: 'Data Visualization', category: 'Analytics', proficiency: 89, color: '#1EAEDB' },
+    { name: 'Data Modeling', category: 'Data', proficiency: 91, color: '#8B5CF6' },
+    { name: 'ETL', category: 'Data', proficiency: 94, color: '#D946EF' },
+    { name: 'API Development', category: 'Development', proficiency: 87, color: '#F97316' }
+  ];
+  
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const blob = document.getElementById('mouse-blob');
@@ -66,8 +81,8 @@ const Index = () => {
       {/* Scroll Progress Indicator */}
       <ScrollProgressIndicator />
       
-      {/* Particle network background */}
-      <ParticleNetwork />
+      {/* Enhanced Particle network background */}
+      <EnhancedParticleNetwork id="background-particles" skills={backgroundSkills} />
       
       {/* Mouse blob effect - smaller and more responsive */}
       <div 
