@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Briefcase, Building } from 'lucide-react';
 import { useTranslation } from '@/context/TranslationContext';
@@ -46,7 +45,7 @@ const ExperienceSection: React.FC = () => {
             role: "Pasante",
             company: "HomeOMattic Service Pvt Ltd",
             period: "Ene 2019–Ene 2020",
-            summary: "Desarrollé clasificadores de aprendizaje automático para la detección de fraudes y construí algoritmos de detección de anomalías no supervisados que redujeron los falsos positivos y las auditorías manuales. Creé flujos de trabajo automatizados de entrenamiento de modelos y paneles de visualización, mejorando la eficiencia operativa y la precisión de datos para el análisis de riesgos."
+            summary: "Desarrollé clasificadores de aprendizaje automático para la detección de fraudes y construí algoritmos de detección de anomalías no supervisadas que redujeron los falsos positivos y las auditorías manuales. Creé flujos de trabajo automatizados de entrenamiento de modelos y paneles de visualización, mejorando la eficiencia operativa y la precisión de datos para el análisis de riesgos."
           }
         ];
       case 'fr':
@@ -79,7 +78,7 @@ const ExperienceSection: React.FC = () => {
             role: "Stagiaire",
             company: "HomeOMattic Service Pvt Ltd",
             period: "Jan 2019–Jan 2020",
-            summary: "J'ai développé des classificateurs d'apprentissage automatique pour la détection de fraudes et construit des algorithmes de détection d'anomalies non supervisés qui ont réduit les faux positifs et les audits manuels. J'ai créé des flux de travail automatisés de formation de modèles et des tableaux de bord de visualisation, améliorant l'efficacité opérationnelle et la précision des données pour l'analyse des risques."
+            summary: "J'ai développé des classificateurs d'apprentissage automatique pour la détection de fraudes et construi des algorithmes de détection d'anomalies non supervisées qui ont réduit les faux positifs et les audits manuels. J'ai créé des flux de travail automatisés de formation de modèles et des tableaux de bord de visualisation, améliorant l'efficacité opérationnelle et la précision des données pour l'analyse des risques."
           }
         ];
       case 'de':

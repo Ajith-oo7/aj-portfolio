@@ -16,9 +16,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/context/TranslationContext';
 
 const SkillsSection: React.FC = () => {
@@ -108,26 +106,13 @@ const SkillsSection: React.FC = () => {
               <Separator className="mb-4 bg-white/10" />
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIdx) => (
-                  <TooltipProvider key={skillIdx} delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Badge 
-                          variant="outline" 
-                          className="bg-black/60 text-gray-300 border-white/10 py-1.5 px-3 text-xs cursor-help"
-                        >
-                          {skill}
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        sideOffset={5}
-                        className="bg-black/90 border-neon-purple/50 z-50"
-                      >
-                        <div className="text-xs">
-                          <span className="font-bold">{skill}</span>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Badge 
+                    key={skillIdx} 
+                    variant="outline" 
+                    className="bg-black/60 text-gray-300 border-white/10 py-1.5 px-3 text-xs"
+                  >
+                    {skill}
+                  </Badge>
                 ))}
               </div>
             </CardContent>
