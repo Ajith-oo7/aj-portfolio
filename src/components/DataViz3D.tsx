@@ -193,7 +193,7 @@ interface DataNetworkProps {
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
   nodeCount = 28,
-  connections = 25, // Reduced from 45 to 25
+  connections = 30, // Adjusted for better connectivity
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -239,20 +239,20 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const edges: EdgeProps[] = [];
   
-  // Connect nodes in a ring around the globe - only adjacent nodes
-  for (let i = 0; i < nodes.length; i += 2) { // Skip every other node to reduce density
-    const nextIndex = (i + 2) % nodes.length;
+  // Connect nodes in a continuous ring around the globe
+  for (let i = 0; i < nodes.length; i++) {
+    const nextIndex = (i + 1) % nodes.length;
     
     edges.push({
       start: nodes[i].position,
       end: nodes[nextIndex].position,
       color: nodes[i].color,
-      width: 0.02 + Math.random() * 0.02, // Thinner lines
+      width: 0.02 + Math.random() * 0.01, // Thin but visible lines
       speed: 0.5 + Math.random() * 1.5
     });
   }
   
-  // Connect similar technology nodes - but be more selective
+  // Connect similar technology nodes with improved organization
   const techGroups = {
     'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake'],
     'cloud': ['AWS', 'Docker', 'Kubernetes'],
@@ -265,32 +265,61 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     return nodes.findIndex(node => node.label === label);
   };
   
-  // Connect within groups but with fewer connections
+  // Connect within groups
   Object.values(techGroups).forEach(group => {
-    // Instead of connecting every node to every other node, just connect them in sequence
-    for (let i = 0; i < group.length - 1; i++) {
+    // Connect in a circular pattern within each group
+    for (let i = 0; i < group.length; i++) {
       const startIdx = findNodeByLabel(group[i]);
-      const endIdx = findNodeByLabel(group[i + 1]);
+      const endIdx = findNodeByLabel(group[(i + 1) % group.length]);
       
       if (startIdx !== -1 && endIdx !== -1) {
         edges.push({
           start: nodes[startIdx].position,
           end: nodes[endIdx].position,
           color: nodes[startIdx].color,
-          width: 0.01 + Math.random() * 0.01, // Even thinner lines
+          width: 0.015, // Consistent width for group connections
           speed: 0.5 + Math.random() * 1.5
         });
       }
     }
   });
   
-  // Add a few cross-discipline connections, but far fewer than before
-  const remainingConnections = Math.min(10, connections - edges.length); // Cap at 10 additional connections
-  for (let i = 0; i < remainingConnections; i++) {
+  // Add a few strategic cross-discipline connections
+  const remainingConnections = Math.min(15, connections - edges.length);
+  
+  // Connect some important cross-discipline nodes
+  const crossConnections = [
+    ['Python', 'ML'],
+    ['AWS', 'Docker'],
+    ['React', 'TypeScript'],
+    ['Data', 'SQL'],
+    ['TensorFlow', 'PyTorch'],
+  ];
+  
+  crossConnections.forEach(([start, end]) => {
+    const startIdx = findNodeByLabel(start);
+    const endIdx = findNodeByLabel(end);
+    
+    if (startIdx !== -1 && endIdx !== -1) {
+      edges.push({
+        start: nodes[startIdx].position,
+        end: nodes[endIdx].position,
+        color: nodes[startIdx].color,
+        width: 0.015,
+        speed: 0.5 + Math.random() * 1.5
+      });
+    }
+  });
+  
+  // Add a few random connections to fill gaps
+  for (let i = 0; i < remainingConnections - crossConnections.length; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
     
-    while (endIndex === startIndex) {
+    // Avoid self-connections
+    while (endIndex === startIndex || 
+           // Avoid adding connections that are too close on the sphere
+           Math.abs(endIndex - startIndex) < 3) {
       endIndex = Math.floor(Math.random() * nodes.length);
     }
     
@@ -298,7 +327,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       start: nodes[startIndex].position,
       end: nodes[endIndex].position,
       color: nodes[startIndex].color,
-      width: 0.01, // Fixed thin width
+      width: 0.012, // Slightly thinner for random connections
       speed: 0.5 + Math.random() * 1.5
     });
   }
@@ -328,11 +357,12 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
         />
       </mesh>
       
-      {nodes.map((node, idx) => (
-        <DataNode key={`node-${idx}`} {...node} />
-      ))}
       {edges.map((edge, idx) => (
         <DataEdge key={`edge-${idx}`} {...edge} />
+      ))}
+      
+      {nodes.map((node, idx) => (
+        <DataNode key={`node-${idx}`} {...node} />
       ))}
       
       <Sparkles 
