@@ -1,7 +1,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, Trail, useTrail, Float, Sparkles, Environment as DreiEnvironment } from '@react-three/drei';
+import { OrbitControls, Text, Float, Sparkles, Environment as DreiEnvironment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface NodeProps {
@@ -150,21 +150,52 @@ const DataEdge: React.FC<EdgeProps> = ({
     new THREE.Vector3(...end)
   ];
   
-  const curve = new THREE.CatmullRomCurve3([
+  // Create arc-like curves that follow the globe's surface
+  const midPoint = new THREE.Vector3().addVectors(
     new THREE.Vector3(...start),
-    new THREE.Vector3(
-      (start[0] + end[0]) / 2 + (Math.random() - 0.5) * 0.5,
-      (start[1] + end[1]) / 2 + (Math.random() - 0.5) * 0.5,
-      (start[2] + end[2]) / 2 + (Math.random() - 0.5) * 0.5
-    ),
     new THREE.Vector3(...end)
-  ]);
+  ).multiplyScalar(0.5);
+  
+  // Push the midpoint out to follow the globe's curvature
+  const midPointLength = midPoint.length();
+  midPoint.normalize().multiplyScalar(2.8 + Math.random() * 0.2);
+  
+  const curve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(...start),
+    midPoint,
+    new THREE.Vector3(...end)
+  );
   
   const tubeGeometry = new THREE.TubeGeometry(curve, 20, width, 8, false);
   
   return (
     <mesh geometry={tubeGeometry}>
       <primitive object={shaderMaterial} attach="material" />
+    </mesh>
+  );
+};
+
+// Globe base component
+const GlobeBase = () => {
+  const globeRef = useRef<THREE.Mesh>(null);
+  
+  useFrame(({ clock }) => {
+    if (globeRef.current) {
+      globeRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+    }
+  });
+  
+  return (
+    <mesh ref={globeRef} position={[0, 0, 0]}>
+      <sphereGeometry args={[2.8, 64, 64]} />
+      <meshPhongMaterial 
+        color="#070c20" 
+        transparent={true}
+        opacity={0.3}
+        emissive="#1a2b4a"
+        emissiveIntensity={0.5}
+        wireframe={true}
+      />
     </mesh>
   );
 };
@@ -176,8 +207,8 @@ interface DataNetworkProps {
 }
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
-  nodeCount = 22,
-  connections = 35,
+  nodeCount = 28,
+  connections = 45,
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -189,26 +220,32 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 
     'Tableau', 'ML', 'Data', 'dbt', 'Snowflake',
     'Docker', 'Kubernetes', 'TensorFlow', 'PyTorch', 
-    'React', 'TypeScript', 'NextJS', 'Supabase'
+    'React', 'TypeScript', 'NextJS', 'Supabase',
+    'Git', 'Jenkins', 'Terraform', 'MongoDB', 'Grafana',
+    'Prometheus'
   ];
   
+  // Place nodes on the globe surface
   for (let i = 0; i < nodeCount; i++) {
-    const phi = Math.acos(-1 + (2 * i) / nodeCount);
-    const theta = Math.sqrt(nodeCount * Math.PI) * phi;
+    // Create a more even distribution of points on a sphere (Fibonacci sphere)
+    const phi = Math.acos(1 - 2 * (i + 0.5) / nodeCount);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
     
-    const radius = 2.5 + Math.sin(i * 5) * 0.3;
+    // Use a fixed radius for the globe
+    const radius = 3;
     
+    // Convert spherical to Cartesian coordinates
     const x = radius * Math.sin(phi) * Math.cos(theta);
     const y = radius * Math.sin(phi) * Math.sin(theta);
     const z = radius * Math.cos(phi);
     
-    const colors = ['#1EAEDB', '#8B5CF6', '#D946EF', '#F97316', '#10B981', '#EC4899'];
+    const colors = ['#1EAEDB', '#8B5CF6', '#D946EF', '#F97316', '#10B981', '#EC4899', '#0EA5E9', '#F59E0B'];
     const color = colors[Math.floor(Math.random() * colors.length)];
     
     nodes.push({
       position: [x, y, z],
       color,
-      size: 0.15 + Math.random() * 0.2,
+      size: 0.12 + Math.random() * 0.15,
       label: skills[i % skills.length],
       pulse: Math.random() > 0.3,
       onClick: () => setActiveNode(activeNode === i ? null : i)
@@ -217,7 +254,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const edges: EdgeProps[] = [];
   
-  // Connect nodes in a ring
+  // Connect nodes in a ring around the globe
   for (let i = 0; i < nodes.length; i++) {
     const nextIndex = (i + 1) % nodes.length;
     
@@ -230,16 +267,16 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     });
   }
   
-  // Add strategic connections (not just random)
   // Connect similar technology nodes
   const techGroups = {
-    'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake', 'NoSQL'],
-    'cloud': ['AWS', 'Docker', 'Kubernetes'],
+    'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake', 'NoSQL', 'MongoDB'],
+    'cloud': ['AWS', 'Docker', 'Kubernetes', 'Terraform'],
     'streaming': ['Kafka', 'Spark'],
     'ml': ['ML', 'TensorFlow', 'PyTorch'],
     'frontend': ['React', 'TypeScript', 'NextJS'],
-    'orchestration': ['Airflow', 'Hadoop'],
-    'visualization': ['Tableau']
+    'orchestration': ['Airflow', 'Hadoop', 'Jenkins'],
+    'visualization': ['Tableau', 'Grafana'],
+    'monitoring': ['Prometheus', 'Grafana']
   };
   
   // Find nodes by label
@@ -288,15 +325,29 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   useFrame((state) => {
     if (groupRef.current && autoRotate) {
-      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
+      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
       
-      groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.05;
-      groupRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.03;
+      // Add a slight tilt animation
+      groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.05;
+      groupRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.08) * 0.03;
     }
   });
   
   return (
     <group ref={groupRef}>
+      <GlobeBase />
+      
+      {/* Create atmospheric glow */}
+      <mesh>
+        <sphereGeometry args={[3.2, 32, 32]} />
+        <meshPhongMaterial 
+          color="#4a88e5"
+          transparent={true}
+          opacity={0.03}
+          side={THREE.BackSide}
+        />
+      </mesh>
+      
       {nodes.map((node, idx) => (
         <DataNode key={`node-${idx}`} {...node} />
       ))}
@@ -305,8 +356,8 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       ))}
       
       <Sparkles 
-        count={100} 
-        scale={[5, 5, 5]} 
+        count={200} 
+        scale={[6, 6, 6]} 
         size={0.2} 
         speed={0.3} 
         color="#ffffff" 
@@ -348,7 +399,7 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={`w-full h-full ${className || ''}`}>
       <Canvas 
-        camera={{ position: [0, 0, 6], fov: 45 }}
+        camera={{ position: [0, 0, 8], fov: 45 }}
         gl={{ 
           antialias: true,
           powerPreference: 'high-performance',
@@ -375,9 +426,9 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
             rotateSpeed={0.5}
             zoomSpeed={0.8}
             minDistance={4}
-            maxDistance={10}
-            minPolarAngle={Math.PI / 3}
-            maxPolarAngle={Math.PI / 1.5}
+            maxDistance={12}
+            minPolarAngle={Math.PI / 4}
+            maxPolarAngle={3 * Math.PI / 4}
           />
         </React.Suspense>
       </Canvas>
