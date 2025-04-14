@@ -160,7 +160,7 @@ const GlobeBase = () => {
         opacity={0.3}
         emissive="#1a2b4a"
         emissiveIntensity={0.5}
-        wireframe={true}
+        wireframe={false}
       />
     </mesh>
   );
@@ -193,7 +193,7 @@ interface DataNetworkProps {
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
   nodeCount = 28,
-  connections = 45,
+  connections = 25, // Reduced from 45 to 25
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -210,7 +210,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     'Prometheus'
   ];
   
-  // Place nodes on the globe surface
+  // Place nodes on the globe surface with consistent spacing
   for (let i = 0; i < nodeCount; i++) {
     // Create a more even distribution of points on a sphere (Fibonacci sphere)
     const phi = Math.acos(1 - 2 * (i + 0.5) / nodeCount);
@@ -232,36 +232,32 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       color,
       size: 0.12 + Math.random() * 0.15,
       label: skills[i % skills.length],
-      pulse: Math.random() > 0.3,
+      pulse: Math.random() > 0.5, // Reduced pulsing nodes
       onClick: () => setActiveNode(activeNode === i ? null : i)
     });
   }
   
   const edges: EdgeProps[] = [];
   
-  // Connect nodes in a ring around the globe
-  for (let i = 0; i < nodes.length; i++) {
-    const nextIndex = (i + 1) % nodes.length;
+  // Connect nodes in a ring around the globe - only adjacent nodes
+  for (let i = 0; i < nodes.length; i += 2) { // Skip every other node to reduce density
+    const nextIndex = (i + 2) % nodes.length;
     
     edges.push({
       start: nodes[i].position,
       end: nodes[nextIndex].position,
       color: nodes[i].color,
-      width: 0.02 + Math.random() * 0.03,
+      width: 0.02 + Math.random() * 0.02, // Thinner lines
       speed: 0.5 + Math.random() * 1.5
     });
   }
   
-  // Connect similar technology nodes
+  // Connect similar technology nodes - but be more selective
   const techGroups = {
-    'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake', 'NoSQL', 'MongoDB'],
-    'cloud': ['AWS', 'Docker', 'Kubernetes', 'Terraform'],
-    'streaming': ['Kafka', 'Spark'],
+    'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake'],
+    'cloud': ['AWS', 'Docker', 'Kubernetes'],
     'ml': ['ML', 'TensorFlow', 'PyTorch'],
     'frontend': ['React', 'TypeScript', 'NextJS'],
-    'orchestration': ['Airflow', 'Hadoop', 'Jenkins'],
-    'visualization': ['Tableau', 'Grafana'],
-    'monitoring': ['Prometheus', 'Grafana']
   };
   
   // Find nodes by label
@@ -269,28 +265,27 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     return nodes.findIndex(node => node.label === label);
   };
   
-  // Connect within groups
+  // Connect within groups but with fewer connections
   Object.values(techGroups).forEach(group => {
-    for (let i = 0; i < group.length; i++) {
-      for (let j = i + 1; j < group.length; j++) {
-        const startIdx = findNodeByLabel(group[i]);
-        const endIdx = findNodeByLabel(group[j]);
-        
-        if (startIdx !== -1 && endIdx !== -1) {
-          edges.push({
-            start: nodes[startIdx].position,
-            end: nodes[endIdx].position,
-            color: nodes[startIdx].color,
-            width: 0.01 + Math.random() * 0.02,
-            speed: 0.5 + Math.random() * 1.5
-          });
-        }
+    // Instead of connecting every node to every other node, just connect them in sequence
+    for (let i = 0; i < group.length - 1; i++) {
+      const startIdx = findNodeByLabel(group[i]);
+      const endIdx = findNodeByLabel(group[i + 1]);
+      
+      if (startIdx !== -1 && endIdx !== -1) {
+        edges.push({
+          start: nodes[startIdx].position,
+          end: nodes[endIdx].position,
+          color: nodes[startIdx].color,
+          width: 0.01 + Math.random() * 0.01, // Even thinner lines
+          speed: 0.5 + Math.random() * 1.5
+        });
       }
     }
   });
   
-  // Add some random cross-discipline connections
-  const remainingConnections = connections - edges.length;
+  // Add a few cross-discipline connections, but far fewer than before
+  const remainingConnections = Math.min(10, connections - edges.length); // Cap at 10 additional connections
   for (let i = 0; i < remainingConnections; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
@@ -303,7 +298,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       start: nodes[startIndex].position,
       end: nodes[endIndex].position,
       color: nodes[startIndex].color,
-      width: 0.01 + Math.random() * 0.02,
+      width: 0.01, // Fixed thin width
       speed: 0.5 + Math.random() * 1.5
     });
   }
