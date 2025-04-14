@@ -10,8 +10,8 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  // Base path - different for GitHub Pages vs Lovable deployment
-  base: process.env.GITHUB_PAGES === "true" ? "/aj-portfolio/" : "/",
+  // Base path - use root path for Lovable deployment
+  base: "/",
   plugins: [
     react(),
     mode === 'development' &&
