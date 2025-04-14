@@ -18,17 +18,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
       <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center z-10">
         <div className="w-full md:w-1/2 mb-10 md:mb-0 relative z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-white">{t('hero.greeting')} </span>
+            <span className="text-foreground">{t('hero.greeting')} </span>
             <span className="text-gradient text-glow">{t('hero.name')}</span>
           </h1>
           <div className="h-1 w-24 bg-neon-blue mb-6"></div>
-          <h2 className="text-xl md:text-2xl text-gray-300 mb-6">
+          <h2 className="text-xl md:text-2xl text-foreground/80 mb-6">
             {t('hero.title')}
           </h2>
-          <p className="text-gray-400 max-w-lg mb-8">
+          <p className="text-foreground/70 max-w-lg mb-8">
             {t('hero.description')}
           </p>
-          <p className="text-gray-300 mb-6">
+          <p className="text-foreground/80 mb-6">
             {t('hero.collaboration')}
           </p>
           <div className="flex flex-wrap gap-4">
@@ -41,20 +41,20 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
             <Button 
               onClick={() => onScroll('contact')} 
               variant="outline" 
-              className="border-white/20 hover:border-white/50 text-white"
+              className="border-white/20 hover:border-white/50 text-foreground"
             >
               {t('hero.getInTouch')}
             </Button>
           </div>
         </div>
-        <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative backdrop-blur-sm bg-black/30 rounded-xl border border-white/5 p-2">
+        <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative neo-blur rounded-xl p-2">
           <DataViz3D className="animate-float" />
         </div>
       </div>
       
       <button 
         onClick={onScrollToContent}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white opacity-60 hover:opacity-100 transition-all duration-300 animate-bounce"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-foreground opacity-60 hover:opacity-100 transition-all duration-300 animate-bounce"
         aria-label="Scroll down"
       >
         <ArrowDown size={24} />
