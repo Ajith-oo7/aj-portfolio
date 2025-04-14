@@ -16,7 +16,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Send, Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -55,47 +54,8 @@ const ContactForm: React.FC = () => {
     try {
       console.log("Submitting form data:", data);
       
-      // First, save the contact submission to the database
-      const { error: dbError } = await supabase
-        .from('contact_submissions')
-        .insert({
-          name: data.name,
-          email: data.email,
-          subject: data.subject,
-          message: data.message
-        });
-      
-      if (dbError) {
-        console.error('Database submission failed:', dbError);
-        throw new Error(dbError.message);
-      }
-      
-      // Then, call the Supabase Edge Function to send the email
-      const { data: responseData, error } = await supabase.functions.invoke('send-email', {
-        body: {
-          name: data.name,
-          email: data.email,
-          subject: data.subject,
-          message: data.message
-        }
-      });
-      
-      console.log("Response from edge function:", { responseData, error });
-      
-      if (error) {
-        console.error('Email sending failed:', error);
-        // We don't throw here because the contact was already saved to DB
-        toast({
-          title: "Message saved, but email notification failed",
-          description: "We've received your message, but there was an issue sending the email notification.",
-          variant: "default",
-          duration: 5000,
-        });
-        form.reset();
-        return;
-      }
-      
-      console.log('Email sent successfully:', responseData);
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
         title: "Message sent!",
