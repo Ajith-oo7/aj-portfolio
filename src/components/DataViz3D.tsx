@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Float, Sparkles, Environment as DreiEnvironment } from '@react-three/drei';
@@ -15,7 +16,7 @@ interface NodeProps {
 const DataNode: React.FC<NodeProps> = ({ 
   position, 
   size = 0.3, 
-  color = '#8E9196', 
+  color = '#1EAEDB', 
   label, 
   pulse = false,
   onClick 
@@ -72,7 +73,6 @@ const DataNode: React.FC<NodeProps> = ({
           outlineWidth={0.004}
           outlineColor="#1A1F2C"
           maxWidth={0.8}
-          font="/fonts/Inter-Medium.woff"
         >
           {label}
         </Text>
@@ -86,26 +86,26 @@ interface EdgeProps {
   end: [number, number, number];
   color?: string;
   width?: number;
-  speed?: number;
 }
 
 const DataEdge: React.FC<EdgeProps> = ({ 
   start, 
   end, 
-  color = '#8E9196',
-  width = 0.02,
-  speed = 1
+  color = '#1EAEDB',
+  width = 0.02
 }) => {
   const points = [
     new THREE.Vector3(...start),
     new THREE.Vector3(...end)
   ];
   
+  // Create a curve between the points with a slight bend
   const midPoint = new THREE.Vector3().addVectors(
     new THREE.Vector3(...start),
     new THREE.Vector3(...end)
   ).multiplyScalar(0.5);
   
+  // Push the midpoint slightly away from the center
   midPoint.normalize().multiplyScalar(2.8 + Math.random() * 0.1);
   
   const curve = new THREE.QuadraticBezierCurve3(
@@ -151,6 +151,7 @@ const GlobeBase = () => {
   );
 };
 
+// This ensures OrbitControls accesses a valid camera and renderer
 const ControlsWrapper = () => {
   const { camera, gl } = useThree();
   return (
@@ -177,8 +178,8 @@ interface DataNetworkProps {
 }
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
-  nodeCount = 20,
-  connections = 30,
+  nodeCount = 12,  // Reduced for simplicity
+  connections = 15, // Reduced for a cleaner look
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -186,12 +187,13 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const nodes: NodeProps[] = [];
   const skills = [
-    'SQL', 'Python', 'AWS', 'Data', 'ML', 
-    'React', 'Cloud', 'API', 'Docker', 'Git',
-    'ETL', 'NoSQL', 'Tableau', 'Spark', 'DevOps',
-    'TypeScript', 'Snowflake', 'Analytics', 'UI', 'UX'
+    'SQL', 'Python', 'AWS', 'Data', 
+    'React', 'Cloud', 'API', 
+    'ETL', 'NoSQL', 'Tableau', 
+    'TypeScript', 'Analytics'
   ];
   
+  // Create nodes in a more structured, evenly distributed pattern
   for (let i = 0; i < nodeCount; i++) {
     const phi = Math.acos(1 - 2 * (i + 0.5) / nodeCount);
     const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
@@ -202,13 +204,14 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     const y = radius * Math.sin(phi) * Math.sin(theta);
     const z = radius * Math.cos(phi);
     
-    const colors = ['#8E9196', '#9BA4B4', '#B8C0CC', '#A0AECD'];
+    // More professional color palette
+    const colors = ['#1EAEDB', '#8B5CF6', '#D946EF', '#5DA3FA'];
     const color = colors[Math.floor(Math.random() * colors.length)];
     
     nodes.push({
       position: [x, y, z],
       color,
-      size: 0.08 + Math.random() * 0.08,
+      size: 0.1 + Math.random() * 0.05, // Smaller, more consistent nodes
       label: skills[i % skills.length],
       pulse: Math.random() > 0.7,
       onClick: () => setActiveNode(activeNode === i ? null : i)
@@ -217,6 +220,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const edges: EdgeProps[] = [];
   
+  // Create a backbone of connections along the circle
   for (let i = 0; i < nodes.length; i++) {
     const nextIndex = (i + 1) % nodes.length;
     
@@ -224,15 +228,16 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       start: nodes[i].position,
       end: nodes[nextIndex].position,
       color: '#8E9196',
-      width: 0.01 + Math.random() * 0.01,
-      speed: 0.3 + Math.random() * 0.7
+      width: 0.01
     });
   }
   
+  // Add a few strategic cross-connections
   for (let i = 0; i < connections/2; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
     
+    // Avoid adjacent or identical connections
     while (endIndex === startIndex || 
            endIndex === (startIndex + 1) % nodes.length || 
            endIndex === (startIndex - 1 + nodes.length) % nodes.length) {
@@ -243,8 +248,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       start: nodes[startIndex].position,
       end: nodes[endIndex].position,
       color: '#8E9196',
-      width: 0.01,
-      speed: 0.3
+      width: 0.008 // Thinner connections for a cleaner look
     });
   }
   
@@ -252,6 +256,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     if (groupRef.current && autoRotate) {
       groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.03;
       
+      // Subtle tilt animation
       groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.05) * 0.03;
     }
   });
@@ -260,6 +265,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     <group ref={groupRef}>
       <GlobeBase />
       
+      {/* Background ambient sphere */}
       <mesh>
         <sphereGeometry args={[3.2, 32, 32]} />
         <meshPhongMaterial 
@@ -277,8 +283,9 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
         <DataEdge key={`edge-${idx}`} {...edge} />
       ))}
       
+      {/* Reduced number of sparkles for cleaner look */}
       <Sparkles 
-        count={80} 
+        count={40} 
         scale={[6, 6, 6]} 
         size={0.1} 
         speed={0.2} 
@@ -292,8 +299,9 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
 const CustomEnvironment = () => {
   return (
     <>
-      <fog attach="fog" args={['#000000', 6, 20]} />
-      <ambientLight intensity={0.2} />
+      {/* Dark fog that doesn't completely black out the scene */}
+      <fog attach="fog" args={['#000000', 10, 20]} />
+      <ambientLight intensity={0.3} />
       <pointLight position={[10, 10, 10]} intensity={0.8} />
       <pointLight position={[-10, -10, -10]} intensity={0.4} color="#F1F0FB" />
       <DreiEnvironment preset="city" background={false} />
@@ -328,7 +336,7 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
           logarithmicDepthBuffer: true,
         }}
         onCreated={({ gl }) => {
-          gl.setClearColor(new THREE.Color('#000000'), 0);
+          gl.setClearColor(new THREE.Color('#000000'), 0.1); // Slightly visible background
           gl.outputColorSpace = THREE.SRGBColorSpace;
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.0;
