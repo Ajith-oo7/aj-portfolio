@@ -53,6 +53,15 @@ jobs:
           echo "Contents of dist directory:"
           ls -la dist
 
+      - name: Create CNAME file if needed
+        run: |
+          # Uncomment and modify if you have a custom domain
+          # echo "your-custom-domain.com" > dist/CNAME
+
+      - name: Create .nojekyll file
+        run: |
+          touch dist/.nojekyll
+          
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:

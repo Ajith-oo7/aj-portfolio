@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  // Base path for GitHub Pages - dynamically set based on environment
+  // Base path for GitHub Pages - explicitly set to your repository name
   base: process.env.GITHUB_PAGES === "true" ? "/aj-portfolio/" : "/",
   plugins: [
     react(),
