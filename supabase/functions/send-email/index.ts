@@ -34,7 +34,7 @@ serve(async (req) => {
       hasPublicKey: !!publicKey
     });
 
-    if (!serviceId || !templateId || !userId) {
+    if (!serviceId || !templateId || !userId || !publicKey) {
       console.error("Missing EmailJS credentials in environment variables");
       return new Response(
         JSON.stringify({ error: "Server configuration error: Missing credentials" }),
