@@ -16,16 +16,28 @@ serve(async (req) => {
 
   try {
     const { name, email, subject, message } = await req.json() as EmailJSParams;
+    
+    // Log the request parameters to identify any issues
+    console.log("Request received with params:", { name, email, subject, message });
 
     // EmailJS credentials from Supabase secrets
     const serviceId = Deno.env.get("EMAILJS_SERVICE_ID") || "";
     const templateId = Deno.env.get("EMAILJS_TEMPLATE_ID") || "";
     const userId = Deno.env.get("EMAILJS_USER_ID") || "";
+    const publicKey = Deno.env.get("EMAILJS_PUBLIC_KEY") || "";
+
+    // Log the EmailJS credentials (without values for security)
+    console.log("Credentials check:", {
+      hasServiceId: !!serviceId,
+      hasTemplateId: !!templateId,
+      hasUserId: !!userId,
+      hasPublicKey: !!publicKey
+    });
 
     if (!serviceId || !templateId || !userId) {
       console.error("Missing EmailJS credentials in environment variables");
       return new Response(
-        JSON.stringify({ error: "Server configuration error" }),
+        JSON.stringify({ error: "Server configuration error: Missing credentials" }),
         { 
           status: 500, 
           headers: { 
@@ -44,24 +56,30 @@ serve(async (req) => {
       message: message
     };
 
-    // Send the email using EmailJS API
+    // Send the email using EmailJS API with updated payload structure
+    const emailJsPayload = {
+      service_id: serviceId,
+      template_id: templateId,
+      user_id: userId,
+      template_params: templateParams,
+      accessToken: publicKey, // Adding public key as accessToken for authentication
+    };
+
+    console.log("Sending request to EmailJS API");
     const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        service_id: serviceId,
-        template_id: templateId,
-        user_id: userId,
-        template_params: templateParams,
-      }),
+      body: JSON.stringify(emailJsPayload),
     });
 
+    const responseText = await response.text();
+    console.log("EmailJS API response status:", response.status);
+    console.log("EmailJS API response:", responseText);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("EmailJS API error:", errorText);
-      throw new Error(`EmailJS API error: ${errorText}`);
+      throw new Error(`EmailJS API error: ${responseText || response.statusText}`);
     }
 
     return new Response(
