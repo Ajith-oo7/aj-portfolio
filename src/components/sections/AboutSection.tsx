@@ -18,7 +18,7 @@ const AboutSection: React.FC = () => {
           <div className="w-full md:w-1/3">
             <div className="aspect-square overflow-hidden rounded-lg border-2 border-neon-blue/30 neon-border">
               <img 
-                src="/lovable-uploads/6f95a394-2f70-4adb-9882-a3a774b96785.png" 
+                src="/lovable-uploads/4ed1cf10-ba04-4a2d-9eb4-9d824c61232d.png" 
                 alt="Ajith Annavarapu" 
                 className="w-full h-full object-cover"
               />
