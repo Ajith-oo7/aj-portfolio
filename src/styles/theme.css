@@ -1,5 +1,5 @@
 
-/* Dark Mode (default) */
+/* Dark Theme (always enabled) */
 :root {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
@@ -29,36 +29,6 @@
   --neon-orange: #F97316;
 }
 
-/* Light Mode */
-.light-mode {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 217.2 91.2% 49.8%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --body-bg: #f5f5f5;
-  --text-color: #1a1a1a;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --neon-blue: #0073a8;
-  --neon-purple: #6939c2;
-  --neon-pink: #b621cf;
-  --neon-orange: #dd5c0d;
-}
-
 body {
   background-color: var(--body-bg);
   color: var(--text-color);
@@ -69,13 +39,7 @@ body {
   background-color: var(--card-bg);
 }
 
-.light-mode .neo-blur {
-  backdrop-filter: blur-md;
-  background-color: var(--card-bg);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-/* Utility classes for neon colors that adapt to theme */
+/* Utility classes for neon colors */
 .text-neon-blue {
   color: var(--neon-blue) !important;
 }
@@ -124,21 +88,20 @@ body {
   border-color: var(--neon-orange) !important;
 }
 
-/* Background adaptations */
-.light-mode #mouse-blob {
-  opacity: 0.2;
+/* Background effects */
+#particles-js canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 
-.light-mode #particles-js canvas {
-  opacity: 0.3;
-}
-
-.light-mode .bg-grid-pattern {
+.bg-grid-pattern {
   opacity: 0.1;
 }
 
-/* Text gradient adaptations */
-.light-mode .text-gradient {
+/* Text gradient */
+.text-gradient {
   background-image: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink));
   background-clip: text;
   color: transparent;

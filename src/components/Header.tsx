@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from '@/context/TranslationContext';
 
@@ -84,7 +83,6 @@ const Header: React.FC = () => {
             </a>
           ))}
           <div className="flex items-center space-x-3">
-            <ThemeToggle />
             <LanguageSwitcher />
             <Button 
               onClick={() => scrollToSection('contact')} 
@@ -96,7 +94,6 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="md:hidden flex items-center space-x-3">
-          <ThemeToggle />
           <LanguageSwitcher />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
