@@ -4,13 +4,16 @@ import ProjectCard from '@/components/ProjectCard';
 import ProjectDetailModal from '@/components/ProjectDetailModal';
 import SectionContainer from '../layout/SectionContainer';
 import { projectsData } from '@/data/projectsData';
+import { useTranslation } from '@/context/TranslationContext';
 
 const ProjectsSection: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <SectionContainer 
       id="projects" 
-      title="Featured Projects"
-      description="A selection of my work that showcases my skills and experience."
+      title={t('projects.title')}
+      description={t('projects.description')}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projectsData.map((project) => (
