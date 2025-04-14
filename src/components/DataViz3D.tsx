@@ -1,7 +1,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, Float, Sparkles, Environment as DreiEnvironment } from '@react-three/drei';
+import { OrbitControls, Text, Float, Sparkles, Environment as DreiEnvironment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface NodeProps {
@@ -16,7 +16,7 @@ interface NodeProps {
 const DataNode: React.FC<NodeProps> = ({ 
   position, 
   size = 0.3, 
-  color = '#333333', 
+  color = '#1EAEDB', 
   label, 
   pulse = false,
   onClick 
@@ -31,6 +31,9 @@ const DataNode: React.FC<NodeProps> = ({
       ref.current.scale.x = 0.85 + 0.15 * Math.sin(t * 2);
       ref.current.scale.y = 0.85 + 0.15 * Math.sin(t * 2 + 0.3);
       ref.current.scale.z = 0.85 + 0.15 * Math.sin(t * 2 + 0.6);
+      
+      ref.current.rotation.x = Math.sin(t * 0.5) * 0.2;
+      ref.current.rotation.z = Math.sin(t * 0.3) * 0.2;
     }
   });
   
@@ -40,27 +43,42 @@ const DataNode: React.FC<NodeProps> = ({
   };
   
   return (
-    <mesh
-      ref={ref}
+    <Float 
+      speed={pulse ? 2 : 1} 
+      rotationIntensity={0.2} 
+      floatIntensity={0.3}
       position={position}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-      onClick={handleClick}
-      scale={clicked ? 1.2 : 1}
     >
-      <sphereGeometry args={[size, 16, 16]} />
-      <meshStandardMaterial 
-        color={hovered ? '#ffffff' : color} 
-        emissive={color}
-        emissiveIntensity={hovered ? 1.5 : clicked ? 1.2 : 0.5}
-        roughness={0.4}
-        metalness={0.6}
-      />
-      {label && hovered && (
+      <mesh
+        ref={ref}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+        onClick={handleClick}
+        scale={clicked ? 1.2 : 1}
+      >
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshStandardMaterial 
+          color={hovered ? '#ffffff' : color} 
+          emissive={color}
+          emissiveIntensity={hovered ? 2.5 : clicked ? 1.8 : 1}
+          roughness={0.2}
+          metalness={0.8}
+        />
+        {hovered && (
+          <Sparkles 
+            count={20} 
+            scale={[2, 2, 2]} 
+            size={0.4} 
+            speed={0.3} 
+            color={color} 
+          />
+        )}
+      </mesh>
+      {label && (
         <Text
           position={[0, size + 0.1, 0]}
-          fontSize={0.08}
-          color="#ffffff"
+          fontSize={0.1}
+          color={hovered ? '#ffffff' : '#cccccc'}
           anchorX="center"
           anchorY="bottom"
           renderOrder={2}
@@ -71,7 +89,7 @@ const DataNode: React.FC<NodeProps> = ({
           {label}
         </Text>
       )}
-    </mesh>
+    </Float>
   );
 };
 
@@ -80,35 +98,84 @@ interface EdgeProps {
   end: [number, number, number];
   color?: string;
   width?: number;
+  speed?: number;
 }
 
-// Fixed DataEdge component to use THREE.Line properly
 const DataEdge: React.FC<EdgeProps> = ({ 
   start, 
   end, 
-  color = '#333333',
-  width = 0.01
+  color = '#1EAEDB',
+  width = 0.05,
+  speed = 1
 }) => {
-  // Create a geometry from points
+  const ref = useRef<THREE.Line>(null);
+  
+  const shaderMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      color: { value: new THREE.Color(color) },
+      time: { value: 0 },
+      width: { value: width }
+    },
+    vertexShader: `
+      uniform float time;
+      varying vec3 vPosition;
+      void main() {
+        vPosition = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 color;
+      uniform float time;
+      uniform float width;
+      varying vec3 vPosition;
+      void main() {
+        float intensity = 0.5 + 0.5 * sin(vPosition.x * 10.0 + time * 2.0);
+        vec3 glowColor = mix(color, vec3(1.0), 0.3 * intensity);
+        gl_FragColor = vec4(glowColor, 0.2 + 0.6 * intensity);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending
+  });
+  
+  useFrame((state) => {
+    if (shaderMaterial) {
+      shaderMaterial.uniforms.time.value = state.clock.getElapsedTime() * speed;
+    }
+  });
+  
   const points = [
     new THREE.Vector3(...start),
     new THREE.Vector3(...end)
   ];
   
-  // Create the line geometry
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+  // Create arc-like curves that follow the globe's surface
+  const midPoint = new THREE.Vector3().addVectors(
+    new THREE.Vector3(...start),
+    new THREE.Vector3(...end)
+  ).multiplyScalar(0.5);
   
-  // Use the mesh directly to avoid the "lov" error
+  // Push the midpoint out to follow the globe's curvature
+  const midPointLength = midPoint.length();
+  midPoint.normalize().multiplyScalar(2.8 + Math.random() * 0.2);
+  
+  const curve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(...start),
+    midPoint,
+    new THREE.Vector3(...end)
+  );
+  
+  const tubeGeometry = new THREE.TubeGeometry(curve, 20, width, 8, false);
+  
   return (
-    <group>
-      <mesh geometry={lineGeometry}>
-        <meshBasicMaterial color={color} transparent opacity={0.6} />
-      </mesh>
-    </group>
+    <mesh geometry={tubeGeometry}>
+      <primitive object={shaderMaterial} attach="material" />
+    </mesh>
   );
 };
 
-// Wireframe globe
+// Globe base component
 const GlobeBase = () => {
   const globeRef = useRef<THREE.Mesh>(null);
   
@@ -120,12 +187,14 @@ const GlobeBase = () => {
   
   return (
     <mesh ref={globeRef} position={[0, 0, 0]}>
-      <sphereGeometry args={[2.8, 32, 32]} />
-      <meshBasicMaterial 
-        color="#333333" 
+      <sphereGeometry args={[2.8, 64, 64]} />
+      <meshPhongMaterial 
+        color="#070c20" 
+        transparent={true}
+        opacity={0.3}
+        emissive="#1a2b4a"
+        emissiveIntensity={0.5}
         wireframe={true}
-        transparent
-        opacity={0.15}
       />
     </mesh>
   );
@@ -138,8 +207,8 @@ interface DataNetworkProps {
 }
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
-  nodeCount = 80,
-  connections = 120,
+  nodeCount = 28,
+  connections = 45,
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -147,79 +216,120 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const nodes: NodeProps[] = [];
   const skills = [
-    'SQL', 'Python', 'Spark', 'ETL', 'AWS', 'Hadoop', 'Kafka', 'Airflow', 
-    'NoSQL', 'Tableau', 'ML', 'Data', 'dbt', 'Snowflake', 'Docker', 
-    'Kubernetes', 'TensorFlow', 'PyTorch', 'React', 'TypeScript', 
-    'NextJS', 'Supabase', 'Git', 'Jenkins', 'Terraform', 'MongoDB', 
-    'Grafana', 'Prometheus', 'Redis', 'Go', 'Rust', 'Vue', 'Angular', 
-    'Django', 'Flask', 'FastAPI', 'Node.js', 'Express', 'Laravel', 
-    'Spring Boot'
+    'SQL', 'Python', 'Spark', 'ETL', 'AWS', 
+    'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 
+    'Tableau', 'ML', 'Data', 'dbt', 'Snowflake',
+    'Docker', 'Kubernetes', 'TensorFlow', 'PyTorch', 
+    'React', 'TypeScript', 'NextJS', 'Supabase',
+    'Git', 'Jenkins', 'Terraform', 'MongoDB', 'Grafana',
+    'Prometheus'
   ];
   
-  // Fibonacci sphere distribution for more even node placement
+  // Place nodes on the globe surface
   for (let i = 0; i < nodeCount; i++) {
-    // Golden ratio based point distribution on sphere
+    // Create a more even distribution of points on a sphere (Fibonacci sphere)
     const phi = Math.acos(1 - 2 * (i + 0.5) / nodeCount);
     const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
     
-    const radius = 2.8;
+    // Use a fixed radius for the globe
+    const radius = 3;
+    
+    // Convert spherical to Cartesian coordinates
     const x = radius * Math.sin(phi) * Math.cos(theta);
     const y = radius * Math.sin(phi) * Math.sin(theta);
     const z = radius * Math.cos(phi);
     
-    // Determine node size - vary sizes to match reference image
-    let size;
-    if (i % 15 === 0) {
-      size = 0.12; // Larger nodes
-    } else if (i % 5 === 0) {
-      size = 0.08; // Medium nodes
-    } else {
-      size = 0.04; // Small nodes
-    }
+    const colors = ['#1EAEDB', '#8B5CF6', '#D946EF', '#F97316', '#10B981', '#EC4899', '#0EA5E9', '#F59E0B'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
     
     nodes.push({
       position: [x, y, z],
-      color: '#333333',
-      size,
-      label: i < skills.length ? skills[i] : undefined,
-      pulse: false,
+      color,
+      size: 0.12 + Math.random() * 0.15,
+      label: skills[i % skills.length],
+      pulse: Math.random() > 0.3,
       onClick: () => setActiveNode(activeNode === i ? null : i)
     });
   }
   
   const edges: EdgeProps[] = [];
   
-  // Create connections between nodes
-  for (let i = 0; i < connections; i++) {
+  // Connect nodes in a ring around the globe
+  for (let i = 0; i < nodes.length; i++) {
+    const nextIndex = (i + 1) % nodes.length;
+    
+    edges.push({
+      start: nodes[i].position,
+      end: nodes[nextIndex].position,
+      color: nodes[i].color,
+      width: 0.02 + Math.random() * 0.03,
+      speed: 0.5 + Math.random() * 1.5
+    });
+  }
+  
+  // Connect similar technology nodes
+  const techGroups = {
+    'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake', 'NoSQL', 'MongoDB'],
+    'cloud': ['AWS', 'Docker', 'Kubernetes', 'Terraform'],
+    'streaming': ['Kafka', 'Spark'],
+    'ml': ['ML', 'TensorFlow', 'PyTorch'],
+    'frontend': ['React', 'TypeScript', 'NextJS'],
+    'orchestration': ['Airflow', 'Hadoop', 'Jenkins'],
+    'visualization': ['Tableau', 'Grafana'],
+    'monitoring': ['Prometheus', 'Grafana']
+  };
+  
+  // Find nodes by label
+  const findNodeByLabel = (label: string) => {
+    return nodes.findIndex(node => node.label === label);
+  };
+  
+  // Connect within groups
+  Object.values(techGroups).forEach(group => {
+    for (let i = 0; i < group.length; i++) {
+      for (let j = i + 1; j < group.length; j++) {
+        const startIdx = findNodeByLabel(group[i]);
+        const endIdx = findNodeByLabel(group[j]);
+        
+        if (startIdx !== -1 && endIdx !== -1) {
+          edges.push({
+            start: nodes[startIdx].position,
+            end: nodes[endIdx].position,
+            color: nodes[startIdx].color,
+            width: 0.01 + Math.random() * 0.02,
+            speed: 0.5 + Math.random() * 1.5
+          });
+        }
+      }
+    }
+  });
+  
+  // Add some random cross-discipline connections
+  const remainingConnections = connections - edges.length;
+  for (let i = 0; i < remainingConnections; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
     
-    // Avoid self-connections
     while (endIndex === startIndex) {
       endIndex = Math.floor(Math.random() * nodes.length);
     }
     
-    // Ensure we're not creating too many connections from a single node
-    const connectionsFromStart = edges.filter(
-      edge => 
-        edge.start[0] === nodes[startIndex].position[0] &&
-        edge.start[1] === nodes[startIndex].position[1] &&
-        edge.start[2] === nodes[startIndex].position[2]
-    ).length;
-    
-    if (connectionsFromStart < 5) {
-      edges.push({
-        start: nodes[startIndex].position,
-        end: nodes[endIndex].position,
-        color: '#333333',
-        width: 0.01
-      });
-    }
+    edges.push({
+      start: nodes[startIndex].position,
+      end: nodes[endIndex].position,
+      color: nodes[startIndex].color,
+      width: 0.01 + Math.random() * 0.02,
+      speed: 0.5 + Math.random() * 1.5
+    });
   }
   
   useFrame((state) => {
     if (groupRef.current && autoRotate) {
       groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+      
+      // Add a slight tilt animation
+      groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.05;
+      groupRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.08) * 0.03;
     }
   });
   
@@ -227,15 +337,32 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     <group ref={groupRef}>
       <GlobeBase />
       
-      {/* Render edges first so they appear behind nodes */}
+      {/* Create atmospheric glow */}
+      <mesh>
+        <sphereGeometry args={[3.2, 32, 32]} />
+        <meshPhongMaterial 
+          color="#4a88e5"
+          transparent={true}
+          opacity={0.03}
+          side={THREE.BackSide}
+        />
+      </mesh>
+      
+      {nodes.map((node, idx) => (
+        <DataNode key={`node-${idx}`} {...node} />
+      ))}
       {edges.map((edge, idx) => (
         <DataEdge key={`edge-${idx}`} {...edge} />
       ))}
       
-      {/* Then render nodes */}
-      {nodes.map((node, idx) => (
-        <DataNode key={`node-${idx}`} {...node} />
-      ))}
+      <Sparkles 
+        count={200} 
+        scale={[6, 6, 6]} 
+        size={0.2} 
+        speed={0.3} 
+        color="#ffffff" 
+        opacity={0.3}
+      />
     </group>
   );
 };
@@ -243,9 +370,11 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
 const CustomEnvironment = () => {
   return (
     <>
-      <ambientLight intensity={0.8} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} />
+      <fog attach="fog" args={['#000000', 5, 15]} />
+      <ambientLight intensity={0.3} />
+      <pointLight position={[10, 10, 10]} intensity={1.5} castShadow />
+      <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
+      <pointLight position={[5, -5, 5]} intensity={0.5} color="#F97316" />
       <DreiEnvironment preset="city" background={false} />
     </>
   );
@@ -278,26 +407,28 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
           logarithmicDepthBuffer: true,
         }}
         onCreated={({ gl }) => {
-          gl.setClearColor(new THREE.Color('#f5f5f5'), 1);
+          gl.setClearColor(new THREE.Color('#000000'), 0);
           gl.outputColorSpace = THREE.SRGBColorSpace;
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.2;
         }}
         onError={() => setHasError(true)}
+        shadows
       >
-        <color attach="background" args={['#f5f5f5']} />
+        <color attach="background" args={['#000000']} />
         <CustomEnvironment />
         <React.Suspense fallback={null}>
           <DataNetwork />
           <OrbitControls 
             enableZoom={true}
             enablePan={false}
-            autoRotate={true}
-            autoRotateSpeed={0.5}
+            autoRotate={false}
             rotateSpeed={0.5}
             zoomSpeed={0.8}
             minDistance={4}
             maxDistance={12}
+            minPolarAngle={Math.PI / 4}
+            maxPolarAngle={3 * Math.PI / 4}
           />
         </React.Suspense>
       </Canvas>
