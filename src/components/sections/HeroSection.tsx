@@ -3,6 +3,7 @@ import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import DataViz3D from '@/components/DataViz3D';
+import { useTranslation } from '@/context/TranslationContext';
 
 interface HeroSectionProps {
   onScroll: (sectionId: string) => void;
@@ -10,39 +11,39 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }) => {
+  const { t } = useTranslation();
+  
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
       <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center z-10">
         <div className="w-full md:w-1/2 mb-10 md:mb-0 relative z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-white">Hi, I'm </span>
-            <span className="text-gradient text-glow">Ajith Annavarapu</span>
+            <span className="text-white">{t('hero.greeting')} </span>
+            <span className="text-gradient text-glow">{t('hero.name')}</span>
           </h1>
           <div className="h-1 w-24 bg-neon-blue mb-6"></div>
           <h2 className="text-xl md:text-2xl text-gray-300 mb-6">
-            Data Engineer & Data Scientist
+            {t('hero.title')}
           </h2>
           <p className="text-gray-400 max-w-lg mb-8">
-            I transform raw data into meaningful insights that drive business decisions. 
-            With expertise in building robust data pipelines and scalable data systems, 
-            I help organizations harness the full potential of their data.
+            {t('hero.description')}
           </p>
           <p className="text-gray-300 mb-6">
-            I'm always open to new challenges and collaborations. If you're working on an interesting project that requires data expertise, A.I or even Vibe Coding. I'd love to hear about it!
+            {t('hero.collaboration')}
           </p>
           <div className="flex flex-wrap gap-4">
             <Button 
               className="bg-neon-blue hover:bg-neon-blue/80 text-white"
               onClick={() => onScroll('experience')}
             >
-              Explore My Work
+              {t('hero.exploreWork')}
             </Button>
             <Button 
               onClick={() => onScroll('contact')} 
               variant="outline" 
               className="border-white/20 hover:border-white/50 text-white"
             >
-              Get in Touch
+              {t('hero.getInTouch')}
             </Button>
           </div>
         </div>

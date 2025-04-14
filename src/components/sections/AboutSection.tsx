@@ -2,13 +2,16 @@
 import React from 'react';
 import { Mail, Github, Linkedin } from 'lucide-react';
 import SectionContainer from '../layout/SectionContainer';
+import { useTranslation } from '@/context/TranslationContext';
 
 const AboutSection: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <SectionContainer 
       id="about" 
-      title="About Me"
-      description="Beyond the code and data, here's a bit more about who I am."
+      title={t('sections.about.title')}
+      description={t('sections.about.description')}
     >
       <div className="neo-blur border border-white/10 rounded-lg p-8">
         <div className="flex flex-col md:flex-row gap-8">
@@ -48,30 +51,28 @@ const AboutSection: React.FC = () => {
           </div>
           
           <div className="w-full md:w-2/3">
-            <h3 className="text-xl font-bold text-white mb-4">Ajith Annavarapu</h3>
+            <h3 className="text-xl font-bold text-white mb-4">{t('about.title')}</h3>
             <p className="text-gray-300 mb-4">
-              I'm a passionate Data Engineer with a Master's degree in Data Science, dedicated to building 
-              robust and scalable data systems that transform raw data into valuable insights.
+              {t('about.bio1')}
             </p>
             <p className="text-gray-300 mb-4">
-              When I'm not immersed in data, you'll find me exploring new hiking trails, Vibe Coding, experimenting with cooking recipes, or diving into a good thriller movie. I believe in continuous learning and staying curious about the world around us.
+              {t('about.bio2')}
             </p>
             <p className="text-gray-300 mb-6">
-              I'm always open to new challenges and collaborations. If you're working on an interesting 
-              project that requires data expertise, I'd love to hear about it!
+              {t('about.bio3')}
             </p>
             
             <div className="space-y-4">
               <div className="flex items-center">
-                <div className="w-24 text-sm text-gray-400">Location:</div>
-                <div className="text-white">Irving, TX</div>
+                <div className="w-24 text-sm text-gray-400">{t('about.location')}</div>
+                <div className="text-white">{t('about.locationValue')}</div>
               </div>
               <div className="flex items-center">
-                <div className="w-24 text-sm text-gray-400">Education:</div>
-                <div className="text-white">M.S. in Data Science</div>
+                <div className="w-24 text-sm text-gray-400">{t('about.education')}</div>
+                <div className="text-white">{t('about.educationValue')}</div>
               </div>
               <div className="flex items-center">
-                <div className="w-24 text-sm text-gray-400">Email:</div>
+                <div className="w-24 text-sm text-gray-400">{t('about.email')}</div>
                 <a href="mailto:ajith.anna5599@gmail.com" className="text-neon-blue hover:underline">ajith.anna5599@gmail.com</a>
               </div>
             </div>

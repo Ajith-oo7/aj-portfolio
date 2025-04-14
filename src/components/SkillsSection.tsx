@@ -106,24 +106,29 @@ const SkillsSection: React.FC = () => {
             </CardHeader>
             <CardContent>
               <Separator className="mb-4 bg-white/10" />
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-4">
                 {category.skills.map((skill, skillIdx) => (
                   <TooltipProvider key={skillIdx} delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Badge 
-                          variant="outline" 
-                          className="bg-black/60 text-gray-300 border-white/10 py-1.5 px-3 text-xs cursor-help"
-                        >
-                          {skill}
-                        </Badge>
+                        <div className="group cursor-help">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-sm text-gray-300 group-hover:text-white transition-colors">{skill}</span>
+                            <span className="text-xs text-gray-400">{category.proficiency[skillIdx]}%</span>
+                          </div>
+                          <Progress
+                            value={category.proficiency[skillIdx]}
+                            className="h-1.5 bg-gray-800"
+                            indicatorClassName="bg-gradient-to-r from-neon-blue to-neon-purple"
+                          />
+                        </div>
                       </TooltipTrigger>
                       <TooltipContent 
                         sideOffset={5}
                         className="bg-black/90 border-neon-purple/50 z-50"
                       >
                         <div className="text-xs">
-                          <span className="font-bold">{skill}</span>
+                          <span className="font-bold">{skill}: {category.proficiency[skillIdx]}%</span>
                         </div>
                       </TooltipContent>
                     </Tooltip>
