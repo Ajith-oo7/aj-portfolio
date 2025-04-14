@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             <span className="text-white mr-2">Hi, I'm</span>
             <span className="text-gradient text-glow text-white">
-              {t('hero.title')}
+              {t('hero.name')}
             </span>
           </h1>
           <div className="h-1 w-24 bg-neon-blue mb-6"></div>

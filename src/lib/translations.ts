@@ -1,4 +1,3 @@
-
 // Define all supported languages
 export const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -58,7 +57,8 @@ export type TranslationKey =
   | 'contact.linkedin'
   | 'contact.github'
   | 'footer.rights'
-  | 'footer.builtWith';
+  | 'footer.builtWith'
+  | 'hero.name';
 
 // Translation dictionary type
 export type TranslationDictionary = {
@@ -116,7 +116,8 @@ export const translations: Record<string, TranslationDictionary> = {
     'contact.linkedin': 'LinkedIn',
     'contact.github': 'GitHub',
     'footer.rights': '© 2025 Ajith Annavarapu. All rights reserved.',
-    'footer.builtWith': 'Built with React, TailwindCSS, and Three.js'
+    'footer.builtWith': 'Built with React, TailwindCSS, and Three.js',
+    'hero.name': 'Ajith Annavarapu',
   },
   es: {
     'navigation.story': 'Historia',
@@ -167,7 +168,8 @@ export const translations: Record<string, TranslationDictionary> = {
     'contact.linkedin': 'LinkedIn',
     'contact.github': 'GitHub',
     'footer.rights': '© 2025 Ajith Annavarapu. Todos los derechos reservados.',
-    'footer.builtWith': 'Construido con React, TailwindCSS y Three.js'
+    'footer.builtWith': 'Construido con React, TailwindCSS y Three.js',
+    'hero.name': 'Ajith Annavarapu',
   },
   fr: {
     'navigation.story': 'Histoire',
@@ -218,7 +220,8 @@ export const translations: Record<string, TranslationDictionary> = {
     'contact.linkedin': 'LinkedIn',
     'contact.github': 'GitHub',
     'footer.rights': '© 2025 Ajith Annavarapu. Tous droits réservés.',
-    'footer.builtWith': 'Construit avec React, TailwindCSS, et Three.js'
+    'footer.builtWith': 'Construit avec React, TailwindCSS, et Three.js',
+    'hero.name': 'Ajith Annavarapu',
   },
   de: {
     'navigation.story': 'Geschichte',
@@ -269,7 +272,8 @@ export const translations: Record<string, TranslationDictionary> = {
     'contact.linkedin': 'LinkedIn',
     'contact.github': 'GitHub',
     'footer.rights': '© 2025 Ajith Annavarapu. Alle Rechte vorbehalten.',
-    'footer.builtWith': 'Erstellt mit React, TailwindCSS und Three.js'
+    'footer.builtWith': 'Erstellt mit React, TailwindCSS und Three.js',
+    'hero.name': 'Ajith Annavarapu',
   },
   zh: {
     'navigation.story': '故事',
@@ -320,7 +324,7 @@ export const translations: Record<string, TranslationDictionary> = {
     'contact.linkedin': 'LinkedIn',
     'contact.github': 'GitHub',
     'footer.rights': '© 2025 Ajith Annavarapu。保留所有权利。',
-    'footer.builtWith': '使用React、TailwindCSS和Three.js构建'
+    'footer.builtWith': '使用React、TailwindCSS和Three.js构建',
+    'hero.name': 'Ajith Annavarapu',
   }
 };
-
