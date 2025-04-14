@@ -17,6 +17,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
       <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center z-10">
         <div className="w-full md:w-1/2 mb-10 md:mb-0 relative z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <span className="text-white mr-2">Hi, I'm</span>
             <span className="text-gradient text-glow text-white">
               {t('hero.title')}
             </span>
