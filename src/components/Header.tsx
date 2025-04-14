@@ -4,10 +4,12 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from '@/context/TranslationContext';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,6 +52,14 @@ const Header: React.FC = () => {
     }, 300); // Increased delay for better reliability
   };
 
+  const navItems = [
+    { id: 'story', label: t('navigation.story') },
+    { id: 'skills', label: t('navigation.skills') },
+    { id: 'projects', label: t('navigation.projects') },
+    { id: 'about', label: t('navigation.about') },
+    { id: 'contact', label: t('navigation.contact') }
+  ];
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -63,14 +73,14 @@ const Header: React.FC = () => {
         </div>
 
         <nav className="hidden md:flex items-center space-x-8">
-          {['Story', 'Skills', 'Projects', 'About', 'Contact'].map(item => (
+          {navItems.map(item => (
             <a
-              key={item}
-              onClick={() => scrollToSection(item.toLowerCase())}
-              href={`#${item.toLowerCase()}`}
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              href={`#${item.id}`}
               className="text-white opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide cursor-pointer"
             >
-              {item}
+              {item.label}
             </a>
           ))}
           <div className="flex items-center space-x-3">
@@ -80,7 +90,7 @@ const Header: React.FC = () => {
               onClick={() => scrollToSection('contact')} 
               className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
             >
-              Get in Touch
+              {t('navigation.getInTouch')}
             </Button>
           </div>
         </nav>
@@ -101,21 +111,21 @@ const Header: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md py-4 shadow-lg">
           <nav className="container mx-auto px-4 flex flex-col space-y-4">
-            {['Story', 'Skills', 'Projects', 'About', 'Contact'].map(item => (
+            {navItems.map(item => (
               <a
-                key={item}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                href={`#${item.toLowerCase()}`}
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                href={`#${item.id}`}
                 className="text-white py-2 opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide"
               >
-                {item}
+                {item.label}
               </a>
             ))}
             <Button 
               onClick={() => scrollToSection('contact')} 
               className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium w-full"
             >
-              Get in Touch
+              {t('navigation.getInTouch')}
             </Button>
           </nav>
         </div>

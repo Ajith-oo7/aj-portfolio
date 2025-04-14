@@ -1,24 +1,18 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PopoverTrigger, Popover, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Globe } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-
-const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' }
-];
+import { useTranslation } from '@/context/TranslationContext';
+import { languages } from '@/lib/translations';
 
 const LanguageSwitcher: React.FC = () => {
-  const [currentLanguage, setCurrentLanguage] = useState(languages[0]);
+  const { currentLanguage, setLanguage } = useTranslation();
   const { toast } = useToast();
 
   const handleLanguageChange = (language: typeof languages[0]) => {
-    setCurrentLanguage(language);
+    setLanguage(language);
     toast({
       title: "Language changed",
       description: `The language has been changed to ${language.name}`,
