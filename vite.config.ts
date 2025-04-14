@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   // Base path for GitHub Pages - dynamically set based on environment
-  base: process.env.GITHUB_PAGES === "true" ? "./" : "/",
+  base: process.env.GITHUB_PAGES === "true" ? "/aj-portfolio/" : "/",
   plugins: [
     react(),
     mode === 'development' &&
