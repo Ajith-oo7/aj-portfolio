@@ -82,21 +82,28 @@ interface EdgeProps {
   width?: number;
 }
 
+// Fixed DataEdge component that properly renders a line in three.js
 const DataEdge: React.FC<EdgeProps> = ({ 
   start, 
   end, 
   color = '#333333',
   width = 0.01
 }) => {
-  const points = [];
-  points.push(new THREE.Vector3(...start));
-  points.push(new THREE.Vector3(...end));
+  // Create a reference to the line
+  const ref = useRef<THREE.Line>(null);
   
+  // Create points array for the line
+  const points = [
+    new THREE.Vector3(...start),
+    new THREE.Vector3(...end)
+  ];
+  
+  // Create a buffer geometry from points
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
   return (
-    <line geometry={lineGeometry}>
-      <lineBasicMaterial color={color} linewidth={width} transparent opacity={0.6} />
+    <line ref={ref} geometry={lineGeometry}>
+      <lineBasicMaterial attach="material" color={color} linewidth={width} transparent opacity={0.6} />
     </line>
   );
 };
