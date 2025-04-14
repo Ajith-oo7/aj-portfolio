@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Send, Loader2 } from 'lucide-react';
+import { toast as sonnerToast } from 'sonner';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -54,9 +55,28 @@ const ContactForm: React.FC = () => {
     try {
       console.log("Submitting form data:", data);
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send data to Supabase function
+      const response = await fetch('https://ajnanawlfyqnwvfwhfpt.supabase.co/functions/v1/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
       
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send message');
+      }
+      
+      // Show success notification with Sonner (more modern toast)
+      sonnerToast.success('Message sent!', {
+        description: 'Thanks for reaching out. I\'ll get back to you soon.',
+        duration: 5000,
+      });
+      
+      // Also show shadcn toast for backwards compatibility
       toast({
         title: "Message sent!",
         description: "Thanks for reaching out. I'll get back to you soon.",
@@ -65,7 +85,15 @@ const ContactForm: React.FC = () => {
       
       form.reset();
     } catch (error) {
-      console.error('Unexpected error:', error);
+      console.error('Error sending message:', error);
+      
+      // Show error notification with Sonner
+      sonnerToast.error('Message failed to send', {
+        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later.",
+        duration: 5000,
+      });
+      
+      // Also show shadcn toast for backwards compatibility
       toast({
         title: "Message failed to send",
         description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later.",

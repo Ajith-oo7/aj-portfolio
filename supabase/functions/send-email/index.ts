@@ -17,7 +17,7 @@ serve(async (req) => {
   try {
     const { name, email, subject, message } = await req.json() as EmailJSParams;
     
-    // Log the request parameters to identify any issues
+    // Log the request parameters for debugging
     console.log("Request received with params:", { name, email, subject, message });
 
     // Use the provided credentials
@@ -40,7 +40,7 @@ serve(async (req) => {
     const emailJsPayload = {
       service_id: serviceId,
       template_id: templateId,
-      public_key: publicKey,
+      user_id: publicKey, // Changed from public_key to user_id as per EmailJS API requirements
       template_params: templateParams
     };
     
@@ -84,4 +84,3 @@ serve(async (req) => {
     );
   }
 });
-
