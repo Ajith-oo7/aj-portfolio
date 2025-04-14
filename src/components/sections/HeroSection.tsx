@@ -1,8 +1,7 @@
 
-import React, { Suspense, useState } from 'react';
+import React, { Suspense } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import DataViz2D from '@/components/DataViz2D';
 import DataViz3D from '@/components/DataViz3D';
 import { useTranslation } from '@/context/TranslationContext';
 
@@ -13,14 +12,6 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }) => {
   const { t } = useTranslation();
-  const [use3D, setUse3D] = useState(true);
-  const [had3DError, setHad3DError] = useState(false);
-  
-  const handle3DError = () => {
-    console.log("3D visualization failed to load, switching to 2D");
-    setHad3DError(true);
-    setUse3D(false);
-  };
   
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
@@ -56,25 +47,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
             >
               {t('hero.getInTouch')}
             </Button>
-            <Button
-              variant="outline"
-              className="text-white border-white/20 hover:border-white/50"
-              onClick={() => setUse3D(!use3D)}
-            >
-              {use3D ? '2D View' : '3D View'}
-            </Button>
           </div>
         </div>
         <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative backdrop-blur-sm bg-black/30 rounded-xl border border-white/5 p-2">
-          {use3D && !had3DError ? (
-            <Suspense fallback={<DataViz2D className="animate-float" />}>
-              <ErrorBoundary fallback={<DataViz2D className="animate-float" />}>
-                <DataViz3D className="animate-float" />
-              </ErrorBoundary>
-            </Suspense>
-          ) : (
-            <DataViz2D className="animate-float" />
-          )}
+          <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white">Loading...</div>}>
+            <DataViz3D className="animate-float" />
+          </Suspense>
         </div>
       </div>
       
@@ -88,26 +66,5 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
     </section>
   );
 };
-
-// Simple error boundary component
-class ErrorBoundary extends React.Component<{children: React.ReactNode, fallback: React.ReactNode}> {
-  state = { hasError: false };
-  
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-  
-  componentDidCatch(error: any) {
-    console.error("Error in 3D component:", error);
-  }
-  
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback;
-    }
-    
-    return this.props.children;
-  }
-}
 
 export default HeroSection;
