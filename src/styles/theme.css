@@ -27,12 +27,6 @@
   --neon-purple: #8B5CF6;
   --neon-pink: #D946EF;
   --neon-orange: #F97316;
-  
-  /* Default particle color */
-  --particle-color: rgba(255, 255, 255, 0.5);
-  
-  /* Default blob color */
-  --blob-color: radial-gradient(circle, rgba(30, 174, 219, 0.4) 0%, rgba(139, 92, 246, 0.2) 50%, transparent 70%);
 }
 
 /* Light Mode */
@@ -63,276 +57,8 @@
   --neon-purple: #6939c2;
   --neon-pink: #b621cf;
   --neon-orange: #dd5c0d;
-  
-  --particle-color: rgba(0, 0, 0, 0.3);
-  --blob-color: radial-gradient(circle, rgba(0, 115, 168, 0.2) 0%, rgba(105, 57, 194, 0.1) 50%, transparent 70%);
 }
 
-/* Neo-Cyberpunk Mode */
-.cyberpunk-mode {
-  --background: 235 60% 5%;
-  --foreground: 180 100% 60%;
-  --card: 235 60% 7%;
-  --card-foreground: 180 100% 60%;
-  --popover: 235 60% 7%;
-  --popover-foreground: 180 100% 60%;
-  --primary: 320 90% 50%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 235 80% 15%;
-  --secondary-foreground: 180 100% 60%;
-  --muted: 235 80% 15%;
-  --muted-foreground: 180 70% 40%;
-  --accent: 320 90% 50%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 320 90% 50%;
-  --input: 235 80% 15%;
-  --ring: 320 90% 50%;
-  --body-bg: #0a0a14;
-  --text-color: #00f0ff;
-  --card-bg: rgba(10, 10, 20, 0.6);
-  --neon-blue: #00f0ff;
-  --neon-purple: #fc00ff;
-  --neon-pink: #ff00c3;
-  --neon-orange: #ff9000;
-  
-  --particle-color: rgba(252, 0, 255, 0.6);
-  --blob-color: radial-gradient(circle, rgba(252, 0, 255, 0.2) 0%, rgba(0, 240, 255, 0.15) 50%, transparent 70%);
-}
-
-/* Neumorphic Mode */
-.neumorphic-mode {
-  --background: 220 20% 15%;
-  --foreground: 220 10% 80%;
-  --card: 220 20% 18%;
-  --card-foreground: 220 10% 80%;
-  --popover: 220 20% 18%;
-  --popover-foreground: 220 10% 80%;
-  --primary: 220 60% 50%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 220 20% 20%;
-  --secondary-foreground: 220 10% 80%;
-  --muted: 220 20% 20%;
-  --muted-foreground: 220 10% 60%;
-  --accent: 220 60% 50%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 60% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 220 20% 25%;
-  --input: 220 20% 20%;
-  --ring: 220 60% 50%;
-  --body-bg: #1e212a;
-  --text-color: #d8e0e9;
-  --card-bg: #252a35;
-  --neon-blue: #4a7dfc;
-  --neon-purple: #6e7de6;
-  --neon-pink: #b47dfc;
-  --neon-orange: #e6a87d;
-  
-  --particle-color: rgba(74, 125, 252, 0.4);
-  --blob-color: radial-gradient(circle, rgba(74, 125, 252, 0.15) 0%, rgba(110, 125, 230, 0.1) 50%, transparent 70%);
-}
-
-/* Glassmorphism Mode */
-.glassmorphism-mode {
-  --background: 200 50% 10%;
-  --foreground: 0 0% 95%;
-  --card: 200 50% 10%;
-  --card-foreground: 0 0% 95%;
-  --popover: 200 50% 10%;
-  --popover-foreground: 0 0% 95%;
-  --primary: 200 80% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 200 50% 15%;
-  --secondary-foreground: 0 0% 95%;
-  --muted: 200 50% 15%;
-  --muted-foreground: 200 20% 70%;
-  --accent: 200 80% 60%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 80% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 200 50% 20%;
-  --input: 200 50% 15%;
-  --ring: 200 80% 60%;
-  --body-bg: #071a29;
-  --text-color: #f2f2f2;
-  --card-bg: rgba(7, 26, 41, 0.3);
-  --neon-blue: #33adff;
-  --neon-purple: #8f9dff;
-  --neon-pink: #ff77dd;
-  --neon-orange: #ffaa33;
-  
-  --particle-color: rgba(51, 173, 255, 0.5);
-  --blob-color: radial-gradient(circle, rgba(51, 173, 255, 0.2) 0%, rgba(143, 157, 255, 0.1) 50%, transparent 70%);
-}
-
-/* Aurora Mode */
-.aurora-mode {
-  --background: 250 30% 10%;
-  --foreground: 170 80% 80%;
-  --card: 250 30% 13%;
-  --card-foreground: 170 80% 80%;
-  --popover: 250 30% 13%;
-  --popover-foreground: 170 80% 80%;
-  --primary: 170 80% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 250 30% 17%;
-  --secondary-foreground: 170 80% 80%;
-  --muted: 250 30% 17%;
-  --muted-foreground: 170 50% 60%;
-  --accent: 300 70% 60%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 80% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 170 80% 30%;
-  --input: 250 30% 17%;
-  --ring: 170 80% 60%;
-  --body-bg: #121336;
-  --text-color: #7dffe0;
-  --card-bg: rgba(18, 19, 54, 0.5);
-  --neon-blue: #36c9ff;
-  --neon-purple: #b36aff;
-  --neon-pink: #ff36d3;
-  --neon-orange: #ff8c36;
-  
-  --particle-color: rgba(125, 255, 224, 0.6);
-  --blob-color: radial-gradient(circle, rgba(179, 106, 255, 0.2) 0%, rgba(54, 201, 255, 0.15) 50%, transparent 70%);
-}
-
-/* Space Mode */
-.space-mode {
-  --background: 260 40% 3%;
-  --foreground: 260 20% 90%;
-  --card: 260 40% 5%;
-  --card-foreground: 260 20% 90%;
-  --popover: 260 40% 5%;
-  --popover-foreground: 260 20% 90%;
-  --primary: 260 80% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 260 40% 9%;
-  --secondary-foreground: 260 20% 90%;
-  --muted: 260 40% 9%;
-  --muted-foreground: 260 20% 60%;
-  --accent: 260 80% 60%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 80% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 260 40% 13%;
-  --input: 260 40% 9%;
-  --ring: 260 80% 60%;
-  --body-bg: #060210;
-  --text-color: #d9d2f0;
-  --card-bg: rgba(10, 3, 20, 0.6);
-  --neon-blue: #5d62ff;
-  --neon-purple: #9762ff;
-  --neon-pink: #ff62f5;
-  --neon-orange: #ffb562;
-  
-  --particle-color: rgba(217, 210, 240, 0.8);
-  --blob-color: radial-gradient(circle, rgba(93, 98, 255, 0.15) 0%, rgba(151, 98, 255, 0.1) 50%, transparent 70%);
-}
-
-/* High Contrast Mode */
-.high-contrast-mode {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --card: 0 0% 5%;
-  --card-foreground: 0 0% 100%;
-  --popover: 0 0% 5%;
-  --popover-foreground: 0 0% 100%;
-  --primary: 0 100% 50%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 10%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 0 0% 10%;
-  --muted-foreground: 0 0% 70%;
-  --accent: 0 100% 50%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 40%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 30%;
-  --input: 0 0% 10%;
-  --ring: 0 100% 50%;
-  --body-bg: #000000;
-  --text-color: #ffffff;
-  --card-bg: rgba(10, 10, 10, 0.9);
-  --neon-blue: #00a2ff;
-  --neon-purple: #a200ff;
-  --neon-pink: #ff00a2;
-  --neon-orange: #ff7b00;
-  
-  --particle-color: rgba(255, 255, 255, 0.9);
-  --blob-color: radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 0.1) 50%, transparent 70%);
-}
-
-/* Gradient Mode */
-.gradient-mode {
-  --background: 290 60% 5%;
-  --foreground: 290 20% 90%;
-  --card: 290 60% 7%;
-  --card-foreground: 290 20% 90%;
-  --popover: 290 60% 7%;
-  --popover-foreground: 290 20% 90%;
-  --primary: 290 80% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 290 60% 10%;
-  --secondary-foreground: 290 20% 90%;
-  --muted: 290 60% 10%;
-  --muted-foreground: 290 20% 70%;
-  --accent: 320 80% 60%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 80% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 290 60% 15%;
-  --input: 290 60% 10%;
-  --ring: 290 80% 60%;
-  --body-bg: #170829;
-  --text-color: #e9d9f9;
-  --card-bg: rgba(23, 8, 41, 0.6);
-  --neon-blue: #567bff;
-  --neon-purple: #a95bff;
-  --neon-pink: #ff5bf9;
-  --neon-orange: #ff9a5b;
-  
-  --particle-color: rgba(169, 91, 255, 0.6);
-  --blob-color: radial-gradient(circle, rgba(255, 91, 249, 0.2) 0%, rgba(86, 123, 255, 0.15) 50%, transparent 70%);
-}
-
-/* Inverse Mode */
-.inverse-mode {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 95%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 95%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 37.2 91.2% 59.8%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 60 3.7% 15.9%;
-  --secondary-foreground: 0 0% 0%;
-  --muted: 60 3.7% 15.9%;
-  --muted-foreground: 60 5% 35.1%;
-  --accent: 60 3.7% 15.9%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 180 62.8% 30.6%;
-  --destructive-foreground: 0 0% 0%;
-  --border: 60 3.7% 15.9%;
-  --input: 60 3.7% 15.9%;
-  --ring: 60 4.9% 16.1%;
-  --body-bg: #ffffff;
-  --text-color: #000000;
-  --card-bg: rgba(255, 255, 255, 0.4);
-  --neon-blue: #E15124; /* Inverse of #1EAEDB */
-  --neon-purple: #74A309; /* Inverse of #8B5CF6 */
-  --neon-pink: #26B910; /* Inverse of #D946EF */
-  --neon-orange: #068CE9; /* Inverse of #F97316 */
-  
-  --particle-color: rgba(0, 0, 0, 0.5);
-  --blob-color: radial-gradient(circle, rgba(225, 81, 36, 0.4) 0%, rgba(116, 163, 9, 0.2) 50%, transparent 70%);
-}
-
-/* Common styling for all themes */
 body {
   background-color: var(--body-bg);
   color: var(--text-color);
@@ -341,51 +67,12 @@ body {
 
 .neo-blur {
   background-color: var(--card-bg);
-  backdrop-filter: blur(12px);
-  transition: all 0.3s ease;
 }
 
-/* Apply theme to mouse blob effect */
-#mouse-blob {
-  background: var(--blob-color);
-  transition: background 0.3s ease;
-}
-
-/* Apply theme to particles */
-#particles-js canvas {
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-/* Theme-specific particle opacity adjustments */
-.light-mode #particles-js canvas,
-.neumorphic-mode #particles-js canvas,
-.glassmorphism-mode #particles-js canvas {
-  opacity: 0.3;
-}
-
-.cyberpunk-mode #particles-js canvas,
-.aurora-mode #particles-js canvas,
-.space-mode #particles-js canvas {
-  opacity: 0.9;
-}
-
-/* Theme-specific grid pattern opacity */
-.light-mode .bg-grid-pattern,
-.neumorphic-mode .bg-grid-pattern,
-.glassmorphism-mode .bg-grid-pattern {
-  opacity: 0.05;
-}
-
-.cyberpunk-mode .bg-grid-pattern,
-.aurora-mode .bg-grid-pattern,
-.space-mode .bg-grid-pattern {
-  opacity: 0.15;
-}
-
-/* Theme transitions */
-* {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+.light-mode .neo-blur {
+  backdrop-filter: blur-md;
+  background-color: var(--card-bg);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Utility classes for neon colors that adapt to theme */
@@ -437,57 +124,27 @@ body {
   border-color: var(--neon-orange) !important;
 }
 
+/* Background adaptations */
+.light-mode #mouse-blob {
+  opacity: 0.2;
+}
+
+.light-mode #particles-js canvas {
+  opacity: 0.3;
+}
+
+.light-mode .bg-grid-pattern {
+  opacity: 0.1;
+}
+
 /* Text gradient adaptations */
-.text-gradient {
+.light-mode .text-gradient {
   background-image: linear-gradient(to right, var(--neon-blue), var(--neon-purple), var(--neon-pink));
   background-clip: text;
   color: transparent;
 }
 
-/* Theme-specific card styling */
-.cyberpunk-mode .neo-blur {
-  box-shadow: 0 0 15px rgba(252, 0, 255, 0.3), inset 0 0 5px rgba(0, 240, 255, 0.2);
-  border-color: rgba(252, 0, 255, 0.3);
-}
-
-.neumorphic-mode .neo-blur {
-  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.05);
-  border: none;
-}
-
-.glassmorphism-mode .neo-blur {
-  background-color: rgba(7, 26, 41, 0.15);
-  backdrop-filter: blur(20px);
-  border-color: rgba(51, 173, 255, 0.2);
-}
-
-.aurora-mode .neo-blur {
-  background: linear-gradient(135deg, rgba(18, 19, 54, 0.3) 0%, rgba(18, 19, 54, 0.1) 100%);
-  backdrop-filter: blur(10px);
-  border-color: rgba(125, 255, 224, 0.2);
-}
-
-.space-mode .neo-blur {
-  background: rgba(10, 3, 20, 0.5);
-  backdrop-filter: blur(5px);
-  border-color: rgba(93, 98, 255, 0.3);
-}
-
-.high-contrast-mode .neo-blur {
-  background-color: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(5px);
-  border-color: var(--neon-blue);
-  border-width: 2px;
-}
-
-.gradient-mode .neo-blur {
-  background: linear-gradient(135deg, rgba(23, 8, 41, 0.7) 0%, rgba(69, 27, 117, 0.5) 100%);
-  backdrop-filter: blur(10px);
-  border-color: rgba(169, 91, 255, 0.3);
-}
-
-.inverse-mode .neo-blur {
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border-color: rgba(225, 81, 36, 0.3);
+/* Theme transition animations */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
