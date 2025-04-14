@@ -29,6 +29,14 @@ export default defineConfig(({ mode }) => ({
       // This helps with older dependencies
       transformMixedEsModules: true,
     },
+    rollupOptions: {
+      // Externalize the problematic packages
+      external: [
+        '@react-three/fiber',
+        '@react-three/drei', 
+        'three'
+      ],
+    }
   },
   optimizeDeps: {
     // Force inclusion of peer dependencies

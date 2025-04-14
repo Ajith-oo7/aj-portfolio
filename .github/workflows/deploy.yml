@@ -30,10 +30,15 @@ jobs:
       - name: Install Dependencies
         run: |
           echo "Installing dependencies..."
-          npm install --legacy-peer-deps
+          npm install --legacy-peer-deps --force
         env:
           CI: true
 
+      - name: Debug Installed Packages
+        run: |
+          echo "Listing installed packages:"
+          npm list @react-three/fiber @react-three/drei three || true
+          
       - name: Build
         run: |
           echo "Building with GITHUB_PAGES=true"
@@ -41,6 +46,7 @@ jobs:
           npm run build
         env:
           GITHUB_PAGES: true
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Debug Build Output
         run: |
