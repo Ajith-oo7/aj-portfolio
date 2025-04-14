@@ -13,14 +13,14 @@ This project is configured to deploy automatically to GitHub Pages using GitHub 
 2. GitHub Actions will automatically build and deploy the site to GitHub Pages
 3. Your site will be available at `https://[your-username].github.io/[repository-name]/`
 
-### Manual deployment:
+### Troubleshooting GitHub Pages Deployment:
 
-If you prefer to deploy manually:
+If you encounter GitHub Actions errors:
 
-1. Clone the repository
-2. Install dependencies with `npm install`
-3. Build the project with `GITHUB_PAGES=true npm run build`
-4. Deploy the `dist` folder to GitHub Pages
+1. Check the GitHub Actions tab in your repository to see detailed error logs
+2. Verify that your repository has proper permissions set (Settings > Actions > General)
+3. Ensure the GitHub Pages source is set to "GitHub Actions" (Settings > Pages)
+4. Make sure your repository name matches what's configured in your deployment
 
 ## Development
 
