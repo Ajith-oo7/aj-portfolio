@@ -20,33 +20,10 @@ serve(async (req) => {
     // Log the request parameters to identify any issues
     console.log("Request received with params:", { name, email, subject, message });
 
-    // EmailJS credentials from Supabase secrets
-    const serviceId = Deno.env.get("EMAILJS_SERVICE_ID") || "";
-    const templateId = Deno.env.get("EMAILJS_TEMPLATE_ID") || "";
-    const userId = Deno.env.get("EMAILJS_USER_ID") || "";
-    const publicKey = Deno.env.get("EMAILJS_PUBLIC_KEY") || "";
-
-    // Log the EmailJS credentials (without values for security)
-    console.log("Credentials check:", {
-      hasServiceId: !!serviceId,
-      hasTemplateId: !!templateId,
-      hasUserId: !!userId,
-      hasPublicKey: !!publicKey
-    });
-
-    if (!serviceId || !templateId || !userId || !publicKey) {
-      console.error("Missing EmailJS credentials in environment variables");
-      return new Response(
-        JSON.stringify({ error: "Server configuration error: Missing credentials" }),
-        { 
-          status: 500, 
-          headers: { 
-            "Content-Type": "application/json",
-            ...corsHeaders
-          } 
-        }
-      );
-    }
+    // Use the provided credentials
+    const serviceId = "service_lfqzf0s";
+    const templateId = "template_6wz0o6h";
+    const publicKey = "NkEHgQXJYYoLba4ck";
 
     // Prepare the parameters for EmailJS
     const templateParams = {
@@ -57,16 +34,14 @@ serve(async (req) => {
     };
 
     // Send the email using EmailJS API
-    // Note: EmailJS API expects different parameters depending on whether you're using the SDK or direct API
     const emailJsEndpoint = "https://api.emailjs.com/api/v1.0/email/send";
     
     console.log("Preparing EmailJS payload");
     const emailJsPayload = {
       service_id: serviceId,
       template_id: templateId,
-      user_id: userId,
-      template_params: templateParams,
-      accessToken: publicKey
+      public_key: publicKey,
+      template_params: templateParams
     };
     
     console.log("Sending request to EmailJS API");
@@ -98,7 +73,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error in send-email function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "An unexpected error occurred" }),
       { 
         status: 500, 
         headers: { 
@@ -109,3 +84,4 @@ serve(async (req) => {
     );
   }
 });
+
