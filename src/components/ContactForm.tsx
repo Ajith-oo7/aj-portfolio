@@ -53,6 +53,8 @@ const ContactForm: React.FC = () => {
     setIsSubmitting(true);
     
     try {
+      console.log("Submitting form data:", data);
+      
       // Call the Supabase Edge Function to send the email
       const { data: responseData, error } = await supabase.functions.invoke('send-email', {
         body: {
@@ -63,11 +65,13 @@ const ContactForm: React.FC = () => {
         }
       });
       
+      console.log("Response from edge function:", { responseData, error });
+      
       if (error) {
         console.error('Email sending failed:', error);
         toast({
           title: "Message failed to send",
-          description: "There was an error sending your message. Please try again later.",
+          description: `Error: ${error.message || "An unknown error occurred"}`,
           variant: "destructive",
           duration: 5000,
         });
@@ -87,7 +91,7 @@ const ContactForm: React.FC = () => {
       console.error('Unexpected error:', error);
       toast({
         title: "Message failed to send",
-        description: "An unexpected error occurred. Please try again later.",
+        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later.",
         variant: "destructive",
         duration: 5000,
       });

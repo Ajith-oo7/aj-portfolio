@@ -56,17 +56,21 @@ serve(async (req) => {
       message: message
     };
 
-    // Send the email using EmailJS API with updated payload structure
+    // Send the email using EmailJS API
+    // Note: EmailJS API expects different parameters depending on whether you're using the SDK or direct API
+    const emailJsEndpoint = "https://api.emailjs.com/api/v1.0/email/send";
+    
+    console.log("Preparing EmailJS payload");
     const emailJsPayload = {
       service_id: serviceId,
       template_id: templateId,
       user_id: userId,
       template_params: templateParams,
-      accessToken: publicKey, // Adding public key as accessToken for authentication
+      accessToken: publicKey
     };
-
+    
     console.log("Sending request to EmailJS API");
-    const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    const response = await fetch(emailJsEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
