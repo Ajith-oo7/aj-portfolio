@@ -113,14 +113,14 @@ const DataEdge: React.FC<EdgeProps> = ({
     new THREE.Vector3(...end)
   ];
   
-  // Create arc-like curves that follow the globe's surface
+  // Create a more visible curve between points
   const midPoint = new THREE.Vector3().addVectors(
     new THREE.Vector3(...start),
     new THREE.Vector3(...end)
   ).multiplyScalar(0.5);
   
-  // Push the midpoint out to follow the globe's curvature
-  midPoint.normalize().multiplyScalar(2.8 + Math.random() * 0.2);
+  // Push the midpoint out a bit more to increase visibility
+  midPoint.normalize().multiplyScalar(3.0 + Math.random() * 0.3);
   
   const curve = new THREE.QuadraticBezierCurve3(
     new THREE.Vector3(...start),
@@ -128,14 +128,17 @@ const DataEdge: React.FC<EdgeProps> = ({
     new THREE.Vector3(...end)
   );
   
-  const tubeGeometry = new THREE.TubeGeometry(curve, 20, width, 8, false);
+  // Increase tube segments for smoother curves
+  const tubeGeometry = new THREE.TubeGeometry(curve, 30, width, 8, false);
   
   return (
     <mesh geometry={tubeGeometry}>
-      <meshBasicMaterial
+      <meshStandardMaterial
         color={color}
         transparent={true}
-        opacity={0.6}
+        opacity={0.7}
+        emissive={color}
+        emissiveIntensity={0.5}
       />
     </mesh>
   );
@@ -193,7 +196,7 @@ interface DataNetworkProps {
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
   nodeCount = 28,
-  connections = 30, // Adjusted for better connectivity
+  connections = 45, // Increased for better connectivity
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -239,7 +242,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const edges: EdgeProps[] = [];
   
-  // Connect nodes in a continuous ring around the globe
+  // First, ensure all nodes are connected in a continuous ring
   for (let i = 0; i < nodes.length; i++) {
     const nextIndex = (i + 1) % nodes.length;
     
@@ -247,12 +250,12 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       start: nodes[i].position,
       end: nodes[nextIndex].position,
       color: nodes[i].color,
-      width: 0.02 + Math.random() * 0.01, // Thin but visible lines
+      width: 0.03 + Math.random() * 0.02, // Increased width for visibility
       speed: 0.5 + Math.random() * 1.5
     });
   }
   
-  // Connect similar technology nodes with improved organization
+  // Define technology groups for more organized connections
   const techGroups = {
     'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake'],
     'cloud': ['AWS', 'Docker', 'Kubernetes'],
@@ -260,40 +263,44 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     'frontend': ['React', 'TypeScript', 'NextJS'],
   };
   
-  // Find nodes by label
+  // Helper function to find nodes by label
   const findNodeByLabel = (label: string) => {
     return nodes.findIndex(node => node.label === label);
   };
   
-  // Connect within groups
+  // Connect all nodes within each technology group in a mesh pattern
   Object.values(techGroups).forEach(group => {
-    // Connect in a circular pattern within each group
     for (let i = 0; i < group.length; i++) {
-      const startIdx = findNodeByLabel(group[i]);
-      const endIdx = findNodeByLabel(group[(i + 1) % group.length]);
-      
-      if (startIdx !== -1 && endIdx !== -1) {
-        edges.push({
-          start: nodes[startIdx].position,
-          end: nodes[endIdx].position,
-          color: nodes[startIdx].color,
-          width: 0.015, // Consistent width for group connections
-          speed: 0.5 + Math.random() * 1.5
-        });
+      // Connect each node to every other node in the group for a dense mesh
+      for (let j = i + 1; j < group.length; j++) {
+        const startIdx = findNodeByLabel(group[i]);
+        const endIdx = findNodeByLabel(group[j]);
+        
+        if (startIdx !== -1 && endIdx !== -1) {
+          edges.push({
+            start: nodes[startIdx].position,
+            end: nodes[endIdx].position,
+            color: nodes[startIdx].color,
+            width: 0.025, // Thicker lines for group connections
+            speed: 0.5 + Math.random() * 1.5
+          });
+        }
       }
     }
   });
   
-  // Add a few strategic cross-discipline connections
-  const remainingConnections = Math.min(15, connections - edges.length);
-  
-  // Connect some important cross-discipline nodes
+  // Add strategic cross-discipline connections
   const crossConnections = [
     ['Python', 'ML'],
     ['AWS', 'Docker'],
     ['React', 'TypeScript'],
     ['Data', 'SQL'],
     ['TensorFlow', 'PyTorch'],
+    ['Hadoop', 'AWS'],
+    ['Kafka', 'Prometheus'],
+    ['Git', 'Jenkins'],
+    ['MongoDB', 'Supabase'],
+    ['NextJS', 'Supabase'],
   ];
   
   crossConnections.forEach(([start, end]) => {
@@ -305,31 +312,36 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
         start: nodes[startIdx].position,
         end: nodes[endIdx].position,
         color: nodes[startIdx].color,
-        width: 0.015,
+        width: 0.02 + Math.random() * 0.01,
         speed: 0.5 + Math.random() * 1.5
       });
     }
   });
   
-  // Add a few random connections to fill gaps
-  for (let i = 0; i < remainingConnections - crossConnections.length; i++) {
-    const startIndex = Math.floor(Math.random() * nodes.length);
-    let endIndex = Math.floor(Math.random() * nodes.length);
+  // Add some random connections to ensure network is fully connected
+  // We'll connect each node to at least one other random node
+  for (let i = 0; i < nodes.length; i++) {
+    // Skip if node already has many connections
+    const existingConnections = edges.filter(
+      edge => 
+        (edge.start === nodes[i].position || edge.end === nodes[i].position)
+    );
     
-    // Avoid self-connections
-    while (endIndex === startIndex || 
-           // Avoid adding connections that are too close on the sphere
-           Math.abs(endIndex - startIndex) < 3) {
-      endIndex = Math.floor(Math.random() * nodes.length);
+    if (existingConnections.length < 3) {
+      let targetIdx = Math.floor(Math.random() * nodes.length);
+      // Avoid self-connections and close nodes
+      while (targetIdx === i || Math.abs(targetIdx - i) < 3) {
+        targetIdx = Math.floor(Math.random() * nodes.length);
+      }
+      
+      edges.push({
+        start: nodes[i].position,
+        end: nodes[targetIdx].position,
+        color: nodes[i].color,
+        width: 0.02,
+        speed: 0.5 + Math.random() * 1.5
+      });
     }
-    
-    edges.push({
-      start: nodes[startIndex].position,
-      end: nodes[endIndex].position,
-      color: nodes[startIndex].color,
-      width: 0.012, // Slightly thinner for random connections
-      speed: 0.5 + Math.random() * 1.5
-    });
   }
   
   useFrame((state) => {
@@ -357,10 +369,12 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
         />
       </mesh>
       
+      {/* Render edges first so they appear behind nodes */}
       {edges.map((edge, idx) => (
         <DataEdge key={`edge-${idx}`} {...edge} />
       ))}
       
+      {/* Then render nodes on top */}
       {nodes.map((node, idx) => (
         <DataNode key={`node-${idx}`} {...node} />
       ))}
