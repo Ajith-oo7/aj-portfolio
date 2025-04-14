@@ -66,7 +66,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, trigge
                 </DialogDescription>
               </div>
               <div className="flex gap-2">
-                {project.githubLink && (
+                {project.githubLink && project.githubLink !== '#' && (
                   <Button 
                     variant="outline" 
                     size="icon"
@@ -79,7 +79,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, trigge
                   </Button>
                 )}
                 
-                {project.demoLink && (
+                {project.demoLink && project.demoLink !== '#' && (
                   <Button 
                     variant="outline" 
                     size="icon"
@@ -189,7 +189,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, trigge
                 </div>
                 
                 <div className="mt-6 flex gap-4">
-                  {project.demoLink && (
+                  {project.demoLink && project.demoLink !== '#' && (
                     <Button 
                       className={`bg-${colorClass} hover:bg-${colorClass}/80`}
                       asChild
@@ -201,7 +201,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, trigge
                     </Button>
                   )}
                   
-                  {project.githubLink && (
+                  {project.githubLink && project.githubLink !== '#' && (
                     <Button 
                       variant="outline" 
                       className="border-white/10 hover:bg-white/10"

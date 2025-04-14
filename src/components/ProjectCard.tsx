@@ -86,7 +86,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
         
         <div className="flex space-x-3 mt-4">
-          {githubLink && (
+          {githubLink && githubLink !== '#' && (
             <Button 
               asChild
               size="sm" 
@@ -100,7 +100,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </Button>
           )}
           
-          {demoLink && (
+          {demoLink && demoLink !== '#' && (
             <Button 
               asChild
               size="sm" 
