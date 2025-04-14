@@ -1,4 +1,29 @@
 
+# Ajith Annavarapu's Portfolio
+
+This is a portfolio website for Ajith Annavarapu, Data Engineer & Data Scientist.
+
+## Deployment to GitHub Pages
+
+This project is configured to deploy automatically to GitHub Pages using GitHub Actions.
+
+### How to deploy:
+
+1. Push your changes to the `main` branch
+2. GitHub Actions will automatically build and deploy the site to GitHub Pages
+3. Your site will be available at `https://[your-username].github.io/[repository-name]/`
+
+### Manual deployment:
+
+If you prefer to deploy manually:
+
+1. Clone the repository
+2. Install dependencies with `npm install`
+3. Build the project with `GITHUB_PAGES=true npm run build`
+4. Deploy the `dist` folder to GitHub Pages
+
+## Development
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).
@@ -23,7 +48,6 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Custom Domain
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+To connect a domain, navigate to GitHub Pages settings in your repository and add your custom domain.

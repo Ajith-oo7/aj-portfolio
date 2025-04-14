@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -9,6 +10,8 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  // Base path for GitHub Pages - dynamically set based on environment
+  base: process.env.GITHUB_PAGES === "true" ? "./" : "/",
   plugins: [
     react(),
     mode === 'development' &&
