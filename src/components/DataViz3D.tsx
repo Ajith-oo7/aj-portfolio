@@ -82,22 +82,29 @@ interface EdgeProps {
   width?: number;
 }
 
+// Fixed DataEdge component to use THREE.Line properly
 const DataEdge: React.FC<EdgeProps> = ({ 
   start, 
   end, 
   color = '#333333',
   width = 0.01
 }) => {
-  const points = [];
-  points.push(new THREE.Vector3(...start));
-  points.push(new THREE.Vector3(...end));
+  // Create a geometry from points
+  const points = [
+    new THREE.Vector3(...start),
+    new THREE.Vector3(...end)
+  ];
   
+  // Create the line geometry
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
+  // Use the mesh directly to avoid the "lov" error
   return (
-    <line geometry={lineGeometry}>
-      <lineBasicMaterial color={color} linewidth={width} transparent opacity={0.6} />
-    </line>
+    <group>
+      <mesh geometry={lineGeometry}>
+        <meshBasicMaterial color={color} transparent opacity={0.6} />
+      </mesh>
+    </group>
   );
 };
 
@@ -194,7 +201,10 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     
     // Ensure we're not creating too many connections from a single node
     const connectionsFromStart = edges.filter(
-      edge => edge.start === nodes[startIndex].position
+      edge => 
+        edge.start[0] === nodes[startIndex].position[0] &&
+        edge.start[1] === nodes[startIndex].position[1] &&
+        edge.start[2] === nodes[startIndex].position[2]
     ).length;
     
     if (connectionsFromStart < 5) {
