@@ -1,15 +1,12 @@
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import DataViz2D from '@/components/DataViz2D';
 import { useTranslation } from '@/context/TranslationContext';
 
-// Dynamically import the 3D visualization to prevent build errors
-const DataViz3D = React.lazy(() => 
-  import('@/components/DataViz3D')
-    .catch(() => ({ default: DataViz2D }))
-);
+// Always use 2D visualization for now as 3D is having issues
+const DataViz3D = DataViz2D;
 
 interface HeroSectionProps {
   onScroll: (sectionId: string) => void;
@@ -18,15 +15,7 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }) => {
   const { t } = useTranslation();
-  const [showFallback, setShowFallback] = useState(false);
-  
-  useEffect(() => {
-    // Check if we're in a build environment where Three.js might not work
-    if (import.meta.env.MODE === 'production') {
-      const timer = setTimeout(() => setShowFallback(true), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  const [use2D, setUse2D] = useState(true);
   
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden px-4">
@@ -65,13 +54,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
           </div>
         </div>
         <div className="w-full md:w-1/2 h-[300px] md:h-[400px] lg:h-[500px] relative backdrop-blur-sm bg-black/30 rounded-xl border border-white/5 p-2">
-          {showFallback ? (
-            <DataViz2D className="animate-float" />
-          ) : (
-            <Suspense fallback={<DataViz2D className="animate-float" />}>
-              <DataViz3D className="animate-float" />
-            </Suspense>
-          )}
+          <DataViz2D className="animate-float" />
         </div>
       </div>
       

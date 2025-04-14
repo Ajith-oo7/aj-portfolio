@@ -29,18 +29,10 @@ export default defineConfig(({ mode }) => ({
       // This helps with older dependencies
       transformMixedEsModules: true,
     },
-    rollupOptions: {
-      // Externalize the problematic packages
-      external: [
-        '@react-three/fiber',
-        '@react-three/drei', 
-        'three'
-      ],
-    }
   },
   optimizeDeps: {
     // Force inclusion of peer dependencies
-    include: ['react', 'react-dom'],
+    include: ['react', 'react-dom', 'three'],
     esbuildOptions: {
       // Node.js global to browser globalThis
       define: {
