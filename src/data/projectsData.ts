@@ -16,154 +16,154 @@ export type ProjectDetail = {
 
 export const projectsData: ProjectDetail[] = [
   {
-    id: 'real-time-data-pipeline',
-    title: 'Real-time Data Pipeline',
-    description: 'Built a scalable real-time data processing system using Apache Kafka and Spark Streaming for a financial services company.',
-    longDescription: 'Designed and implemented a highly available and fault-tolerant real-time data processing pipeline that processes millions of financial transactions per minute. The system enables real-time fraud detection and business analytics.',
-    techStack: ['Apache Kafka', 'Spark Streaming', 'AWS', 'Python', 'Docker', 'Redis'],
+    id: 'cleaning-automation',
+    title: 'Data Cleaning Automation',
+    description: 'Automated data cleaning and preprocessing pipeline for handling complex datasets efficiently.',
+    longDescription: 'Developed a robust data cleaning automation framework that streamlines the preprocessing of large and complex datasets. This tool reduces manual effort, improves data quality, and ensures consistency across different data sources.',
+    techStack: ['Python', 'Pandas', 'Numpy', 'Scikit-learn', 'Jupyter Notebooks'],
     challenges: [
-      'Processing millions of transactions per minute with sub-second latency',
-      'Ensuring data consistency across distributed systems',
-      'Implementing fault tolerance and disaster recovery',
-      'Optimizing for cost efficiency while maintaining performance'
+      'Processing heterogeneous data from multiple sources',
+      'Handling missing values and outliers automatically',
+      'Creating a reusable pipeline for different dataset formats',
+      'Reducing manual intervention in data preparation tasks'
     ],
     solutions: [
-      'Designed a microservices architecture using Kafka for message queuing',
-      'Implemented exactly-once processing semantics',
-      'Created auto-scaling pipeline components based on load',
-      'Used AWS Lambda for stateless processing and EKS for stateful workloads'
+      'Implemented modular data cleaning functions for different data types',
+      'Created automated detection and handling of missing values and outliers',
+      'Designed a configurable pipeline that adapts to different dataset schemas',
+      'Built comprehensive logging and validation checks throughout the process'
     ],
     outcomes: [
-      'Reduced fraud detection time from hours to milliseconds',
-      'Saved $2M annually in fraud prevention',
-      'Improved system reliability with 99.99% uptime',
-      'Enabled real-time business insights for executives'
+      'Reduced data preparation time by 70%',
+      'Improved data quality and consistency across projects',
+      'Created reusable components that save time in future projects',
+      'Enhanced reproducibility of data preparation steps'
     ],
     demoLink: '#',
-    githubLink: '#',
+    githubLink: 'https://github.com/Ajith-oo7/Cleaning-Automation',
     imageSrc: '',
     color: "blue"
   },
   {
-    id: 'data-warehouse-optimization',
-    title: 'Data Warehouse Optimization',
-    description: 'Redesigned and optimized a data warehouse architecture, reducing query times by 70% and storage costs by 30%.',
-    longDescription: 'Led a complete overhaul of an enterprise data warehouse that was suffering from performance and cost issues. The project involved data modeling, query optimization, and implementing modern data warehouse design patterns.',
-    techStack: ['Snowflake', 'dbt', 'SQL', 'Python', 'Airflow', 'Terraform'],
+    id: 'data-analysis-automation',
+    title: 'Data Analysis Automation',
+    description: 'An end-to-end automated data analysis tool for generating insights and visualizations from raw data.',
+    longDescription: 'Built a comprehensive data analysis automation framework that processes raw data, performs statistical analysis, creates visualizations, and generates reports with minimal user intervention. This tool helps extract valuable insights faster and more consistently.',
+    techStack: ['Python', 'Pandas', 'Matplotlib', 'Seaborn', 'Statsmodels', 'Jupyter'],
     challenges: [
-      'Legacy schema design causing performance bottlenecks',
-      'Exponentially growing storage costs',
-      'Complex queries taking hours to execute',
-      'Inconsistent data quality affecting business decisions'
+      'Automating complex analytical workflows that normally require expertise',
+      'Creating meaningful visualizations automatically based on data patterns',
+      'Handling diverse data types and relationships',
+      'Making the analysis results accessible to non-technical users'
     ],
     solutions: [
-      'Implemented a Kimball dimensional modeling approach',
-      'Created materialized views for common query patterns',
-      'Optimized storage with clustering and partitioning',
-      'Developed an automated data quality framework'
+      'Designed an intelligent pipeline that selects appropriate analyses based on data types',
+      'Implemented auto-generation of relevant visualizations for detected patterns',
+      'Created adaptive preprocessing for different data formats',
+      'Developed templated report generation with interactive components'
     ],
     outcomes: [
-      'Reduced average query time by 70%',
-      'Decreased storage costs by 30%',
-      'Improved data freshness from daily to hourly',
-      'Implemented automated data lineage tracking'
+      'Accelerated data analysis workflows by 60%',
+      'Enabled non-technical stakeholders to obtain insights independently',
+      'Standardized reporting across the organization',
+      'Improved decision-making through consistent and timely analysis'
     ],
     demoLink: '#',
-    githubLink: '#',
+    githubLink: 'https://github.com/Ajith-oo7/data-analysis-automation',
     imageSrc: '',
     color: "purple"
   },
   {
-    id: 'machine-learning-pipeline',
-    title: 'Machine Learning Pipeline',
-    description: 'Developed an end-to-end ML pipeline for customer segmentation that increased marketing campaign conversion rates by 25%.',
-    longDescription: 'Created a sophisticated machine learning pipeline that processes customer data to identify distinct customer segments and predict future behavior. The system enables highly targeted marketing campaigns with measurable ROI.',
-    techStack: ['Scikit-learn', 'Airflow', 'Docker', 'Python', 'PostgreSQL', 'MLflow'],
+    id: 'linkedin-post-generator',
+    title: 'LinkedIn Post Generator',
+    description: 'AI-powered content generation tool that creates engaging LinkedIn posts from minimal input.',
+    longDescription: 'Developed an intelligent content generation system specifically designed for LinkedIn. The tool analyzes user input, understands context, and generates professional, engaging posts optimized for LinkedIn\'s algorithm and audience engagement patterns.',
+    techStack: ['Python', 'NLP', 'OpenAI API', 'Flask', 'React', 'CSS'],
     challenges: [
-      'Integrating disparate customer data sources',
-      'Building explainable ML models for business users',
-      'Creating an automated retraining pipeline',
-      'Deploying models in a production environment'
+      'Creating content that sounds natural and professional, not AI-generated',
+      'Adapting to different industries and professional contexts',
+      'Optimizing content for LinkedIn\'s specific engagement patterns',
+      'Building a user-friendly interface for non-technical users'
     ],
     solutions: [
-      'Developed a feature engineering framework for customer data',
-      'Used ensemble methods to improve model accuracy',
-      'Implemented MLflow for experiment tracking',
-      'Built CI/CD pipeline for model deployment'
+      'Fine-tuned language models on professional LinkedIn content',
+      'Implemented industry-specific templates and tone adjustment',
+      'Developed engagement optimization features based on LinkedIn analytics',
+      'Created an intuitive UI with preview and editing capabilities'
     ],
     outcomes: [
-      'Increased marketing campaign conversion rates by 25%',
-      'Improved customer retention by identifying at-risk segments',
-      'Enabled personalized product recommendations',
-      'Reduced marketing costs by targeting high-value segments'
+      'Increased posting frequency and consistency for users',
+      'Improved engagement rates on generated content',
+      'Reduced content creation time from hours to minutes',
+      'Positive feedback on content quality and professional tone'
     ],
     demoLink: '#',
-    githubLink: '#',
+    githubLink: 'https://github.com/Ajith-oo7/Linkedin-Post-Generator',
     imageSrc: '',
     color: "pink"
   },
   {
-    id: 'data-quality-framework',
-    title: 'Data Quality Framework',
-    description: 'Implemented a comprehensive data quality monitoring system with automated alerts and dashboards.',
-    longDescription: 'Designed and implemented an enterprise-wide data quality monitoring system that automatically detects anomalies, validates data integrity, and provides visibility into data health across the organization.',
-    techStack: ['Great Expectations', 'Airflow', 'Grafana', 'Python', 'Prometheus', 'Slack API'],
+    id: 'project-dare',
+    title: 'Project DARE',
+    description: 'Dynamic Anomaly Recognition Engine - An advanced system for detecting outliers in complex datasets.',
+    longDescription: 'Developed Project DARE (Dynamic Anomaly Recognition Engine), a sophisticated system that identifies anomalies and outliers in complex, high-dimensional datasets. The project combines traditional statistical methods with modern machine learning approaches to provide robust anomaly detection across various data types.',
+    techStack: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Docker', 'Kubernetes'],
     challenges: [
-      'Monitoring thousands of datasets across different platforms',
-      'Building flexible validation rules for diverse data types',
-      'Implementing alerting with minimal false positives',
-      'Creating actionable dashboards for different stakeholders'
+      'Detecting subtle anomalies in high-dimensional data',
+      'Handling both labeled and unlabeled datasets effectively',
+      'Minimizing false positives while maintaining sensitivity',
+      'Creating a scalable system for large datasets'
     ],
     solutions: [
-      'Used Great Expectations for declarative data validation',
-      'Implemented statistical anomaly detection algorithms',
-      'Created a metadata repository for tracking data lineage',
-      'Developed custom Grafana dashboards by department'
+      'Implemented ensemble of detection algorithms for different data patterns',
+      'Developed semi-supervised learning approach for sparse labeled data',
+      'Created adaptive thresholding based on data characteristics',
+      'Designed containerized architecture for horizontal scaling'
     ],
     outcomes: [
-      'Reduced data incidents by 60%',
-      'Improved mean time to detection of issues by 85%',
-      'Created comprehensive data health scorecards',
-      'Enabled proactive data quality management'
+      'Achieved 92% detection rate on benchmark datasets',
+      'Reduced false positive rate by 40% compared to baseline methods',
+      'Successfully deployed in production environments',
+      'Enabled real-time anomaly detection for critical systems'
     ],
     demoLink: '#',
-    githubLink: '#',
+    githubLink: 'https://github.com/Ajith-oo7/project_dare',
     imageSrc: '',
     color: "blue"
   },
   {
-    id: 'iot-analytics-platform',
-    title: 'IoT Analytics Platform',
-    description: 'Built a scalable analytics platform for processing and analyzing data from thousands of IoT devices in real-time.',
-    longDescription: 'Architected a robust IoT analytics platform capable of ingesting, processing, and analyzing telemetry data from thousands of connected devices. The platform enables real-time monitoring, predictive maintenance, and operational insights.',
-    techStack: ['Kafka', 'Elasticsearch', 'Kibana', 'Python', 'TimescaleDB', 'MQTT'],
+    id: 'ml-model-deployment',
+    title: 'ML Model Deployment Framework',
+    description: 'End-to-end framework for deploying machine learning models to production environments.',
+    longDescription: 'Created a comprehensive framework for deploying machine learning models from development to production environments. The system handles model versioning, A/B testing, monitoring, and scaling while providing a simple interface for data scientists to push their models to production.',
+    techStack: ['Python', 'Docker', 'Kubernetes', 'Flask', 'MLflow', 'Prometheus', 'Grafana'],
     challenges: [
-      'Handling millions of data points per second',
-      'Managing device connectivity and message durability',
-      'Implementing time series analytics at scale',
-      'Creating real-time alerting for device health'
+      'Bridging the gap between data science and production engineering',
+      'Ensuring reliable deployment and version control of models',
+      'Monitoring model performance in production',
+      'Handling model updates without service disruption'
     ],
     solutions: [
-      'Used MQTT for lightweight edge device communication',
-      'Implemented Kafka for reliable message processing',
-      'Leveraged TimescaleDB for time-series data storage',
-      'Developed custom anomaly detection algorithms'
+      'Developed a CI/CD pipeline specifically for ML models',
+      'Implemented containerized deployment with automatic scaling',
+      'Created comprehensive monitoring and alerting system',
+      'Designed canary deployments and A/B testing infrastructure'
     ],
     outcomes: [
-      'Enabled predictive maintenance saving $1M annually',
-      'Improved device uptime by 15%',
-      'Reduced mean time to repair by 40%',
-      'Created real-time operational dashboards'
+      'Reduced model deployment time from weeks to hours',
+      'Improved model reliability in production',
+      'Enhanced visibility into model performance metrics',
+      'Enabled easy rollback and version management'
     ],
     demoLink: '#',
-    githubLink: '#',
+    githubLink: 'https://github.com/Ajith-oo7/deploying-machine-learning-models',
     imageSrc: '',
     color: "purple"
   },
   {
     id: 'sentiment-analysis-dashboard',
     title: 'Sentiment Analysis Dashboard',
-    description: 'Created an interactive dashboard for real-time sentiment analysis of customer feedback across multiple channels.',
+    description: 'Interactive dashboard for real-time sentiment analysis of customer feedback across multiple channels.',
     longDescription: 'Developed a comprehensive sentiment analysis solution that aggregates customer feedback from social media, support tickets, and reviews. The system uses natural language processing to determine sentiment and identify emerging issues.',
     techStack: ['NLP', 'React', 'Flask', 'MongoDB', 'BERT', 'AWS Comprehend'],
     challenges: [
