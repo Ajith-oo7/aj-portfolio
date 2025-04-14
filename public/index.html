@@ -19,13 +19,26 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     
-    <!-- Redirect script if we're on GitHub Pages -->
-    <script>
-      // Check if we need to redirect to the hash router version
+    <!-- Script to handle GitHub Pages routing -->
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
       (function() {
-        var isDirectGitHubAccess = window.location.pathname.indexOf('/aj-portfolio') === 0;
-        if (isDirectGitHubAccess && window.location.hash === '') {
-          window.location.href = window.location.origin + '/aj-portfolio/#/';
+        // Check if we're running on GitHub Pages
+        var pathSegmentsToKeep = 1; // Only keep the first path segment (repo name)
+        var l = window.location;
+        
+        // Make sure we're not already using the hash router format
+        if (l.pathname.indexOf('/aj-portfolio') === 0 && l.hash === '') {
+          // Redirect to the hash router version of the page
+          var repoName = '/aj-portfolio/';
+          l.replace(
+            l.protocol + '//' + l.hostname + 
+            (l.port ? ':' + l.port : '') + 
+            repoName + '#' + l.pathname.slice(repoName.length) +
+            l.search
+          );
         }
       })();
     </script>

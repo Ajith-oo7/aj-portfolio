@@ -16,7 +16,9 @@
       // Redirect to the hash-based URL structure that works with GitHub Pages
       window.location.href = l.protocol + '//' + l.hostname + 
         (l.port ? ':' + l.port : '') + 
-        repo + '#' + l.pathname.slice(1);
+        repo + '#' + (l.pathname.match(/^\/aj-portfolio\//) ? 
+                       l.pathname.replace(/^\/aj-portfolio\//, '') : 
+                       l.pathname.replace(/^\//, ''));
     })();
   </script>
   <style>
