@@ -18,7 +18,27 @@
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-    <script type="module" crossorigin src="/aj-portfolio/assets/index-DLfPQn81.js"></script>
+    
+    <!-- Script to handle GitHub Pages routing -->
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // https://github.com/rafgraph/spa-github-pages
+      (function() {
+        // Check if we need to redirect to the hash router format
+        var l = window.location;
+        if (l.hostname.includes('github.io') && l.hash === '') {
+          var repoPath = '/aj-portfolio/';
+          var path = l.pathname.replace(repoPath, '') || '';
+          l.replace(
+            l.protocol + '//' + l.hostname + 
+            (l.port ? ':' + l.port : '') + 
+            repoPath + '#/' + path +
+            l.search
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/aj-portfolio/assets/index-BdrCOG7m.js"></script>
     <link rel="stylesheet" crossorigin href="/aj-portfolio/assets/index-Dy3JNMxT.css">
   </head>
 
