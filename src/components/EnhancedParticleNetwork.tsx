@@ -6,6 +6,17 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 declare global {
   interface Window {
     particlesJS: any;
+    pJSDom: Array<{
+      pJS: {
+        particles: {
+          array: Array<any>;
+        };
+        canvas: {
+          w: number;
+          h: number;
+        };
+      };
+    }>;
   }
 }
 
