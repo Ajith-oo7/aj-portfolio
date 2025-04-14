@@ -25,5 +25,19 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist",
     sourcemap: true,
+    commonjsOptions: {
+      // This helps with older dependencies
+      transformMixedEsModules: true,
+    },
+  },
+  optimizeDeps: {
+    // Force inclusion of peer dependencies
+    include: ['react', 'react-dom'],
+    esbuildOptions: {
+      // Node.js global to browser globalThis
+      define: {
+        global: 'globalThis',
+      },
+    },
   },
 }));
