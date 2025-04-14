@@ -159,34 +159,5 @@ export const projectsData: ProjectDetail[] = [
     githubLink: 'https://github.com/Ajith-oo7/deploying-machine-learning-models',
     imageSrc: '',
     color: "purple"
-  },
-  {
-    id: 'sentiment-analysis-dashboard',
-    title: 'Sentiment Analysis Dashboard',
-    description: 'Interactive dashboard for real-time sentiment analysis of customer feedback across multiple channels.',
-    longDescription: 'Developed a comprehensive sentiment analysis solution that aggregates customer feedback from social media, support tickets, and reviews. The system uses natural language processing to determine sentiment and identify emerging issues.',
-    techStack: ['NLP', 'React', 'Flask', 'MongoDB', 'BERT', 'AWS Comprehend'],
-    challenges: [
-      'Processing unstructured text data in multiple languages',
-      'Handling sentiment analysis in domain-specific contexts',
-      'Integrating multiple data sources in real-time',
-      'Creating intuitive visualizations for non-technical users'
-    ],
-    solutions: [
-      'Fine-tuned BERT models for domain-specific sentiment analysis',
-      'Created a microservices architecture for data ingestion',
-      'Implemented real-time streaming with WebSockets',
-      'Designed interactive dashboards with React'
-    ],
-    outcomes: [
-      'Reduced response time to negative feedback by 80%',
-      'Identified product improvement opportunities',
-      'Tracked sentiment trends over time and by feature',
-      'Improved overall customer satisfaction scores'
-    ],
-    demoLink: '#',
-    githubLink: '#',
-    imageSrc: '',
-    color: "pink"
   }
 ];
