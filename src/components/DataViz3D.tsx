@@ -82,27 +82,22 @@ interface EdgeProps {
   width?: number;
 }
 
-// Fixed DataEdge component without the DOM issues
 const DataEdge: React.FC<EdgeProps> = ({ 
   start, 
   end, 
   color = '#333333',
   width = 0.01
 }) => {
-  // Create points array for the line
-  const points = [
-    new THREE.Vector3(...start),
-    new THREE.Vector3(...end)
-  ];
+  const points = [];
+  points.push(new THREE.Vector3(...start));
+  points.push(new THREE.Vector3(...end));
   
-  // Create a buffer geometry from points
   const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   
   return (
-    <primitive object={new THREE.Line(
-      lineGeometry,
-      new THREE.LineBasicMaterial({ color: color, linewidth: width, transparent: true, opacity: 0.6 })
-    )} />
+    <line geometry={lineGeometry}>
+      <lineBasicMaterial color={color} linewidth={width} transparent opacity={0.6} />
+    </line>
   );
 };
 
@@ -301,4 +296,3 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
 };
 
 export default DataViz3D;
-
