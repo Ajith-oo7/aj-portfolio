@@ -19,26 +19,24 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     
-    <!-- Script to handle GitHub Pages routing -->
+    <!-- Script to handle GitHub Pages routing - only runs on GitHub Pages -->
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
-      // https://github.com/rafgraph/spa-github-pages
       (function() {
-        // Check if we need to redirect to the hash router format
-        var l = window.location;
-        if (l.hostname.includes('github.io') && l.hash === '') {
+        // Check if we're on GitHub Pages
+        if (window.location.hostname.includes('github.io') && window.location.hash === '') {
           var repoPath = '/aj-portfolio/';
-          var path = l.pathname.replace(repoPath, '') || '';
-          l.replace(
-            l.protocol + '//' + l.hostname + 
-            (l.port ? ':' + l.port : '') + 
+          var path = window.location.pathname.replace(repoPath, '') || '';
+          window.location.replace(
+            window.location.protocol + '//' + window.location.hostname + 
+            (window.location.port ? ':' + window.location.port : '') + 
             repoPath + '#/' + path +
-            l.search
+            window.location.search
           );
         }
       })();
     </script>
-    <script type="module" crossorigin src="/aj-portfolio/assets/index-BdrCOG7m.js"></script>
+    <script type="module" crossorigin src="/aj-portfolio/assets/index-Bfa4F1Yb.js"></script>
     <link rel="stylesheet" crossorigin href="/aj-portfolio/assets/index-Dy3JNMxT.css">
   </head>
 
