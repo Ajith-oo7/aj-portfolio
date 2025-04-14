@@ -1,25 +1,29 @@
 
 import React, { useRef, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
-const DataNode: React.FC<{
+const SkillNode: React.FC<{
   position: [number, number, number];
-  color?: string;
-  label?: string;
-}> = ({ 
-  position, 
-  color = '#8B5CF6', 
-  label 
-}) => {
+  skill: string;
+  index: number;
+}> = ({ position, skill, index }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
+
+  // Color palette with soft, professional colors
+  const colors = [
+    '#8B5CF6',  // Soft Purple
+    '#1EAEDB', // Ocean Blue
+    '#D946EF', // Magenta Pink
+    '#F97316', // Bright Orange
+  ];
 
   useFrame((state) => {
     if (meshRef.current) {
       const t = state.clock.getElapsedTime();
-      const scale = 1 + (hovered ? 0.1 * Math.sin(t * 5) : 0);
+      const scale = 1 + (hovered ? 0.2 * Math.sin(t * 5) : 0);
       meshRef.current.scale.set(scale, scale, scale);
     }
   });
@@ -31,35 +35,35 @@ const DataNode: React.FC<{
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
       >
-        <sphereGeometry args={[0.2, 32, 32]} />
+        <sphereGeometry args={[0.15, 32, 32]} />
         <meshStandardMaterial 
-          color={hovered ? '#FFFFFF' : color} 
-          emissive={color}
-          emissiveIntensity={hovered ? 1.2 : 0.7}
-          roughness={0.4}
-          metalness={0.6}
+          color={colors[index % colors.length]} 
+          opacity={hovered ? 0.8 : 0.6}
+          transparent
+          roughness={0.5}
+          metalness={0.3}
         />
       </mesh>
-      {label && (
+      {hovered && (
         <Text
           position={[0, 0.3, 0]}
           fontSize={0.1}
-          color="#aaadb0"
+          color="#ffffff"
           anchorX="center"
           anchorY="bottom"
         >
-          {label}
+          {skill}
         </Text>
       )}
     </group>
   );
 };
 
-const DataNetwork: React.FC = () => {
+const SkillNetwork: React.FC = () => {
   const skills = [
     'Python', 'React', 'AWS', 
-    'Data', 'SQL', 'Cloud', 
-    'TypeScript'
+    'Data Science', 'SQL', 'Cloud', 
+    'TypeScript', 'Machine Learning'
   ];
 
   const nodes = skills.map((skill, i) => {
@@ -72,17 +76,20 @@ const DataNetwork: React.FC = () => {
     const z = radius * Math.cos(phi);
 
     return { 
-      position: [x, y, z], 
-      label: skill 
+      position: [x, y, z] as [number, number, number], 
+      skill,
+      index: i
     };
   });
 
   return (
     <group>
-      {nodes.map((node, idx) => (
-        <DataNode 
-          key={`node-${idx}`} 
-          {...node} 
+      {nodes.map((node) => (
+        <SkillNode 
+          key={node.skill} 
+          position={node.position} 
+          skill={node.skill}
+          index={node.index}
         />
       ))}
     </group>
@@ -93,8 +100,8 @@ const CustomEnvironment = () => {
   return (
     <>
       <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={0.8} />
-      <pointLight position={[-10, -10, -10]} intensity={0.4} />
+      <pointLight position={[10, 10, 10]} intensity={0.6} />
+      <pointLight position={[-10, -10, -10]} intensity={0.3} />
     </>
   );
 };
@@ -112,11 +119,13 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
       >
         <color attach="background" args={['#000000']} />
         <CustomEnvironment />
-        <DataNetwork />
+        <SkillNetwork />
         <OrbitControls 
           autoRotate 
           autoRotateSpeed={0.5} 
-          enableZoom={false} 
+          enableZoom={true} 
+          maxZoom={10}
+          minZoom={3}
         />
       </Canvas>
     </div>
