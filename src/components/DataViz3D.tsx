@@ -1,7 +1,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text } from '@react-three/drei';
+import { OrbitControls, Text, Trail, useTrail, Float, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface NodeProps {
@@ -10,48 +10,87 @@ interface NodeProps {
   color?: string;
   label?: string;
   pulse?: boolean;
+  onClick?: () => void;
 }
 
-const DataNode: React.FC<NodeProps> = ({ position, size = 0.3, color = '#1EAEDB', label, pulse = false }) => {
+const DataNode: React.FC<NodeProps> = ({ 
+  position, 
+  size = 0.3, 
+  color = '#1EAEDB', 
+  label, 
+  pulse = false,
+  onClick 
+}) => {
   const ref = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
+  const [clicked, setClicked] = useState(false);
   
+  // More dynamic pulsing animation
   useFrame((state) => {
     if (ref.current && pulse) {
-      ref.current.scale.x = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
-      ref.current.scale.y = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
-      ref.current.scale.z = 0.9 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1;
+      const t = state.clock.getElapsedTime();
+      ref.current.scale.x = 0.85 + 0.15 * Math.sin(t * 2);
+      ref.current.scale.y = 0.85 + 0.15 * Math.sin(t * 2 + 0.3);
+      ref.current.scale.z = 0.85 + 0.15 * Math.sin(t * 2 + 0.6);
+      
+      // Add subtle rotation
+      ref.current.rotation.x = Math.sin(t * 0.5) * 0.2;
+      ref.current.rotation.z = Math.sin(t * 0.3) * 0.2;
     }
   });
   
+  const handleClick = () => {
+    setClicked(!clicked);
+    if (onClick) onClick();
+  };
+  
   return (
-    <group position={position}>
+    <Float 
+      speed={pulse ? 2 : 1} 
+      rotationIntensity={0.2} 
+      floatIntensity={0.3}
+      position={position}
+    >
       <mesh
         ref={ref}
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
+        onClick={handleClick}
+        scale={clicked ? 1.2 : 1}
       >
         <sphereGeometry args={[size, 32, 32]} />
         <meshStandardMaterial 
           color={hovered ? '#ffffff' : color} 
           emissive={color}
-          emissiveIntensity={hovered ? 2 : 1}
+          emissiveIntensity={hovered ? 2.5 : clicked ? 1.8 : 1}
           roughness={0.2}
           metalness={0.8}
         />
+        {hovered && (
+          <Sparkles 
+            count={20} 
+            scale={[2, 2, 2]} 
+            size={0.4} 
+            speed={0.3} 
+            color={color} 
+          />
+        )}
       </mesh>
       {label && (
         <Text
           position={[0, size + 0.1, 0]}
           fontSize={0.1}
-          color="#ffffff"
+          color={hovered ? '#ffffff' : '#cccccc'}
           anchorX="center"
           anchorY="bottom"
+          renderOrder={2}
+          outlineWidth={0.008}
+          outlineColor="#000000"
         >
           {label}
         </Text>
       )}
-    </group>
+    </Float>
   );
 };
 
@@ -59,23 +98,53 @@ interface EdgeProps {
   start: [number, number, number];
   end: [number, number, number];
   color?: string;
+  width?: number;
+  speed?: number;
 }
 
-const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
-  const materialRef = useRef<THREE.LineBasicMaterial>(null);
+const DataEdge: React.FC<EdgeProps> = ({ 
+  start, 
+  end, 
+  color = '#1EAEDB',
+  width = 0.05,
+  speed = 1
+}) => {
+  const ref = useRef<THREE.Line>(null);
   
-  // Create a material outside of JSX
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: color,
+  // Create animated material
+  const shaderMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      color: { value: new THREE.Color(color) },
+      time: { value: 0 },
+      width: { value: width }
+    },
+    vertexShader: `
+      uniform float time;
+      varying vec3 vPosition;
+      void main() {
+        vPosition = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 color;
+      uniform float time;
+      uniform float width;
+      varying vec3 vPosition;
+      void main() {
+        float intensity = 0.5 + 0.5 * sin(vPosition.x * 10.0 + time * 2.0);
+        vec3 glowColor = mix(color, vec3(1.0), 0.3 * intensity);
+        gl_FragColor = vec4(glowColor, 0.2 + 0.6 * intensity);
+      }
+    `,
     transparent: true,
-    opacity: 0.7,
-    linewidth: 2
+    blending: THREE.AdditiveBlending
   });
   
-  // Update opacity in animation frame
+  // Update shader time uniform
   useFrame((state) => {
-    if (lineMaterial) {
-      lineMaterial.opacity = 0.5 + Math.sin(state.clock.getElapsedTime() * 3) * 0.2;
+    if (shaderMaterial) {
+      shaderMaterial.uniforms.time.value = state.clock.getElapsedTime() * speed;
     }
   });
   
@@ -85,13 +154,24 @@ const DataEdge: React.FC<EdgeProps> = ({ start, end, color = '#1EAEDB' }) => {
     new THREE.Vector3(...end)
   ];
   
-  // Create geometry from points
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+  // Create curved path
+  const curve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(...start),
+    new THREE.Vector3(
+      (start[0] + end[0]) / 2 + (Math.random() - 0.5) * 0.5,
+      (start[1] + end[1]) / 2 + (Math.random() - 0.5) * 0.5,
+      (start[2] + end[2]) / 2 + (Math.random() - 0.5) * 0.5
+    ),
+    new THREE.Vector3(...end)
+  ]);
   
-  // Create and return the line as a primitive object
-  const line = new THREE.Line(lineGeometry, lineMaterial);
+  const tubeGeometry = new THREE.TubeGeometry(curve, 20, width, 8, false);
   
-  return <primitive object={line} />;
+  return (
+    <mesh geometry={tubeGeometry}>
+      <primitive object={shaderMaterial} attach="material" />
+    </mesh>
+  );
 };
 
 interface DataNetworkProps {
@@ -102,19 +182,26 @@ interface DataNetworkProps {
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
   nodeCount = 14,
-  connections = 20,
+  connections = 25,
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
+  const [activeNode, setActiveNode] = useState<number | null>(null);
   
   // Generate nodes in a spherical pattern
   const nodes: NodeProps[] = [];
-  const skills = ['SQL', 'Python', 'Spark', 'ETL', 'AWS', 'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 'Tableau', 'ML', 'Data', 'dbt', 'Snowflake'];
+  const skills = [
+    'SQL', 'Python', 'Spark', 'ETL', 'AWS', 
+    'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 
+    'Tableau', 'ML', 'Data', 'dbt', 'Snowflake'
+  ];
   
   for (let i = 0; i < nodeCount; i++) {
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    const radius = 2.2 + Math.random() * 0.3;
+    // Create more interesting distribution pattern
+    const phi = Math.acos(-1 + (2 * i) / nodeCount);
+    const theta = Math.sqrt(nodeCount * Math.PI) * phi;
+    
+    const radius = 2.5 + Math.sin(i * 5) * 0.3;
     
     const x = radius * Math.sin(phi) * Math.cos(theta);
     const y = radius * Math.sin(phi) * Math.sin(theta);
@@ -126,17 +213,36 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     nodes.push({
       position: [x, y, z],
       color,
-      size: 0.15 + Math.random() * 0.1,
+      size: 0.15 + Math.random() * 0.2,
       label: skills[i % skills.length],
-      pulse: Math.random() > 0.5,
+      pulse: Math.random() > 0.3,
+      onClick: () => setActiveNode(activeNode === i ? null : i)
     });
   }
   
-  // Generate random connections
+  // Generate smarter connections
   const edges: EdgeProps[] = [];
-  for (let i = 0; i < connections; i++) {
+  
+  // First connect adjacent nodes
+  for (let i = 0; i < nodes.length; i++) {
+    const nextIndex = (i + 1) % nodes.length;
+    
+    edges.push({
+      start: nodes[i].position,
+      end: nodes[nextIndex].position,
+      color: nodes[i].color,
+      width: 0.02 + Math.random() * 0.03,
+      speed: 0.5 + Math.random() * 1.5
+    });
+  }
+  
+  // Then add some random connections
+  const randomConnections = connections - nodes.length;
+  for (let i = 0; i < randomConnections; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
+    
+    // Avoid self-connections
     while (endIndex === startIndex) {
       endIndex = Math.floor(Math.random() * nodes.length);
     }
@@ -145,12 +251,19 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       start: nodes[startIndex].position,
       end: nodes[endIndex].position,
       color: nodes[startIndex].color,
+      width: 0.01 + Math.random() * 0.02,
+      speed: 0.5 + Math.random() * 1.5
     });
   }
   
+  // Rotation animation
   useFrame((state) => {
     if (groupRef.current && autoRotate) {
       groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
+      
+      // Add subtle wobble
+      groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.05;
+      groupRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.03;
     }
   });
   
@@ -162,7 +275,30 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
       {edges.map((edge, idx) => (
         <DataEdge key={`edge-${idx}`} {...edge} />
       ))}
+      
+      {/* Add ambient particles */}
+      <Sparkles 
+        count={100} 
+        scale={[5, 5, 5]} 
+        size={0.2} 
+        speed={0.3} 
+        color="#ffffff" 
+        opacity={0.3}
+      />
     </group>
+  );
+};
+
+// Environment component to add ambient effects
+const Environment = () => {
+  return (
+    <>
+      <fog attach="fog" args={['#000000', 5, 15]} />
+      <ambientLight intensity={0.3} />
+      <pointLight position={[10, 10, 10]} intensity={1.5} castShadow />
+      <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
+      <pointLight position={[5, -5, 5]} intensity={0.5} color="#F97316" />
+    </>
   );
 };
 
@@ -191,28 +327,31 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
         gl={{ 
           antialias: true,
           powerPreference: 'high-performance',
-          alpha: true
+          alpha: true,
+          logarithmicDepthBuffer: true,
         }}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color('#000000'), 0);
-          // Fix: Use the correct encoding property available in Three.js v0.160.0
           gl.outputColorSpace = THREE.SRGBColorSpace;
+          gl.physicallyCorrectLights = true;
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.2;
         }}
         onError={() => setHasError(true)}
         shadows
       >
         <color attach="background" args={['#000000']} />
-        <fog attach="fog" args={['#000000', 5, 15]} />
-        <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} castShadow />
-        <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
+        <Environment />
         <React.Suspense fallback={null}>
           <DataNetwork />
           <OrbitControls 
-            enableZoom={false}
+            enableZoom={true}
             enablePan={false}
             autoRotate={false}
             rotateSpeed={0.5}
+            zoomSpeed={0.8}
+            minDistance={4}
+            maxDistance={10}
             minPolarAngle={Math.PI / 3}
             maxPolarAngle={Math.PI / 1.5}
           />
