@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, Trail, useTrail, Float, Sparkles } from '@react-three/drei';
@@ -25,7 +24,6 @@ const DataNode: React.FC<NodeProps> = ({
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   
-  // More dynamic pulsing animation
   useFrame((state) => {
     if (ref.current && pulse) {
       const t = state.clock.getElapsedTime();
@@ -33,7 +31,6 @@ const DataNode: React.FC<NodeProps> = ({
       ref.current.scale.y = 0.85 + 0.15 * Math.sin(t * 2 + 0.3);
       ref.current.scale.z = 0.85 + 0.15 * Math.sin(t * 2 + 0.6);
       
-      // Add subtle rotation
       ref.current.rotation.x = Math.sin(t * 0.5) * 0.2;
       ref.current.rotation.z = Math.sin(t * 0.3) * 0.2;
     }
@@ -111,7 +108,6 @@ const DataEdge: React.FC<EdgeProps> = ({
 }) => {
   const ref = useRef<THREE.Line>(null);
   
-  // Create animated material
   const shaderMaterial = new THREE.ShaderMaterial({
     uniforms: {
       color: { value: new THREE.Color(color) },
@@ -141,20 +137,17 @@ const DataEdge: React.FC<EdgeProps> = ({
     blending: THREE.AdditiveBlending
   });
   
-  // Update shader time uniform
   useFrame((state) => {
     if (shaderMaterial) {
       shaderMaterial.uniforms.time.value = state.clock.getElapsedTime() * speed;
     }
   });
   
-  // Create points for the line
   const points = [
     new THREE.Vector3(...start),
     new THREE.Vector3(...end)
   ];
   
-  // Create curved path
   const curve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(...start),
     new THREE.Vector3(
@@ -188,7 +181,6 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   const groupRef = useRef<THREE.Group>(null);
   const [activeNode, setActiveNode] = useState<number | null>(null);
   
-  // Generate nodes in a spherical pattern
   const nodes: NodeProps[] = [];
   const skills = [
     'SQL', 'Python', 'Spark', 'ETL', 'AWS', 
@@ -197,7 +189,6 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   ];
   
   for (let i = 0; i < nodeCount; i++) {
-    // Create more interesting distribution pattern
     const phi = Math.acos(-1 + (2 * i) / nodeCount);
     const theta = Math.sqrt(nodeCount * Math.PI) * phi;
     
@@ -220,10 +211,8 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     });
   }
   
-  // Generate smarter connections
   const edges: EdgeProps[] = [];
   
-  // First connect adjacent nodes
   for (let i = 0; i < nodes.length; i++) {
     const nextIndex = (i + 1) % nodes.length;
     
@@ -236,13 +225,11 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     });
   }
   
-  // Then add some random connections
   const randomConnections = connections - nodes.length;
   for (let i = 0; i < randomConnections; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
     
-    // Avoid self-connections
     while (endIndex === startIndex) {
       endIndex = Math.floor(Math.random() * nodes.length);
     }
@@ -256,12 +243,10 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     });
   }
   
-  // Rotation animation
   useFrame((state) => {
     if (groupRef.current && autoRotate) {
       groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
       
-      // Add subtle wobble
       groupRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.05;
       groupRef.current.rotation.z = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.03;
     }
@@ -276,7 +261,6 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
         <DataEdge key={`edge-${idx}`} {...edge} />
       ))}
       
-      {/* Add ambient particles */}
       <Sparkles 
         count={100} 
         scale={[5, 5, 5]} 
@@ -289,7 +273,6 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   );
 };
 
-// Environment component to add ambient effects
 const Environment = () => {
   return (
     <>
@@ -302,7 +285,6 @@ const Environment = () => {
   );
 };
 
-// Fallback component to handle errors in 3D rendering
 const Fallback = () => (
   <div className="w-full h-full flex items-center justify-center">
     <div className="text-white text-center">
@@ -313,7 +295,6 @@ const Fallback = () => (
 );
 
 const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
-  // Using an error boundary pattern for React Three Fiber
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
@@ -333,7 +314,6 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color('#000000'), 0);
           gl.outputColorSpace = THREE.SRGBColorSpace;
-          gl.physicallyCorrectLights = true;
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.2;
         }}
