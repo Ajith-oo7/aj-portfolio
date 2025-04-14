@@ -1,6 +1,7 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, Trail, useTrail, Float, Sparkles } from '@react-three/drei';
+import { OrbitControls, Text, Trail, useTrail, Float, Sparkles, Environment as DreiEnvironment } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface NodeProps {
@@ -83,6 +84,7 @@ const DataNode: React.FC<NodeProps> = ({
           renderOrder={2}
           outlineWidth={0.008}
           outlineColor="#000000"
+          maxWidth={1}
         >
           {label}
         </Text>
@@ -174,8 +176,8 @@ interface DataNetworkProps {
 }
 
 const DataNetwork: React.FC<DataNetworkProps> = ({ 
-  nodeCount = 14,
-  connections = 25,
+  nodeCount = 22,
+  connections = 35,
   autoRotate = true
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -185,7 +187,9 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   const skills = [
     'SQL', 'Python', 'Spark', 'ETL', 'AWS', 
     'Hadoop', 'Kafka', 'Airflow', 'NoSQL', 
-    'Tableau', 'ML', 'Data', 'dbt', 'Snowflake'
+    'Tableau', 'ML', 'Data', 'dbt', 'Snowflake',
+    'Docker', 'Kubernetes', 'TensorFlow', 'PyTorch', 
+    'React', 'TypeScript', 'NextJS', 'Supabase'
   ];
   
   for (let i = 0; i < nodeCount; i++) {
@@ -198,7 +202,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     const y = radius * Math.sin(phi) * Math.sin(theta);
     const z = radius * Math.cos(phi);
     
-    const colors = ['#1EAEDB', '#8B5CF6', '#D946EF', '#F97316'];
+    const colors = ['#1EAEDB', '#8B5CF6', '#D946EF', '#F97316', '#10B981', '#EC4899'];
     const color = colors[Math.floor(Math.random() * colors.length)];
     
     nodes.push({
@@ -213,6 +217,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   
   const edges: EdgeProps[] = [];
   
+  // Connect nodes in a ring
   for (let i = 0; i < nodes.length; i++) {
     const nextIndex = (i + 1) % nodes.length;
     
@@ -225,8 +230,46 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
     });
   }
   
-  const randomConnections = connections - nodes.length;
-  for (let i = 0; i < randomConnections; i++) {
+  // Add strategic connections (not just random)
+  // Connect similar technology nodes
+  const techGroups = {
+    'data': ['SQL', 'ETL', 'Data', 'dbt', 'Snowflake', 'NoSQL'],
+    'cloud': ['AWS', 'Docker', 'Kubernetes'],
+    'streaming': ['Kafka', 'Spark'],
+    'ml': ['ML', 'TensorFlow', 'PyTorch'],
+    'frontend': ['React', 'TypeScript', 'NextJS'],
+    'orchestration': ['Airflow', 'Hadoop'],
+    'visualization': ['Tableau']
+  };
+  
+  // Find nodes by label
+  const findNodeByLabel = (label: string) => {
+    return nodes.findIndex(node => node.label === label);
+  };
+  
+  // Connect within groups
+  Object.values(techGroups).forEach(group => {
+    for (let i = 0; i < group.length; i++) {
+      for (let j = i + 1; j < group.length; j++) {
+        const startIdx = findNodeByLabel(group[i]);
+        const endIdx = findNodeByLabel(group[j]);
+        
+        if (startIdx !== -1 && endIdx !== -1) {
+          edges.push({
+            start: nodes[startIdx].position,
+            end: nodes[endIdx].position,
+            color: nodes[startIdx].color,
+            width: 0.01 + Math.random() * 0.02,
+            speed: 0.5 + Math.random() * 1.5
+          });
+        }
+      }
+    }
+  });
+  
+  // Add some random cross-discipline connections
+  const remainingConnections = connections - edges.length;
+  for (let i = 0; i < remainingConnections; i++) {
     const startIndex = Math.floor(Math.random() * nodes.length);
     let endIndex = Math.floor(Math.random() * nodes.length);
     
@@ -273,7 +316,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({
   );
 };
 
-const Environment = () => {
+const CustomEnvironment = () => {
   return (
     <>
       <fog attach="fog" args={['#000000', 5, 15]} />
@@ -281,6 +324,7 @@ const Environment = () => {
       <pointLight position={[10, 10, 10]} intensity={1.5} castShadow />
       <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
       <pointLight position={[5, -5, 5]} intensity={0.5} color="#F97316" />
+      <DreiEnvironment preset="city" background={false} />
     </>
   );
 };
@@ -321,7 +365,7 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
         shadows
       >
         <color attach="background" args={['#000000']} />
-        <Environment />
+        <CustomEnvironment />
         <React.Suspense fallback={null}>
           <DataNetwork />
           <OrbitControls 
