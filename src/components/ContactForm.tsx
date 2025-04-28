@@ -35,6 +35,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+// Direct EmailJS integration without going through Supabase
+const EMAILJS_SERVICE_ID = "service_lfqzf0s";
+const EMAILJS_TEMPLATE_ID = "template_6wz0o6h";
+const EMAILJS_PUBLIC_KEY = "NkEHgQXJYYoLba4ck";
+
 const ContactForm: React.FC = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -55,22 +60,37 @@ const ContactForm: React.FC = () => {
     try {
       console.log("Submitting form data:", data);
       
-      // Send data to Supabase function
-      const response = await fetch('https://ajnanawlfyqnwvfwhfpt.supabase.co/functions/v1/send-email', {
+      // Prepare template parameters for EmailJS
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        subject: data.subject,
+        message: data.message
+      };
+
+      // Send email directly using EmailJS API
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          service_id: EMAILJS_SERVICE_ID,
+          template_id: EMAILJS_TEMPLATE_ID,
+          user_id: EMAILJS_PUBLIC_KEY,
+          template_params: templateParams
+        }),
       });
       
-      const result = await response.json();
+      const responseText = await response.text();
+      console.log("EmailJS API response status:", response.status);
+      console.log("EmailJS API response:", responseText);
       
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to send message');
+        throw new Error(`Failed to send message: ${responseText || response.statusText}`);
       }
       
-      // Show success notification with Sonner (more modern toast)
+      // Show success notification with Sonner
       sonnerToast.success('Message sent!', {
         description: 'Thanks for reaching out. I\'ll get back to you soon.',
         duration: 5000,
