@@ -1,13 +1,15 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from '@/context/TranslationContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -18,9 +20,37 @@ const Header: React.FC = () => {
         setIsScrolled(false);
       }
     };
+    
+    // Close mobile menu when screen is resized to desktop
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('resize', handleResize);
+    
+    // Handle clicking outside to close mobile menu
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isMobileMenuOpen && 
+        mobileMenuRef.current && 
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('button')
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   const scrollToSection = (sectionId: string) => {
     console.log(`Attempting to scroll to section: ${sectionId}`);
@@ -65,68 +95,111 @@ const Header: React.FC = () => {
         isScrolled ? 'bg-black/80 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'
       }`}
     >
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <div className="text-white font-mono text-2xl flex items-center">
+        <motion.div 
+          className="text-white font-mono text-2xl flex items-center"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <span className="text-gradient font-bold">AA</span>
           <span className="text-neon-blue">.</span>
-        </div>
+        </motion.div>
 
-        <nav className="hidden md:flex items-center space-x-8">
-          {navItems.map(item => (
-            <a
+        <motion.nav 
+          className="hidden md:flex items-center space-x-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {navItems.map((item, index) => (
+            <motion.a
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               href={`#${item.id}`}
               className="text-white opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide cursor-pointer"
+              aria-label={`Navigate to ${item.label} section`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 + index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
             >
               {item.label}
-            </a>
+            </motion.a>
           ))}
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
             <Button 
               onClick={() => scrollToSection('contact')} 
               className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
+              aria-label="Get in touch"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {t('navigation.getInTouch')}
             </Button>
           </div>
-        </nav>
+        </motion.nav>
 
         <div className="md:hidden flex items-center space-x-3">
           <LanguageSwitcher />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-white"
-            aria-label="Toggle menu"
+            className="text-white p-2 rounded-md hover:bg-white/10 transition-colors"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md py-4 shadow-lg">
-          <nav className="container mx-auto px-4 flex flex-col space-y-4">
-            {navItems.map(item => (
-              <a
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                href={`#${item.id}`}
-                className="text-white py-2 opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide"
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            ref={mobileMenuRef}
+            id="mobile-menu"
+            className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md py-4 shadow-lg"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <nav className="container mx-auto px-4 flex flex-col space-y-4">
+              {navItems.map((item, index) => (
+                <motion.a
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  href={`#${item.id}`}
+                  className="text-white py-3 opacity-80 hover:opacity-100 hover:text-neon-blue transition-colors text-sm uppercase tracking-wide"
+                  aria-label={`Navigate to ${item.label} section`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navItems.length * 0.05 }}
               >
-                {item.label}
-              </a>
-            ))}
-            <Button 
-              onClick={() => scrollToSection('contact')} 
-              className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium w-full"
-            >
-              {t('navigation.getInTouch')}
-            </Button>
-          </nav>
-        </div>
-      )}
+                <Button 
+                  onClick={() => scrollToSection('contact')} 
+                  className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium w-full py-3"
+                  aria-label="Get in touch"
+                >
+                  {t('navigation.getInTouch')}
+                </Button>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

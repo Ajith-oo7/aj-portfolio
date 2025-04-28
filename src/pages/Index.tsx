@@ -12,6 +12,7 @@ import ProjectsSection from '@/components/sections/ProjectsSection';
 import AboutSection from '@/components/sections/AboutSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/layout/Footer';
+import { motion } from 'framer-motion';
 
 const Index = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -70,14 +71,18 @@ const Index = () => {
       <ParticleNetwork />
       
       {/* Mouse blob effect - smaller and more responsive */}
-      <div 
+      <motion.div 
         id="mouse-blob" 
         className="fixed w-48 h-48 rounded-full bg-radial-glow pointer-events-none opacity-60 z-0"
         style={{ transform: 'translate(-50%, -50%)' }}
-      ></div>
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 0.6, scale: 1 }}
+        transition={{ duration: 1 }}
+      ></motion.div>
       
       <div 
         className="fixed inset-0 bg-grid-pattern bg-[length:30px_30px] opacity-5 pointer-events-none z-0"
+        aria-hidden="true"
       ></div>
       
       <Header />
@@ -86,7 +91,7 @@ const Index = () => {
       <HeroSection onScroll={scrollToSection} onScrollToContent={scrollToContent} />
       
       {/* Main Content Sections */}
-      <div ref={scrollRef}>
+      <main id="main-content" ref={scrollRef}>
         <JourneySection />
         <SkillsSectionWrapper />
         <ExperienceSectionWrapper />
@@ -94,7 +99,7 @@ const Index = () => {
         <ProjectsSection />
         <AboutSection />
         <ContactSection />
-      </div>
+      </main>
       
       {/* Footer */}
       <Footer />
