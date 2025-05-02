@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
 import ParticleNetwork from '@/components/ParticleNetwork';
 import ScrollProgressIndicator from '@/components/ScrollProgressIndicator';
@@ -12,10 +12,11 @@ import ProjectsSection from '@/components/sections/ProjectsSection';
 import AboutSection from '@/components/sections/AboutSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/layout/Footer';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Index = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [showNetworkTip, setShowNetworkTip] = useState(false);
   
   const scrollToContent = () => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -45,6 +46,25 @@ const Index = () => {
     }, 300); // Delay for better reliability
   };
   
+  // Create a pulsing animation effect on first load to draw attention to background
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowNetworkTip(true);
+    }, 3000); // Show tip after 3 seconds
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  useEffect(() => {
+    if (showNetworkTip) {
+      const timer = setTimeout(() => {
+        setShowNetworkTip(false);
+      }, 5000); // Hide tip after 5 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showNetworkTip]);
+  
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const blob = document.getElementById('mouse-blob');
@@ -70,6 +90,28 @@ const Index = () => {
       {/* Particle network background */}
       <ParticleNetwork />
       
+      {/* Network interaction tip */}
+      <AnimatePresence>
+        {showNetworkTip && (
+          <motion.div
+            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 py-2 px-4 bg-purple-800/80 backdrop-blur-sm rounded-lg shadow-lg border border-purple-400/20 text-white"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            role="status"
+            aria-live="polite"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-8 h-8 bg-purple-700/50 rounded-full">
+                <span className="block w-3 h-3 bg-purple-400 rounded-full animate-ping"></span>
+              </div>
+              <p>Explore the interactive purple network by clicking anywhere!</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       {/* Mouse blob effect - smaller and more responsive */}
       <motion.div 
         id="mouse-blob" 
@@ -78,6 +120,7 @@ const Index = () => {
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 0.6, scale: 1 }}
         transition={{ duration: 1 }}
+        aria-hidden="true"
       ></motion.div>
       
       <div 

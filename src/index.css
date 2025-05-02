@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
@@ -45,6 +44,11 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Particle network variables */
+    --particle-color-main: 139, 92, 246; /* Purple */
+    --particle-color-accent: 217, 70, 239; /* Pink */
+    --particle-animation-speed: 2.5s;
   }
 }
 
@@ -196,6 +200,65 @@
   }
 }
 
+/* Particle effect utilities */
+.particle-ping {
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.particle-pulse {
+  animation: pulse-particle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.particle-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.particle-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  border-radius: 50%;
+  background: radial-gradient(
+    rgba(var(--particle-color-main), 0.3) 0%,
+    rgba(var(--particle-color-main), 0.1) 30%,
+    rgba(var(--particle-color-main), 0.05) 60%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-out var(--particle-animation-speed) ease-out infinite;
+}
+
+/* Animations for particle effects */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-particle {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes ripple-out {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -208,6 +271,36 @@
   width: 100%;
   height: 100%;
   z-index: 0;
+  cursor: pointer; /* Indicate interactivity */
+}
+
+.particle-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  padding: 10px 16px;
+  border-radius: 24px;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  color: #fff;
+  font-size: 0.875rem;
+  backdrop-filter: blur(5px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.particle-hint::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  background-color: rgb(139, 92, 246);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
 }
 
 /* Improve touch targets for mobile */
