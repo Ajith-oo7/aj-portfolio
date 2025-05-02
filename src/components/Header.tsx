@@ -131,15 +131,18 @@ const Header: React.FC = () => {
           ))}
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
-            <Button 
-              onClick={() => scrollToSection('contact')} 
-              className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
-              aria-label="Get in touch"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {t('navigation.getInTouch')}
-            </Button>
+              <Button 
+                onClick={() => scrollToSection('contact')} 
+                className="bg-neon-blue text-white hover:bg-neon-blue/80 font-medium"
+                aria-label="Get in touch"
+              >
+                {t('navigation.getInTouch')}
+              </Button>
+            </motion.div>
           </div>
         </motion.nav>
 

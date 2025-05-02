@@ -9,21 +9,30 @@ declare global {
   }
 }
 
+export type ParticleTheme = 'purple' | 'blue' | 'green' | 'orange' | 'rainbow';
+
 interface ParticleNetworkProps {
   className?: string;
   id?: string;
+  enabled?: boolean;
+  theme?: ParticleTheme;
 }
 
 const ParticleNetwork: React.FC<ParticleNetworkProps> = ({ 
   className, 
-  id = 'particle-1' 
+  id = 'particle-1',
+  enabled = true,
+  theme = 'purple'
 }) => {
   const particlesRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showHint, setShowHint] = useState(true);
+  const [easterEggActive, setEasterEggActive] = useState(false);
+  const sequenceRef = useRef<string[]>([]);
+  const easterEggCode = ['p', 'a', 'r', 't', 'y'];
   
   useEffect(() => {
-    if (typeof window !== "undefined" && particlesRef.current) {
+    if (typeof window !== "undefined" && particlesRef.current && enabled) {
       // Load particles.js from CDN
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js';
@@ -43,38 +52,114 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
       
       document.body.appendChild(script);
       
+      // Set up keyboard listener for easter egg
+      const handleKeyDown = (e: KeyboardEvent) => {
+        const key = e.key.toLowerCase();
+        
+        // Add the key to the sequence
+        sequenceRef.current = [...sequenceRef.current, key].slice(-easterEggCode.length);
+        
+        // Check if the sequence matches the easter egg code
+        if (sequenceRef.current.join('') === easterEggCode.join('')) {
+          setEasterEggActive(true);
+          setTimeout(() => setEasterEggActive(false), 10000); // Reset after 10 seconds
+        }
+      };
+      
+      window.addEventListener('keydown', handleKeyDown);
+      
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
         }
+        window.removeEventListener('keydown', handleKeyDown);
       };
     }
-  }, []);
+  }, [enabled]);
+  
+  // Effect to handle theme changes
+  useEffect(() => {
+    if (isLoaded && window.particlesJS && enabled) {
+      initParticles();
+    }
+  }, [theme, easterEggActive, enabled]);
+  
+  const getThemeColors = () => {
+    if (easterEggActive) {
+      return {
+        particleColors: ["#ff0000", "#ff7700", "#ffff00", "#00ff00", "#0000ff", "#8B5CF6", "#D946EF"],
+        lineColor: "#ffffff",
+        speed: 5,
+        size: 4
+      };
+    }
+    
+    switch (theme) {
+      case 'blue':
+        return {
+          particleColors: ["#1EAEDB", "#33C3F0", "#6DEAFF", "#0FA0CE", "#0078A8"],
+          lineColor: "#1EAEDB",
+          speed: 2.2,
+          size: 3
+        };
+      case 'green':
+        return {
+          particleColors: ["#10B981", "#34D399", "#6EE7B7", "#059669", "#047857"],
+          lineColor: "#10B981",
+          speed: 2.5,
+          size: 3.2
+        };
+      case 'orange':
+        return {
+          particleColors: ["#F97316", "#FB923C", "#FDBA74", "#EA580C", "#C2410C"],
+          lineColor: "#F97316",
+          speed: 2.8,
+          size: 3.5
+        };
+      case 'rainbow':
+        return {
+          particleColors: ["#D946EF", "#8B5CF6", "#3B82F6", "#10B981", "#F97316"],
+          lineColor: "#8B5CF6",
+          speed: 3,
+          size: 3.8
+        };
+      case 'purple':
+      default:
+        return {
+          particleColors: ["#D946EF", "#8B5CF6", "#9b87f5", "#7E69AB", "#6E59A5"],
+          lineColor: "#8B5CF6",
+          speed: 2.5,
+          size: 3.5
+        };
+    }
+  };
   
   const initParticles = () => {
     if (particlesRef.current && window.particlesJS) {
+      const themeConfig = getThemeColors();
+      
       window.particlesJS(particlesRef.current.id, {
         particles: {
           number: { 
-            value: 80, // Increased for more visible network
+            value: easterEggActive ? 120 : 80, // More particles during easter egg
             density: { enable: true, value_area: 800 } 
           },
           color: { 
-            value: ["#D946EF", "#8B5CF6", "#9b87f5", "#7E69AB", "#6E59A5"] // Pink/purple tones
+            value: themeConfig.particleColors
           },
           shape: { type: "circle" },
           opacity: { 
-            value: 0.7, // Increased for better visibility
+            value: 0.7,
             random: true, 
             anim: { 
               enable: true, 
               speed: 1, 
-              opacity_min: 0.3, // Increased minimum opacity
+              opacity_min: 0.3,
               sync: false 
             } 
           },
           size: { 
-            value: 3.5, // Slightly larger particles
+            value: themeConfig.size,
             random: true, 
             anim: { 
               enable: true, 
@@ -86,13 +171,13 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
           line_linked: {
             enable: true,
             distance: 150,
-            color: "#8B5CF6", // More vibrant connection lines
-            opacity: 0.5, // Increased opacity
-            width: 1.2 // Slightly thicker lines
+            color: themeConfig.lineColor,
+            opacity: 0.5,
+            width: 1.2
           },
           move: {
             enable: true,
-            speed: 2.5, // Slightly faster movement
+            speed: easterEggActive ? themeConfig.speed * 1.5 : themeConfig.speed, // Faster during easter egg
             direction: "none",
             random: true,
             straight: false,
@@ -102,35 +187,35 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
           }
         },
         interactivity: {
-          detect_on: "window", // Detect on entire window
+          detect_on: "window",
           events: {
             onhover: { 
               enable: true, 
-              mode: "grab" // "Grabbing" effect connecting particles to cursor
+              mode: "grab"
             },
             onclick: { 
               enable: true, 
-              mode: "push" // Add particles on click
+              mode: easterEggActive ? "repulse" : "push" // Different click effect during easter egg
             },
             resize: true
           },
           modes: {
             grab: {
-              distance: 180, // Increased grab distance
+              distance: 180,
               line_linked: {
-                opacity: 0.9 // More visible grab lines
+                opacity: 0.9
               }
             },
             repulse: {
-              distance: 100,
+              distance: 200,
               duration: 0.4
             },
             push: {
-              particles_nb: 8 // Add more particles on click
+              particles_nb: easterEggActive ? 12 : 8
             },
             bubble: {
               distance: 100,
-              size: 6,
+              size: easterEggActive ? 8 : 6,
               duration: 0.4,
               opacity: 0.8,
               speed: 3
@@ -141,6 +226,8 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
       });
     }
   };
+  
+  if (!enabled) return null;
   
   return (
     <>
@@ -154,9 +241,10 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
           position: 'fixed',
           top: 0,
           left: 0,
-          pointerEvents: 'auto' // Allow interaction with particles
+          pointerEvents: 'auto'
         }}
         aria-hidden="true"
+        data-theme={theme}
       ></div>
       
       {/* Visual hint to show interactivity */}
@@ -171,6 +259,20 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
         >
           <span className="text-sm font-medium">Try clicking or moving your cursor</span>
           <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+        </motion.div>
+      )}
+      
+      {/* Easter Egg Activation Message */}
+      {easterEggActive && (
+        <motion.div 
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-8 py-4 rounded-lg bg-black/80 backdrop-blur-md border border-white/20 text-white text-center"
+          initial={{ scale: 0, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          exit={{ scale: 0, rotate: 10 }}
+          transition={{ type: "spring", bounce: 0.5 }}
+        >
+          <h2 className="text-3xl font-bold mb-2 text-gradient">Party Mode Activated! 🎉</h2>
+          <p>Enjoy the rainbow particles for 10 seconds!</p>
         </motion.div>
       )}
     </>

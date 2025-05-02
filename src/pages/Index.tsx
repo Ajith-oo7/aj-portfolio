@@ -1,7 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
-import ParticleNetwork from '@/components/ParticleNetwork';
+import ParticleNetwork, { ParticleTheme } from '@/components/ParticleNetwork';
+import NetworkToggle from '@/components/NetworkToggle';
 import ScrollProgressIndicator from '@/components/ScrollProgressIndicator';
 import HeroSection from '@/components/sections/HeroSection';
 import JourneySection from '@/components/sections/JourneySection';
@@ -14,7 +15,19 @@ import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/layout/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Index = () => {
+interface IndexProps {
+  networkEnabled: boolean;
+  setNetworkEnabled: (enabled: boolean) => void;
+  networkTheme: ParticleTheme;
+  setNetworkTheme: (theme: ParticleTheme) => void;
+}
+
+const Index: React.FC<IndexProps> = ({
+  networkEnabled,
+  setNetworkEnabled,
+  networkTheme,
+  setNetworkTheme
+}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showNetworkTip, setShowNetworkTip] = useState(false);
   
@@ -88,11 +101,28 @@ const Index = () => {
       <ScrollProgressIndicator />
       
       {/* Particle network background */}
-      <ParticleNetwork />
+      <ParticleNetwork enabled={networkEnabled} theme={networkTheme} />
+      
+      {/* Network toggle positioned at the top right corner */}
+      <div className="fixed top-20 right-4 z-50">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <NetworkToggle
+            enabled={networkEnabled}
+            onToggle={() => setNetworkEnabled(!networkEnabled)}
+            currentTheme={networkTheme}
+            onThemeChange={setNetworkTheme}
+            className="p-3 bg-black/60 backdrop-blur-sm rounded-lg border border-white/10 shadow-lg"
+          />
+        </motion.div>
+      </div>
       
       {/* Network interaction tip */}
       <AnimatePresence>
-        {showNetworkTip && (
+        {showNetworkTip && networkEnabled && (
           <motion.div
             className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 py-2 px-4 bg-purple-800/80 backdrop-blur-sm rounded-lg shadow-lg border border-purple-400/20 text-white"
             initial={{ opacity: 0, y: 20 }}
@@ -106,7 +136,7 @@ const Index = () => {
               <div className="flex items-center justify-center w-8 h-8 bg-purple-700/50 rounded-full">
                 <span className="block w-3 h-3 bg-purple-400 rounded-full animate-ping"></span>
               </div>
-              <p>Explore the interactive purple network by clicking anywhere!</p>
+              <p>Explore the interactive network by clicking anywhere!</p>
             </div>
           </motion.div>
         )}

@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
@@ -174,8 +173,31 @@ const skills = [
 ];
 
 // Simplified visualization
-const DataNetwork = () => {
+interface DataNetworkProps {
+  theme?: string;
+}
+
+const DataNetwork: React.FC<DataNetworkProps> = ({ theme = 'purple' }) => {
   const groupRef = useRef<THREE.Group>(null);
+  
+  // Get theme-appropriate colors
+  const getThemeColors = () => {
+    switch (theme) {
+      case 'blue':
+        return ['#1EAEDB', '#33C3F0', '#6DEAFF', '#0FA0CE'];
+      case 'green':
+        return ['#10B981', '#34D399', '#6EE7B7', '#059669'];
+      case 'orange':
+        return ['#F97316', '#FB923C', '#FDBA74', '#EA580C'];
+      case 'rainbow':
+        return ['#D946EF', '#8B5CF6', '#3B82F6', '#10B981', '#F97316'];
+      case 'purple':
+      default:
+        return ['#1EAEDB', '#8B5CF6', '#F97316', '#10B981'];
+    }
+  };
+  
+  const colors = getThemeColors();
   
   // Create fewer nodes
   const nodes: NodeProps[] = [];
@@ -191,7 +213,6 @@ const DataNetwork = () => {
     const y = radius * Math.sin(phi) * Math.sin(theta);
     const z = radius * Math.cos(phi);
     
-    const colors = ['#1EAEDB', '#8B5CF6', '#F97316', '#10B981'];
     const color = colors[Math.floor(Math.random() * colors.length)];
     
     nodes.push({
@@ -278,7 +299,12 @@ const Fallback = () => (
   </div>
 );
 
-const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
+interface DataViz3DProps {
+  className?: string;
+  theme?: string;
+}
+
+const DataViz3D: React.FC<DataViz3DProps> = ({ className, theme = 'purple' }) => {
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
@@ -301,7 +327,7 @@ const DataViz3D: React.FC<{ className?: string }> = ({ className }) => {
         <pointLight position={[10, 10, 10]} intensity={1.5} />
         <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
         <React.Suspense fallback={null}>
-          <DataNetwork />
+          <DataNetwork theme={theme} />
           <ControlsWrapper />
         </React.Suspense>
       </Canvas>
