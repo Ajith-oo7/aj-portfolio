@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Add type definition for particlesJS
 declare global {
@@ -28,6 +28,8 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [easterEggActive, setEasterEggActive] = useState(false);
+  const [isParticleActive, setIsParticleActive] = useState(false);
+  const activeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const sequenceRef = useRef<string[]>([]);
   const easterEggCode = ['p', 'a', 'r', 't', 'y'];
   
@@ -35,7 +37,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
     if (typeof window !== "undefined" && particlesRef.current && enabled) {
       // Load particles.js from CDN
       const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js';
+      script.src = 'https://cdn.jsdelivr.net/npm/particles.min.js@2.0.0/particles.min.js';
       script.async = true;
       
       script.onload = () => {
@@ -62,27 +64,58 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
         // Check if the sequence matches the easter egg code
         if (sequenceRef.current.join('') === easterEggCode.join('')) {
           setEasterEggActive(true);
-          setTimeout(() => setEasterEggActive(false), 10000); // Reset after 10 seconds
+          setIsParticleActive(true);
+          
+          // Reset easter egg after 10 seconds
+          setTimeout(() => setEasterEggActive(false), 10000);
+          
+          // Reset active state after random time between 15-25 seconds
+          const randomDuration = Math.floor(Math.random() * (25000 - 15000 + 1) + 15000);
+          if (activeTimerRef.current) {
+            clearTimeout(activeTimerRef.current);
+          }
+          activeTimerRef.current = setTimeout(() => {
+            setIsParticleActive(false);
+          }, randomDuration);
         }
       };
       
+      // Handle click events to activate particles
+      const handleClick = () => {
+        setIsParticleActive(true);
+        
+        // Reset active state after random time between 15-25 seconds
+        const randomDuration = Math.floor(Math.random() * (25000 - 15000 + 1) + 15000);
+        if (activeTimerRef.current) {
+          clearTimeout(activeTimerRef.current);
+        }
+        activeTimerRef.current = setTimeout(() => {
+          setIsParticleActive(false);
+        }, randomDuration);
+      };
+      
       window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('click', handleClick);
       
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
         }
         window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('click', handleClick);
+        if (activeTimerRef.current) {
+          clearTimeout(activeTimerRef.current);
+        }
       };
     }
   }, [enabled]);
   
-  // Effect to handle theme changes
+  // Effect to handle theme changes and active state
   useEffect(() => {
     if (isLoaded && window.particlesJS && enabled) {
       initParticles();
     }
-  }, [theme, easterEggActive, enabled]);
+  }, [theme, easterEggActive, enabled, isParticleActive]);
   
   const getThemeColors = () => {
     if (easterEggActive) {
@@ -138,92 +171,139 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
     if (particlesRef.current && window.particlesJS) {
       const themeConfig = getThemeColors();
       
-      window.particlesJS(particlesRef.current.id, {
-        particles: {
-          number: { 
-            value: easterEggActive ? 120 : 80, // More particles during easter egg
-            density: { enable: true, value_area: 800 } 
-          },
-          color: { 
-            value: themeConfig.particleColors
-          },
-          shape: { type: "circle" },
-          opacity: { 
-            value: 0.7,
-            random: true, 
-            anim: { 
-              enable: true, 
-              speed: 1, 
-              opacity_min: 0.3,
-              sync: false 
-            } 
-          },
-          size: { 
-            value: themeConfig.size,
-            random: true, 
-            anim: { 
-              enable: true, 
-              speed: 2, 
-              size_min: 0.1, 
-              sync: false 
-            } 
-          },
-          line_linked: {
-            enable: true,
-            distance: 150,
-            color: themeConfig.lineColor,
-            opacity: 0.5,
-            width: 1.2
-          },
-          move: {
-            enable: true,
-            speed: easterEggActive ? themeConfig.speed * 1.5 : themeConfig.speed, // Faster during easter egg
-            direction: "none",
-            random: true,
-            straight: false,
-            out_mode: "out",
-            bounce: false,
-            attract: { enable: true, rotateX: 600, rotateY: 1200 }
-          }
-        },
-        interactivity: {
-          detect_on: "window",
-          events: {
-            onhover: { 
-              enable: true, 
-              mode: "grab"
+      // Only show interactive particles when active
+      if (!isParticleActive && !easterEggActive) {
+        window.particlesJS(particlesRef.current.id, {
+          particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 } },
+            color: { value: themeConfig.particleColors },
+            shape: { type: "circle" },
+            opacity: { 
+              value: 0.3,
+              random: true, 
+              anim: { enable: false }
             },
-            onclick: { 
-              enable: true, 
-              mode: easterEggActive ? "repulse" : "push" // Different click effect during easter egg
+            size: { 
+              value: 2,
+              random: true, 
+              anim: { enable: false }
             },
-            resize: true
-          },
-          modes: {
-            grab: {
-              distance: 180,
-              line_linked: {
-                opacity: 0.9
-              }
+            line_linked: {
+              enable: true,
+              distance: 150,
+              color: themeConfig.lineColor,
+              opacity: 0.2,
+              width: 1
             },
-            repulse: {
-              distance: 200,
-              duration: 0.4
-            },
-            push: {
-              particles_nb: easterEggActive ? 12 : 8
-            },
-            bubble: {
-              distance: 100,
-              size: easterEggActive ? 8 : 6,
-              duration: 0.4,
-              opacity: 0.8,
-              speed: 3
+            move: {
+              enable: true,
+              speed: 0.8,
+              direction: "none",
+              random: true,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
+              attract: { enable: false }
             }
-          }
-        },
-        retina_detect: true
-      });
+          },
+          interactivity: {
+            detect_on: "window",
+            events: {
+              onhover: { enable: false },
+              onclick: { enable: false },
+              resize: true
+            }
+          },
+          retina_detect: true
+        });
+      } else {
+        window.particlesJS(particlesRef.current.id, {
+          particles: {
+            number: { 
+              value: easterEggActive ? 120 : 80,
+              density: { enable: true, value_area: 800 } 
+            },
+            color: { 
+              value: themeConfig.particleColors
+            },
+            shape: { type: "circle" },
+            opacity: { 
+              value: 0.7,
+              random: true, 
+              anim: { 
+                enable: true, 
+                speed: 1, 
+                opacity_min: 0.3,
+                sync: false 
+              } 
+            },
+            size: { 
+              value: themeConfig.size,
+              random: true, 
+              anim: { 
+                enable: true, 
+                speed: 2, 
+                size_min: 0.1, 
+                sync: false 
+              } 
+            },
+            line_linked: {
+              enable: true,
+              distance: 150,
+              color: themeConfig.lineColor,
+              opacity: 0.5,
+              width: 1.2
+            },
+            move: {
+              enable: true,
+              speed: easterEggActive ? themeConfig.speed * 1.5 : themeConfig.speed,
+              direction: "none",
+              random: true,
+              straight: false,
+              out_mode: "out",
+              bounce: false,
+              attract: { enable: true, rotateX: 600, rotateY: 1200 }
+            }
+          },
+          interactivity: {
+            detect_on: "window",
+            events: {
+              onhover: { 
+                enable: true, 
+                mode: "grab"
+              },
+              onclick: { 
+                enable: true, 
+                mode: easterEggActive ? "repulse" : "push"
+              },
+              resize: true
+            },
+            modes: {
+              grab: {
+                distance: 180,
+                line_linked: {
+                  opacity: 0.9
+                }
+              },
+              repulse: {
+                distance: 200,
+                duration: 0.4
+              },
+              push: {
+                particles_nb: easterEggActive ? 12 : 8
+              },
+              bubble: {
+                distance: 100,
+                size: easterEggActive ? 8 : 6,
+                duration: 0.4,
+                opacity: 0.8,
+                speed: 3
+              }
+            }
+          },
+          retina_detect: true
+        });
+      }
     }
   };
   
@@ -245,6 +325,7 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
         }}
         aria-hidden="true"
         data-theme={theme}
+        data-active={isParticleActive || easterEggActive ? "true" : "false"}
       ></div>
       
       {/* Visual hint to show interactivity */}

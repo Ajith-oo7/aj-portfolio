@@ -33,9 +33,9 @@ const NetworkToggle: React.FC<NetworkToggleProps> = ({
   };
   
   return (
-    <div className={`flex flex-col items-center gap-2 ${className}`}>
+    <div className={`flex flex-col items-center gap-1 ${className}`}>
       <div className="flex items-center space-x-2 py-1">
-        <label htmlFor="network-toggle" className="text-sm text-white/80 select-none cursor-pointer">
+        <label htmlFor="network-toggle" className="text-xs text-white/80 select-none cursor-pointer">
           Network Mode
         </label>
         <Switch
@@ -47,32 +47,32 @@ const NetworkToggle: React.FC<NetworkToggleProps> = ({
       </div>
       
       {enabled && (
-        <div className="flex flex-col items-center space-y-2 pt-1 pb-2">
-          <div className="flex items-center space-x-2">
-            <Palette className="h-4 w-4 text-white/60" />
-            <span className="text-xs text-white/80">Themes</span>
+        <div className="flex flex-col items-center space-y-1 pt-1 pb-2">
+          <div className="flex items-center space-x-1">
+            <Palette className="h-3 w-3 text-white/60" />
+            <span className="text-xs text-white/70">Themes</span>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-2 max-w-[200px]">
+          <div className="flex flex-wrap justify-center gap-1 max-w-[160px]">
             {themes.map((theme) => (
               <Toggle
                 key={theme}
                 aria-label={`${theme} theme`}
                 variant="outline"
                 size="sm"
-                className={`h-8 w-8 rounded-full p-0 ${currentTheme === theme ? 'ring-2 ring-white' : ''}`}
+                className={`h-6 w-6 rounded-full p-0 ${currentTheme === theme ? 'ring-1 ring-white' : ''}`}
                 pressed={currentTheme === theme}
                 onPressedChange={() => onThemeChange(theme)}
               >
                 <span 
-                  className={`w-5 h-5 rounded-full ${themeClasses[theme]}`} 
+                  className={`w-4 h-4 rounded-full ${themeClasses[theme]}`} 
                   aria-hidden="true"
                 ></span>
               </Toggle>
             ))}
           </div>
           
-          <div className="text-xs text-white/60 mt-1 text-center">
+          <div className="text-[10px] text-white/50 mt-0.5 text-center">
             <p>Psst! Try typing "party"</p>
           </div>
         </div>
