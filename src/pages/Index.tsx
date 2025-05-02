@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
 import ParticleNetwork, { ParticleTheme } from '@/components/ParticleNetwork';
@@ -103,22 +102,20 @@ const Index: React.FC<IndexProps> = ({
       {/* Particle network background */}
       <ParticleNetwork enabled={networkEnabled} theme={networkTheme} />
       
-      {/* Network toggle positioned at the top right corner */}
-      <div className="fixed top-20 right-4 z-50">
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <NetworkToggle
-            enabled={networkEnabled}
-            onToggle={() => setNetworkEnabled(!networkEnabled)}
-            currentTheme={networkTheme}
-            onThemeChange={setNetworkTheme}
-            className="p-3 bg-black/60 backdrop-blur-sm rounded-lg border border-white/10 shadow-lg"
-          />
-        </motion.div>
-      </div>
+      {/* Rest of components */}
+      <div 
+        className="fixed inset-0 bg-grid-pattern bg-[length:30px_30px] opacity-5 pointer-events-none z-0"
+        aria-hidden="true"
+      ></div>
+      
+      <Header>
+        <NetworkToggle
+          enabled={networkEnabled}
+          onToggle={() => setNetworkEnabled(!networkEnabled)}
+          currentTheme={networkTheme}
+          onThemeChange={setNetworkTheme}
+        />
+      </Header>
       
       {/* Network interaction tip */}
       <AnimatePresence>
@@ -142,7 +139,7 @@ const Index: React.FC<IndexProps> = ({
         )}
       </AnimatePresence>
       
-      {/* Mouse blob effect - smaller and more responsive */}
+      {/* Mouse blob effect */}
       <motion.div 
         id="mouse-blob" 
         className="fixed w-48 h-48 rounded-full bg-radial-glow pointer-events-none opacity-60 z-0"
@@ -152,13 +149,6 @@ const Index: React.FC<IndexProps> = ({
         transition={{ duration: 1 }}
         aria-hidden="true"
       ></motion.div>
-      
-      <div 
-        className="fixed inset-0 bg-grid-pattern bg-[length:30px_30px] opacity-5 pointer-events-none z-0"
-        aria-hidden="true"
-      ></div>
-      
-      <Header />
       
       {/* Hero Section */}
       <HeroSection onScroll={scrollToSection} onScrollToContent={scrollToContent} />

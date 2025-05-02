@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,11 @@ import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from '@/context/TranslationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  children?: React.ReactNode;
+}
+
+const Header: React.FC<HeaderProps> = ({ children }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -130,6 +133,7 @@ const Header: React.FC = () => {
             </motion.a>
           ))}
           <div className="flex items-center space-x-3">
+            {children}
             <LanguageSwitcher />
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -147,6 +151,7 @@ const Header: React.FC = () => {
         </motion.nav>
 
         <div className="md:hidden flex items-center space-x-3">
+          {children}
           <LanguageSwitcher />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
