@@ -6,6 +6,8 @@ export interface ThemeConfig {
   lineColor: string;
   speed: number;
   size: number;
+  blinking?: boolean;
+  blinkSpeed?: number;
 }
 
 /**
@@ -17,7 +19,9 @@ export const getThemeColors = (theme: ParticleTheme, isEasterEggActive: boolean)
       particleColors: ["#ff0000", "#ff7700", "#ffff00", "#00ff00", "#0000ff", "#8B5CF6", "#D946EF"],
       lineColor: "#ffffff",
       speed: 5,
-      size: 4
+      size: 4,
+      blinking: true,
+      blinkSpeed: 1.5
     };
   }
   

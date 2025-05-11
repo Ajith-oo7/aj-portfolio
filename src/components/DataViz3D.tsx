@@ -36,42 +36,45 @@ const Node: React.FC<NodeProps> = ({
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      position={position}
-    >
-      <sphereGeometry args={[size, 16, 16]} />
-      <meshStandardMaterial 
-        color={color} 
-        emissive={color} 
-        emissiveIntensity={hovered ? 0.6 : 0.2}
-        roughness={0.2}
-        metalness={0.8}
+    <group>
+      <mesh
+        ref={meshRef}
+        position={position}
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
-      />
+      >
+        <sphereGeometry args={[size, 16, 16]} />
+        <meshStandardMaterial 
+          color={color} 
+          emissive={color} 
+          emissiveIntensity={hovered ? 0.6 : 0.2}
+          roughness={0.2}
+          metalness={0.8}
+        />
+      </mesh>
       
       {label && (
-        <Float
-          speed={5}
-          rotationIntensity={0.2}
-          floatIntensity={0.2}
-          position={new THREE.Vector3(0, size * 2, 0)}
-        >
-          <Text
-            color={color}
-            fontSize={0.15}
-            maxWidth={2}
-            lineHeight={1}
-            letterSpacing={0.02}
-            textAlign="center"
-            anchorY="bottom"
+        <group position={[position.x, position.y + size * 2, position.z]}>
+          <Float
+            speed={5}
+            rotationIntensity={0.2}
+            floatIntensity={0.2}
           >
-            {label}
-          </Text>
-        </Float>
+            <Text
+              color={color}
+              fontSize={0.15}
+              maxWidth={2}
+              lineHeight={1}
+              letterSpacing={0.02}
+              textAlign="center"
+              anchorY="bottom"
+            >
+              {label}
+            </Text>
+          </Float>
+        </group>
       )}
-    </mesh>
+    </group>
   );
 };
 
@@ -129,18 +132,20 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
   });
   
   return (
-    <mesh 
-      ref={mesh}
-      position={position}
-    >
-      <sphereGeometry args={[size || 0.2, 24, 24]} />
-      <meshPhongMaterial 
-        color={color || '#ffffff'} 
-        emissive={hovered ? color : '#000000'}
+    <group>
+      <mesh 
+        ref={mesh}
+        position={position}
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}
-      />
-    </mesh>
+      >
+        <sphereGeometry args={[size || 0.2, 24, 24]} />
+        <meshPhongMaterial 
+          color={color || '#ffffff'} 
+          emissive={hovered ? color : '#000000'}
+        />
+      </mesh>
+    </group>
   );
 };
 

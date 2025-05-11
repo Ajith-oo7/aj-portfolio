@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { initParticles, loadParticlesScript } from '../utils/particleConfig';
 import { useEasterEgg } from '../hooks/useEasterEgg';
 import { ParticleTheme } from '../types/particle';
@@ -88,18 +88,20 @@ const ParticleNetwork: React.FC<ParticleNetworkProps> = ({
       )}
       
       {/* Easter Egg Activation Message */}
-      {easterEggActive && (
-        <motion.div 
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-8 py-4 rounded-lg bg-black/80 backdrop-blur-md border border-white/20 text-white text-center"
-          initial={{ scale: 0, rotate: -10 }}
-          animate={{ scale: 1, rotate: 0 }}
-          exit={{ scale: 0, rotate: 10 }}
-          transition={{ type: "spring", bounce: 0.5 }}
-        >
-          <h2 className="text-3xl font-bold mb-2 text-gradient">Party Mode Activated! 🎉</h2>
-          <p>Enjoy the rainbow particles for 10 seconds!</p>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {easterEggActive && (
+          <motion.div 
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 px-8 py-4 rounded-lg bg-black/80 backdrop-blur-md border border-white/20 text-white text-center"
+            initial={{ scale: 0, rotate: -10 }}
+            animate={{ scale: 1, rotate: 0 }}
+            exit={{ scale: 0, rotate: 10 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+          >
+            <h2 className="text-3xl font-bold mb-2 text-gradient">Party Mode Activated! 🎉</h2>
+            <p>Enjoy the rainbow neon particles for 10 seconds!</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
