@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
-import ParticleNetwork, { ParticleTheme } from '@/components/ParticleNetwork';
+import ParticleNetwork from '@/components/ParticleNetwork';
 import NetworkToggle from '@/components/NetworkToggle';
 import ScrollProgressIndicator from '@/components/ScrollProgressIndicator';
 import HeroSection from '@/components/sections/HeroSection';
@@ -13,6 +13,7 @@ import AboutSection from '@/components/sections/AboutSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/layout/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ParticleTheme } from '../types/particle';
 
 interface IndexProps {
   networkEnabled: boolean;
@@ -29,6 +30,7 @@ const Index: React.FC<IndexProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showNetworkTip, setShowNetworkTip] = useState(false);
+  const [particleDensity, setParticleDensity] = useState(1);
   
   const scrollToContent = () => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -100,7 +102,11 @@ const Index: React.FC<IndexProps> = ({
       <ScrollProgressIndicator />
       
       {/* Particle network background */}
-      <ParticleNetwork enabled={networkEnabled} theme={networkTheme} />
+      <ParticleNetwork 
+        enabled={networkEnabled} 
+        theme={networkTheme} 
+        density={particleDensity}
+      />
       
       {/* Rest of components */}
       <div 
@@ -114,6 +120,8 @@ const Index: React.FC<IndexProps> = ({
           onToggle={() => setNetworkEnabled(!networkEnabled)}
           currentTheme={networkTheme}
           onThemeChange={setNetworkTheme}
+          density={particleDensity}
+          onDensityChange={setParticleDensity}
         />
       </Header>
       

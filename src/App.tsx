@@ -8,7 +8,7 @@ import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { TranslationProvider } from "./context/TranslationContext";
-import { ParticleTheme } from "./components/ParticleNetwork";
+import { ParticleTheme } from "./types/particle";
 
 const queryClient = new QueryClient();
 
