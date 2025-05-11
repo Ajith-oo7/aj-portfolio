@@ -39,10 +39,6 @@ const Node: React.FC<NodeProps> = ({
     <mesh
       ref={meshRef}
       position={position}
-      // Using the properly typed event handlers for R3F
-      onPointerDown={(e) => e.stopPropagation()}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
     >
       <sphereGeometry args={[size, 16, 16]} />
       <meshStandardMaterial 
@@ -51,6 +47,8 @@ const Node: React.FC<NodeProps> = ({
         emissiveIntensity={hovered ? 0.6 : 0.2}
         roughness={0.2}
         metalness={0.8}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
       />
       
       {label && (
@@ -58,7 +56,6 @@ const Node: React.FC<NodeProps> = ({
           speed={5}
           rotationIntensity={0.2}
           floatIntensity={0.2}
-          // Create a proper Vector3 for the position
           position={new THREE.Vector3(0, size * 2, 0)}
         >
           <Text
@@ -135,14 +132,13 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
     <mesh 
       ref={mesh}
       position={position}
-      // Using the properly typed event handlers for R3F
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}
     >
       <sphereGeometry args={[size || 0.2, 24, 24]} />
       <meshPhongMaterial 
         color={color || '#ffffff'} 
         emissive={hovered ? color : '#000000'}
+        onPointerOver={() => setHover(true)}
+        onPointerOut={() => setHover(false)}
       />
     </mesh>
   );
