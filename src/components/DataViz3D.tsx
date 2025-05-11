@@ -39,8 +39,9 @@ const Node: React.FC<NodeProps> = ({
     <mesh
       ref={meshRef}
       position={position}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
+      onClick={(e) => e.stopPropagation()}
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
     >
       <sphereGeometry args={[size, 16, 16]} />
       <meshStandardMaterial 
@@ -56,7 +57,7 @@ const Node: React.FC<NodeProps> = ({
           speed={5}
           rotationIntensity={0.2}
           floatIntensity={0.2}
-          position={new THREE.Vector3(0, size * 2, 0)}
+          position={[0, size * 2, 0]}
         >
           <Text
             color={color}
@@ -132,8 +133,8 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
     <mesh 
       ref={mesh}
       position={position}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
     >
       <sphereGeometry args={[size || 0.2, 24, 24]} />
       <meshPhongMaterial 
@@ -159,6 +160,7 @@ interface NetworkData {
 
 interface DataViz3DProps {
   rotate?: boolean;
+  className?: string;
 }
 
 const Skills3D: React.FC = () => {
@@ -281,7 +283,7 @@ const SkillsConnection: React.FC = () => {
   );
 };
 
-const DataViz3D: React.FC<DataViz3DProps> = ({ rotate = true }) => {
+const DataViz3D: React.FC<DataViz3DProps> = ({ rotate = true, className }) => {
   const [hasError, setHasError] = useState(false);
   
   if (hasError) {
@@ -299,7 +301,7 @@ const DataViz3D: React.FC<DataViz3DProps> = ({ rotate = true }) => {
   }
   
   return (
-    <div className="w-full h-[300px] neo-blur border border-white/10 rounded-lg overflow-hidden">
+    <div className={`w-full h-[300px] neo-blur border border-white/10 rounded-lg overflow-hidden ${className || ''}`}>
       <Canvas
         camera={{ position: [0, 0, 8], fov: 60 }}
         gl={{ 

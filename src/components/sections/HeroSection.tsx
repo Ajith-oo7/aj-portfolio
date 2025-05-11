@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
