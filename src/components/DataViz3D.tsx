@@ -1,10 +1,11 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Float, Sparkles } from '@react-three/drei';
 
 interface NodeProps {
-  position: [number, number, number];
+  position: THREE.Vector3;
   size?: number;
   color?: string;
   label?: string;
@@ -85,8 +86,8 @@ const DataNode: React.FC<NodeProps> = ({
 };
 
 interface EdgeProps {
-  start: [number, number, number];
-  end: [number, number, number];
+  start: THREE.Vector3;
+  end: THREE.Vector3;
   color?: string;
   width?: number;
 }
@@ -97,22 +98,17 @@ const DataEdge: React.FC<EdgeProps> = ({
   color = '#1EAEDB',
   width = 0.05
 }) => {
-  const points = [
-    new THREE.Vector3(...start),
-    new THREE.Vector3(...end)
-  ];
-  
   const midPoint = new THREE.Vector3().addVectors(
-    new THREE.Vector3(...start),
-    new THREE.Vector3(...end)
+    start,
+    end
   ).multiplyScalar(0.5);
   
   midPoint.normalize().multiplyScalar(3.0);
   
   const curve = new THREE.QuadraticBezierCurve3(
-    new THREE.Vector3(...start),
+    start,
     midPoint,
-    new THREE.Vector3(...end)
+    end
   );
   
   const tubeGeometry = new THREE.TubeGeometry(curve, 20, width, 8, false);
@@ -216,7 +212,7 @@ const DataNetwork: React.FC<DataNetworkProps> = ({ theme = 'purple' }) => {
     const color = colors[Math.floor(Math.random() * colors.length)];
     
     nodes.push({
-      position: [x, y, z],
+      position: new THREE.Vector3(x, y, z),
       color,
       size: 0.15 + Math.random() * 0.1,
       label: skills[i % skills.length],
@@ -322,7 +318,7 @@ const DataViz3D: React.FC<DataViz3DProps> = ({ className, theme = 'purple' }) =>
         }}
         onError={() => setHasError(true)}
       >
-        <color attach="background" args={['#000000']} />
+        <color attach="background" args={[0, 0, 0]} />
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
         <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
