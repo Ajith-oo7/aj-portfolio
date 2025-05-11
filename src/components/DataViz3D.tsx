@@ -39,9 +39,10 @@ const Node: React.FC<NodeProps> = ({
     <mesh
       ref={meshRef}
       position={position}
-      onClick={(e) => e.stopPropagation()}
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
+      // Using the properly typed event handlers for R3F
+      onPointerDown={(e) => e.stopPropagation()}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
     >
       <sphereGeometry args={[size, 16, 16]} />
       <meshStandardMaterial 
@@ -57,7 +58,8 @@ const Node: React.FC<NodeProps> = ({
           speed={5}
           rotationIntensity={0.2}
           floatIntensity={0.2}
-          position={[0, size * 2, 0]}
+          // Create a proper Vector3 for the position
+          position={new THREE.Vector3(0, size * 2, 0)}
         >
           <Text
             color={color}
@@ -133,8 +135,9 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
     <mesh 
       ref={mesh}
       position={position}
-      onPointerEnter={() => setHover(true)}
-      onPointerLeave={() => setHover(false)}
+      // Using the properly typed event handlers for R3F
+      onPointerOver={() => setHover(true)}
+      onPointerOut={() => setHover(false)}
     >
       <sphereGeometry args={[size || 0.2, 24, 24]} />
       <meshPhongMaterial 
