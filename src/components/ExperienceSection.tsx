@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Briefcase, Building } from 'lucide-react';
 import { useTranslation } from '@/context/TranslationContext';
@@ -19,7 +20,7 @@ const ExperienceSection: React.FC = () => {
         return [
           {
             role: "Ingeniero de Datos",
-            company: "Accenture",
+            company: "Infokeys",
             period: "Abr 2024–Presente",
             summary: "Dirigí la migración de flujos de trabajo ETL a Databricks, desarrollé marcos de gobierno de datos e implementé sistemas de monitoreo basados en IA. Creé estrategias de optimización de datos en Snowflake e integré LLMs para etiquetado de metadatos e informes automatizados, mejorando significativamente el tiempo de procesamiento, reduciendo costos y mejorando la calidad y accesibilidad de los datos."
           },
@@ -52,7 +53,7 @@ const ExperienceSection: React.FC = () => {
         return [
           {
             role: "Ingénieur de Données",
-            company: "Accenture",
+            company: "Infokeys",
             period: "Avr 2024–Présent",
             summary: "J'ai dirigé la migration des flux de travail ETL vers Databricks, développé des cadres de gouvernance des données et mis en œuvre des systèmes de surveillance basés sur l'IA. J'ai créé des stratégies d'optimisation des données dans Snowflake et intégré des LLMs pour le balisage des métadonnées et les rapports automatisés, améliorant considérablement le temps de traitement, réduisant les coûts et améliorant la qualité et l'accessibilité des données."
           },
@@ -85,7 +86,7 @@ const ExperienceSection: React.FC = () => {
         return [
           {
             role: "Dateningenieur",
-            company: "Accenture",
+            company: "Infokeys",
             period: "Apr 2024–Heute",
             summary: "Ich leitete die Migration von ETL-Workflows zu Databricks, entwickelte Daten-Governance-Frameworks und implementierte KI-gestützte Überwachungssysteme. Ich erstellte Datenoptimierungsstrategien in Snowflake und integrierte LLMs für Metadaten-Tagging und automatisierte Berichterstattung, was die Verarbeitungszeit erheblich verbesserte, Kosten reduzierte und die Datenqualität und -zugänglichkeit verbesserte."
           },
@@ -118,7 +119,7 @@ const ExperienceSection: React.FC = () => {
         return [
           {
             role: "数据工程师",
-            company: "Accenture",
+            company: "Infokeys",
             period: "2024年4月至今",
             summary: "领导ETL工作流程迁移到Databricks，开发数据治理框架，并实施AI驱动的监控系统。在Snowflake中创建数据优化策略，并集成LLM用于元数据标记和自动报告，显著改善处理时间，降低成本，提高数据质量和可访问性。"
           },
@@ -151,7 +152,7 @@ const ExperienceSection: React.FC = () => {
         return [
           {
             role: "Data Engineer",
-            company: "Accenture",
+            company: "Infokeys",
             period: "Apr 2024–Present",
             summary: "Led migration of ETL workflows to Databricks, developed data governance frameworks, and implemented AI-driven monitoring systems. Created data optimization strategies in Snowflake and integrated LLMs for metadata tagging and automated reporting, significantly improving processing time, reducing costs, and enhancing data quality and accessibility."
           },

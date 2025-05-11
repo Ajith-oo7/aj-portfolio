@@ -9,79 +9,69 @@ interface NodeProps {
   size?: number;
   color?: string;
   label?: string;
-  pulse?: boolean;
-  onClick?: () => void;
+  pulsate?: boolean;
 }
 
-const DataNode: React.FC<NodeProps> = ({ 
+const Node: React.FC<NodeProps> = ({ 
   position, 
-  size = 0.3, 
-  color = '#1EAEDB', 
-  label, 
-  pulse = false,
-  onClick 
+  size = 0.2, 
+  color = '#ffffff', 
+  label,
+  pulsate = true 
 }) => {
-  const ref = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
-  const [clicked, setClicked] = useState(false);
   
   useFrame((state) => {
-    if (ref.current && pulse) {
-      const t = state.clock.getElapsedTime();
-      ref.current.scale.x = 0.85 + 0.15 * Math.sin(t * 2);
-      ref.current.scale.y = 0.85 + 0.15 * Math.sin(t * 2 + 0.3);
-      ref.current.scale.z = 0.85 + 0.15 * Math.sin(t * 2 + 0.6);
+    if (meshRef.current && pulsate) {
+      meshRef.current.scale.setScalar(
+        1.0 + Math.sin(state.clock.getElapsedTime() * 2) * 0.1
+      );
+    }
+    
+    if (hovered && meshRef.current) {
+      meshRef.current.rotation.x += 0.01;
+      meshRef.current.rotation.y += 0.01;
     }
   });
-  
-  const handleClick = () => {
-    setClicked(!clicked);
-    if (onClick) onClick();
-  };
-  
+
   return (
-    <Float 
-      speed={pulse ? 2 : 1} 
-      rotationIntensity={0.2} 
-      floatIntensity={0.3}
+    <mesh
+      ref={meshRef}
       position={position}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
     >
-      <mesh
-        ref={ref}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-        onClick={handleClick}
-        scale={clicked ? 1.2 : 1}
-      >
-        <sphereGeometry args={[size, 16, 16]} />
-        <meshStandardMaterial 
-          color={hovered ? '#ffffff' : color} 
-          emissive={color}
-          emissiveIntensity={hovered ? 2 : clicked ? 1.5 : 1}
-          roughness={0.3}
-        />
-        {hovered && (
-          <Sparkles 
-            count={10} 
-            scale={[1.5, 1.5, 1.5]} 
-            size={0.4} 
-            speed={0.3} 
-            color={color} 
-          />
-        )}
-      </mesh>
+      <sphereGeometry args={[size, 16, 16]} />
+      <meshStandardMaterial 
+        color={color} 
+        emissive={color} 
+        emissiveIntensity={hovered ? 0.6 : 0.2}
+        roughness={0.2}
+        metalness={0.8}
+      />
+      
       {label && (
-        <Text
-          position={[0, size + 0.1, 0]}
-          fontSize={0.1}
-          color={hovered ? '#ffffff' : '#cccccc'}
-          anchorX="center"
-          anchorY="bottom"
+        <Float
+          speed={5}
+          rotationIntensity={0.2}
+          floatIntensity={0.2}
+          position={new THREE.Vector3(0, size * 2, 0)}
         >
-          {label}
-        </Text>
+          <Text
+            color={color}
+            fontSize={0.15}
+            maxWidth={2}
+            lineHeight={1}
+            letterSpacing={0.02}
+            textAlign="center"
+            anchorY="bottom"
+          >
+            {label}
+          </Text>
+        </Float>
       )}
-    </Float>
+    </mesh>
   );
 };
 
@@ -92,7 +82,7 @@ interface EdgeProps {
   width?: number;
 }
 
-const DataEdge: React.FC<EdgeProps> = ({ 
+const Edge: React.FC<EdgeProps> = ({ 
   start, 
   end, 
   color = '#1EAEDB',
@@ -114,207 +104,208 @@ const DataEdge: React.FC<EdgeProps> = ({
   const tubeGeometry = new THREE.TubeGeometry(curve, 20, width, 8, false);
   
   return (
-    <mesh geometry={tubeGeometry}>
-      <meshStandardMaterial
-        color={color}
-        transparent={true}
-        opacity={0.7}
+    <mesh>
+      <meshStandardMaterial 
+        color={color} 
         emissive={color}
-        emissiveIntensity={0.5}
+        emissiveIntensity={0.4}
+        transparent
+        opacity={0.7}
       />
+      <primitive object={tubeGeometry} attach="geometry" />
     </mesh>
   );
 };
 
-// Globe base component
-const GlobeBase = () => {
-  const globeRef = useRef<THREE.Mesh>(null);
+const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
+  const mesh = useRef<THREE.Mesh>(null);
+  const [hovered, setHover] = useState(false);
   
-  useFrame(({ clock }) => {
-    if (globeRef.current) {
-      globeRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+  useFrame(() => {
+    if (mesh.current) {
+      mesh.current.rotation.x += 0.005;
+      mesh.current.rotation.y += 0.005;
     }
   });
   
   return (
-    <mesh ref={globeRef}>
-      <sphereGeometry args={[2.8, 32, 32]} />
+    <mesh 
+      ref={mesh}
+      position={position}
+      onPointerOver={() => setHover(true)}
+      onPointerOut={() => setHover(false)}
+    >
+      <sphereGeometry args={[size || 0.2, 24, 24]} />
       <meshPhongMaterial 
-        color="#070c20" 
-        transparent={true}
-        opacity={0.3}
-        emissive="#1a2b4a"
-        emissiveIntensity={0.5}
-        wireframe={false}
+        color={color || '#ffffff'} 
+        emissive={hovered ? color : '#000000'}
       />
     </mesh>
   );
 };
 
-// Controls wrapper with reduced complexity
-const ControlsWrapper = () => (
-  <OrbitControls 
-    enableZoom={true}
-    enablePan={false}
-    rotateSpeed={0.5}
-    zoomSpeed={0.8}
-    minDistance={4}
-    maxDistance={10}
-  />
-);
-
-const skills = [
-  'SQL', 'Python', 'Spark', 'ETL', 'AWS', 
-  'React', 'TypeScript', 'NextJS', 'Data'
-];
-
-// Simplified visualization
-interface DataNetworkProps {
-  theme?: string;
+interface NetworkData {
+  nodes: {
+    position: THREE.Vector3;
+    color: string;
+    size: number;
+    label: string;
+  }[];
+  edges: {
+    start: number;
+    end: number;
+  }[];
 }
 
-const DataNetwork: React.FC<DataNetworkProps> = ({ theme = 'purple' }) => {
+interface DataViz3DProps {
+  rotate?: boolean;
+}
+
+const Skills3D: React.FC = () => {
+  const [rotationSpeed, setRotationSpeed] = useState(0.001);
   const groupRef = useRef<THREE.Group>(null);
+  const { camera } = useThree();
   
-  // Get theme-appropriate colors
-  const getThemeColors = () => {
-    switch (theme) {
-      case 'blue':
-        return ['#1EAEDB', '#33C3F0', '#6DEAFF', '#0FA0CE'];
-      case 'green':
-        return ['#10B981', '#34D399', '#6EE7B7', '#059669'];
-      case 'orange':
-        return ['#F97316', '#FB923C', '#FDBA74', '#EA580C'];
-      case 'rainbow':
-        return ['#D946EF', '#8B5CF6', '#3B82F6', '#10B981', '#F97316'];
-      case 'purple':
-      default:
-        return ['#1EAEDB', '#8B5CF6', '#F97316', '#10B981'];
+  useEffect(() => {
+    if (camera instanceof THREE.PerspectiveCamera) {
+      camera.position.set(0, 0, 8);
     }
-  };
+  }, [camera]);
   
-  const colors = getThemeColors();
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += rotationSpeed;
+      groupRef.current.rotation.x += rotationSpeed * 0.5;
+    }
+  });
   
-  // Create fewer nodes
-  const nodes: NodeProps[] = [];
-  const nodeCount = 12;
-  
-  for (let i = 0; i < nodeCount; i++) {
-    const phi = Math.acos(1 - 2 * (i + 0.5) / nodeCount);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
+  // Generate network data
+  const networkData = React.useMemo(() => {
+    const nodes: NetworkData['nodes'] = [];
+    const edges: NetworkData['edges'] = [];
     
-    const radius = 3;
+    const nodeCount = 20;
+    const maxConnections = 3;
     
-    const x = radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.sin(phi) * Math.sin(theta);
-    const z = radius * Math.cos(phi);
+    // Set of skills for labels
+    const skills = [
+      "Python", "SQL", "React", "Spark", "Airflow",
+      "AWS", "Snowflake", "Kafka", "Docker", "ETL",
+      "TensorFlow", "ML", "DataOps", "Visualization", "NoSQL",
+      "Git", "CI/CD", "Kubernetes", "ELK", "REST"
+    ];
     
-    const color = colors[Math.floor(Math.random() * colors.length)];
+    // Generate nodes in a spherical formation
+    const colors = ['#1EAEDB', '#3D5AFE', '#8B5CF6', '#EC4899', '#F471B5'];
     
-    nodes.push({
-      position: new THREE.Vector3(x, y, z),
-      color,
-      size: 0.15 + Math.random() * 0.1,
-      label: skills[i % skills.length],
-      pulse: Math.random() > 0.7
-    });
-  }
-  
-  // Create fewer edges
-  const edges: EdgeProps[] = [];
-  
-  // Basic ring connections
-  for (let i = 0; i < nodes.length; i++) {
-    const nextIndex = (i + 1) % nodes.length;
-    
-    edges.push({
-      start: nodes[i].position,
-      end: nodes[nextIndex].position,
-      color: nodes[i].color,
-      width: 0.03 + Math.random() * 0.02
-    });
-  }
-  
-  // Add a few cross connections
-  for (let i = 0; i < 6; i++) {
-    const startIdx = Math.floor(Math.random() * nodes.length);
-    let endIdx = Math.floor(Math.random() * nodes.length);
-    
-    // Avoid self connections
-    while (endIdx === startIdx) {
-      endIdx = Math.floor(Math.random() * nodes.length);
+    // Create nodes in a spherical arrangement
+    for (let i = 0; i < nodeCount; i++) {
+      const phi = Math.acos(-1 + (2 * i) / nodeCount);
+      const theta = Math.sqrt(nodeCount * Math.PI) * phi;
+      
+      const x = 4 * Math.cos(theta) * Math.sin(phi);
+      const y = 4 * Math.sin(theta) * Math.sin(phi);
+      const z = 4 * Math.cos(phi);
+      
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      nodes.push({
+        position: new THREE.Vector3(x, y, z),
+        color,
+        size: 0.15 + Math.random() * 0.1,
+        label: skills[i % skills.length],
+      });
     }
     
-    edges.push({
-      start: nodes[startIdx].position,
-      end: nodes[endIdx].position,
-      color: nodes[startIdx].color,
-      width: 0.02
-    });
-  }
+    // Generate edges between nearby nodes
+    for (let i = 0; i < nodes.length; i++) {
+      const connections = Math.floor(Math.random() * maxConnections) + 1;
+      for (let j = 0; j < connections; j++) {
+        const target = (i + 1 + Math.floor(Math.random() * (nodes.length - 2))) % nodes.length;
+        if (i !== target) {
+          edges.push({
+            start: i,
+            end: target,
+          });
+        }
+      }
+    }
+    
+    return { nodes, edges };
+  }, []);
+
+  return (
+    <group ref={groupRef}>
+      {networkData.nodes.map((node, index) => (
+        <Node 
+          key={index} 
+          position={node.position}
+          color={node.color}
+          size={node.size}
+          label={node.label}
+        />
+      ))}
+      
+      {networkData.edges.map((edge, index) => (
+        <Edge 
+          key={index}
+          start={networkData.nodes[edge.start].position}
+          end={networkData.nodes[edge.end].position}
+          color="#1EAEDB"
+          width={0.02}
+        />
+      ))}
+    </group>
+  );
+};
+
+const SkillsConnection: React.FC = () => {
+  const groupRef = useRef<THREE.Group>(null);
   
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
     }
   });
   
   return (
     <group ref={groupRef}>
-      <GlobeBase />
-      
-      {/* Render edges first */}
-      {edges.map((edge, idx) => (
-        <DataEdge key={`edge-${idx}`} {...edge} />
-      ))}
-      
-      {/* Then render nodes */}
-      {nodes.map((node, idx) => (
-        <DataNode key={`node-${idx}`} {...node} />
-      ))}
-      
-      <Sparkles 
-        count={100} 
-        scale={[6, 6, 6]} 
-        size={0.2} 
-        speed={0.3} 
-        color="#ffffff" 
-        opacity={0.3}
+      <Sparkles
+        count={100}
+        scale={10}
+        size={1}
+        speed={0.3}
+        color="#8B5CF6"
       />
     </group>
   );
 };
 
-// Fallback component
-const Fallback = () => (
-  <div className="w-full h-full flex items-center justify-center">
-    <div className="text-white text-center">
-      <div className="text-2xl mb-2">Interactive Visualization</div>
-      <div className="text-sm opacity-70">Loading 3D view...</div>
-    </div>
-  </div>
-);
-
-interface DataViz3DProps {
-  className?: string;
-  theme?: string;
-}
-
-const DataViz3D: React.FC<DataViz3DProps> = ({ className, theme = 'purple' }) => {
+const DataViz3D: React.FC<DataViz3DProps> = ({ rotate = true }) => {
   const [hasError, setHasError] = useState(false);
-
+  
   if (hasError) {
-    return <Fallback />;
+    return (
+      <div className="h-[300px] flex items-center justify-center bg-black/20 rounded-lg">
+        <p className="text-gray-400 text-center">
+          3D visualization could not be loaded.
+          <br />
+          <span className="text-sm text-gray-500">
+            Try refreshing the page or using a different browser.
+          </span>
+        </p>
+      </div>
+    );
   }
-
+  
   return (
-    <div className={`w-full h-full ${className || ''}`}>
-      <Canvas 
-        camera={{ position: [0, 0, 8], fov: 45 }}
+    <div className="w-full h-[300px] neo-blur border border-white/10 rounded-lg overflow-hidden">
+      <Canvas
+        camera={{ position: [0, 0, 8], fov: 60 }}
         gl={{ 
           antialias: true,
-          powerPreference: 'default',
-          alpha: true
+          alpha: true,
+          powerPreference: 'high-performance'
         }}
         onError={() => setHasError(true)}
       >
@@ -322,10 +313,17 @@ const DataViz3D: React.FC<DataViz3DProps> = ({ className, theme = 'purple' }) =>
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
         <pointLight position={[-10, -10, -10]} intensity={0.8} color="#8B5CF6" />
-        <React.Suspense fallback={null}>
-          <DataNetwork theme={theme} />
-          <ControlsWrapper />
-        </React.Suspense>
+        
+        <Skills3D />
+        <SkillsConnection />
+        <OrbitControls 
+          enableZoom={false}
+          enablePan={false}
+          autoRotate={rotate}
+          autoRotateSpeed={0.5}
+          minPolarAngle={Math.PI / 6}
+          maxPolarAngle={Math.PI - Math.PI / 6}
+        />
       </Canvas>
     </div>
   );
