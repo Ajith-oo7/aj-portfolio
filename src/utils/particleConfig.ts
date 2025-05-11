@@ -126,6 +126,7 @@ const generateConfig = (
 export const loadParticlesScript = (callback: () => void): void => {
   if (typeof window !== "undefined") {
     if (window.particlesJS) {
+      // Execute callback immediately if particlesJS is already loaded
       callback();
       return;
     }
@@ -133,13 +134,12 @@ export const loadParticlesScript = (callback: () => void): void => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js';
     script.async = true;
-    script.onload = callback;
-    document.body.appendChild(script);
     
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
+    // Fix the type error by changing how we handle the callback
+    script.onload = () => {
+      callback();
     };
+    
+    document.body.appendChild(script);
   }
 };
