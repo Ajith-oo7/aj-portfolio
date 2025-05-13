@@ -16,12 +16,20 @@ export interface ThemeConfig {
 export const getThemeColors = (theme: ParticleTheme, isEasterEggActive: boolean): ThemeConfig => {
   if (isEasterEggActive) {
     return {
-      particleColors: ["#ff0000", "#ff7700", "#ffff00", "#00ff00", "#0000ff", "#8B5CF6", "#D946EF"],
+      particleColors: [
+        "#ff0000", // Red
+        "#ff7700", // Orange
+        "#ffff00", // Yellow
+        "#00ff00", // Green
+        "#0000ff", // Blue
+        "#8B5CF6", // Purple
+        "#D946EF"  // Pink
+      ],
       lineColor: "#ffffff",
       speed: 5,
       size: 4,
       blinking: true,
-      blinkSpeed: 1.5
+      blinkSpeed: 2.5 // Faster blinking
     };
   }
   

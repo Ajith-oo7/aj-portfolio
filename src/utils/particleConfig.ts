@@ -1,4 +1,3 @@
-
 import { getThemeColors, ThemeConfig } from './particleThemes';
 import { ParticleTheme } from '../types/particle';
 
@@ -49,7 +48,7 @@ const startBlinkingEffect = (elementId: string, themeConfig: ThemeConfig) => {
     ];
     
     // Create a blinking interval
-    const blinkInterval = setInterval(() => {
+    const blinkInterval = window.setInterval(() => {
       const particles = document.getElementById(elementId);
       if (particles && window.pJSDom && window.pJSDom.length > 0) {
         // Get the particles instance

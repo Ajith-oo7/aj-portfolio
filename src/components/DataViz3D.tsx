@@ -40,8 +40,6 @@ const Node: React.FC<NodeProps> = ({
       <mesh
         ref={meshRef}
         position={position}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
       >
         <sphereGeometry args={[size, 16, 16]} />
         <meshStandardMaterial 
@@ -50,6 +48,8 @@ const Node: React.FC<NodeProps> = ({
           emissiveIntensity={hovered ? 0.6 : 0.2}
           roughness={0.2}
           metalness={0.8}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
         />
       </mesh>
       
@@ -136,13 +136,13 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
       <mesh 
         ref={mesh}
         position={position}
-        onPointerOver={() => setHover(true)}
-        onPointerOut={() => setHover(false)}
       >
         <sphereGeometry args={[size || 0.2, 24, 24]} />
         <meshPhongMaterial 
           color={color || '#ffffff'} 
           emissive={hovered ? color : '#000000'}
+          onPointerOver={() => setHover(true)}
+          onPointerOut={() => setHover(false)}
         />
       </mesh>
     </group>
