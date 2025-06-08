@@ -118,6 +118,7 @@ const Edge: React.FC<EdgeProps> = ({
   
   return (
     <mesh>
+      <primitive object={tubeGeometry} attach="geometry" />
       <meshStandardMaterial 
         color={color} 
         emissive={color}
@@ -125,7 +126,6 @@ const Edge: React.FC<EdgeProps> = ({
         transparent
         opacity={0.7}
       />
-      <primitive object={tubeGeometry} attach="geometry" />
     </mesh>
   );
 };
