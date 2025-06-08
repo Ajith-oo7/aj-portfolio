@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree, ThreeEvent } from '@react-three/fiber';
@@ -38,7 +39,7 @@ const Node: React.FC<NodeProps> = ({
     <group>
       <mesh
         ref={meshRef}
-        position={[position.x, position.y, position.z]}
+        position={position}
         onPointerEnter={(event) => {
           event.stopPropagation();
           setHovered(true);
@@ -59,7 +60,7 @@ const Node: React.FC<NodeProps> = ({
       </mesh>
       
       {label && (
-        <group position={[position.x, position.y + size * 2, position.z]}>
+        <group position={new THREE.Vector3(position.x, position.y + size * 2, position.z)}>
           <Float
             speed={5}
             rotationIntensity={0.2}
@@ -140,7 +141,7 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
     <group>
       <mesh 
         ref={mesh}
-        position={[position.x, position.y, position.z]}
+        position={position}
         onPointerEnter={(event) => {
           event.stopPropagation();
           setHover(true);
