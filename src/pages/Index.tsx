@@ -13,7 +13,6 @@ import ProjectsSection from '@/components/sections/ProjectsSection';
 import AboutSection from '@/components/sections/AboutSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Footer from '@/components/layout/Footer';
-import AdminLoginButton from '@/components/AdminLoginButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ParticleTheme } from '../types/particle';
 
@@ -176,9 +175,6 @@ const Index: React.FC<IndexProps> = ({
       
       {/* Footer */}
       <Footer />
-      
-      {/* Admin Login Button */}
-      <AdminLoginButton />
     </div>
   );
 };
