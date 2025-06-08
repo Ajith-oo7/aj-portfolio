@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree, ThreeEvent } from '@react-three/fiber';
@@ -39,11 +40,11 @@ const Node: React.FC<NodeProps> = ({
       <mesh
         ref={meshRef}
         position={position}
-        onPointerOver={(event: ThreeEvent<PointerEvent>) => {
+        onPointerEnter={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
           setHovered(true);
         }}
-        onPointerOut={(event: ThreeEvent<PointerEvent>) => {
+        onPointerLeave={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
           setHovered(false);
         }}
@@ -141,11 +142,11 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
       <mesh 
         ref={mesh}
         position={position}
-        onPointerOver={(event: ThreeEvent<PointerEvent>) => {
+        onPointerEnter={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
           setHover(true);
         }}
-        onPointerOut={(event: ThreeEvent<PointerEvent>) => {
+        onPointerLeave={(event: ThreeEvent<PointerEvent>) => {
           event.stopPropagation();
           setHover(false);
         }}
