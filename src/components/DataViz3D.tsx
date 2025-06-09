@@ -49,8 +49,7 @@ const Node: React.FC<NodeProps> = ({
       <mesh
         ref={meshRef}
         position={position}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
+        {...({ onPointerOver: handlePointerOver, onPointerOut: handlePointerOut } as any)}
       >
         <sphereGeometry args={[size, 16, 16]} />
         <meshStandardMaterial 
@@ -155,8 +154,7 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
       <mesh 
         ref={mesh}
         position={position}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
+        {...({ onPointerOver: handlePointerOver, onPointerOut: handlePointerOut } as any)}
       >
         <sphereGeometry args={[size || 0.2, 24, 24]} />
         <meshPhongMaterial 
