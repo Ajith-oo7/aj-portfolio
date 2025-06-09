@@ -1,5 +1,3 @@
-
-
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree, ThreeEvent } from '@react-three/fiber';
@@ -36,19 +34,23 @@ const Node: React.FC<NodeProps> = ({
     }
   });
 
+  const handlePointerOver = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    setHovered(true);
+  };
+
+  const handlePointerOut = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    setHovered(false);
+  };
+
   return (
     <group>
       <mesh
         ref={meshRef}
         position={position}
-        onPointerOver={(event) => {
-          event.stopPropagation();
-          setHovered(true);
-        }}
-        onPointerOut={(event) => {
-          event.stopPropagation();
-          setHovered(false);
-        }}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
       >
         <sphereGeometry args={[size, 16, 16]} />
         <meshStandardMaterial 
@@ -137,20 +139,24 @@ const NetworkNode: React.FC<NodeProps> = ({ position, size, color, label }) => {
       mesh.current.rotation.y += 0.005;
     }
   });
+
+  const handlePointerOver = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    setHover(true);
+  };
+
+  const handlePointerOut = (event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+    setHover(false);
+  };
   
   return (
     <group>
       <mesh 
         ref={mesh}
         position={position}
-        onPointerOver={(event) => {
-          event.stopPropagation();
-          setHover(true);
-        }}
-        onPointerOut={(event) => {
-          event.stopPropagation();
-          setHover(false);
-        }}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
       >
         <sphereGeometry args={[size || 0.2, 24, 24]} />
         <meshPhongMaterial 
