@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageSwitcher from './LanguageSwitcher';
+import AdminLoginButton from './AdminLoginButton';
 import { useTranslation } from '@/context/TranslationContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -135,6 +137,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           <div className="flex items-center space-x-3">
             {children}
             <LanguageSwitcher />
+            <AdminLoginButton />
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -153,6 +156,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
         <div className="md:hidden flex items-center space-x-3">
           {children}
           <LanguageSwitcher />
+          <AdminLoginButton />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-white p-2 rounded-md hover:bg-white/10 transition-colors"
