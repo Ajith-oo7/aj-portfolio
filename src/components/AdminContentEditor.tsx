@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,8 +25,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ title, children }) => {
 };
 
 const AdminContentEditor: React.FC = () => {
-  const { data, updateHero, updateAbout, updateContact, updateJourney, addExperience, removeExperience, addProject, removeProject, addSkillCategory, removeSkillCategory, updateCertifications } = usePortfolio();
+  const { data, updateHero, updateAbout, updateContact, updateJourney, addExperience, removeExperience, updateExperience, addProject, removeProject, addSkillCategory, removeSkillCategory, updateCertifications } = usePortfolio();
   const [editingSection, setEditingSection] = useState<string | null>(null);
+  const [editingExperience, setEditingExperience] = useState<string | null>(null);
+  const [editingExpData, setEditingExpData] = useState<ExperienceItem | null>(null);
 
   // Hero Section Editor
   const HeroEditor = () => {
@@ -213,26 +216,98 @@ const AdminContentEditor: React.FC = () => {
       }
     };
 
+    const handleEditExperience = (exp: ExperienceItem) => {
+      setEditingExperience(exp.id);
+      setEditingExpData({ ...exp });
+    };
+
+    const handleSaveExperience = () => {
+      if (editingExpData) {
+        const updatedExperiences = data.experience.map(exp => 
+          exp.id === editingExpData.id ? editingExpData : exp
+        );
+        updateExperience(updatedExperiences);
+        setEditingExperience(null);
+        setEditingExpData(null);
+      }
+    };
+
+    const handleCancelEdit = () => {
+      setEditingExperience(null);
+      setEditingExpData(null);
+    };
+
     return (
       <SectionEditor title="Experience Section">
         <div className="space-y-6">
           {/* Existing experiences */}
           {data.experience.map((exp) => (
             <div key={exp.id} className="bg-gray-900/50 p-4 rounded-lg border border-white/5">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="text-white font-semibold">{exp.role} at {exp.company}</h4>
-                  <p className="text-gray-400 text-sm">{exp.period}</p>
-                  <p className="text-gray-300 text-sm mt-2">{exp.description}</p>
+              {editingExperience === exp.id ? (
+                // Edit mode
+                <div className="space-y-3">
+                  <Input
+                    value={editingExpData?.company || ''}
+                    onChange={(e) => setEditingExpData(prev => prev ? { ...prev, company: e.target.value } : null)}
+                    placeholder="Company"
+                    className="bg-gray-800 border-white/10 text-white"
+                  />
+                  <Input
+                    value={editingExpData?.role || ''}
+                    onChange={(e) => setEditingExpData(prev => prev ? { ...prev, role: e.target.value } : null)}
+                    placeholder="Role"
+                    className="bg-gray-800 border-white/10 text-white"
+                  />
+                  <Input
+                    value={editingExpData?.period || ''}
+                    onChange={(e) => setEditingExpData(prev => prev ? { ...prev, period: e.target.value } : null)}
+                    placeholder="Period"
+                    className="bg-gray-800 border-white/10 text-white"
+                  />
+                  <Textarea
+                    value={editingExpData?.description || ''}
+                    onChange={(e) => setEditingExpData(prev => prev ? { ...prev, description: e.target.value } : null)}
+                    placeholder="Description"
+                    className="bg-gray-800 border-white/10 text-white"
+                  />
+                  <div className="flex gap-2">
+                    <Button onClick={handleSaveExperience} className="bg-green-600 hover:bg-green-700">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save
+                    </Button>
+                    <Button onClick={handleCancelEdit} variant="outline" className="border-white/20">
+                      <X className="w-4 h-4 mr-2" />
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
-                <Button
-                  onClick={() => removeExperience(exp.id)}
-                  variant="destructive"
-                  size="sm"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
+              ) : (
+                // View mode
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold">{exp.role} at {exp.company}</h4>
+                    <p className="text-gray-400 text-sm">{exp.period}</p>
+                    <p className="text-gray-300 text-sm mt-2">{exp.description}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleEditExperience(exp)}
+                      variant="outline"
+                      size="sm"
+                      className="border-white/20"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      onClick={() => removeExperience(exp.id)}
+                      variant="destructive"
+                      size="sm"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
 
