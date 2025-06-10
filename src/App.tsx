@@ -10,6 +10,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { TranslationProvider } from "./context/TranslationContext";
+import { PortfolioProvider } from "./context/PortfolioContext";
 import { ParticleTheme } from "./types/particle";
 
 const queryClient = new QueryClient();
@@ -21,35 +22,37 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TranslationProvider>
-        <TooltipProvider delayDuration={0}>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route 
-                path="/" 
-                element={
-                  <Index 
-                    networkEnabled={networkEnabled} 
-                    setNetworkEnabled={setNetworkEnabled}
-                    networkTheme={networkTheme}
-                    setNetworkTheme={setNetworkTheme}
-                  />
-                } 
-              />
-              <Route 
-                path="/admin" 
-                element={
-                  <ProtectedRoute>
-                    <Admin />
-                  </ProtectedRoute>
-                } 
-              />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <PortfolioProvider>
+          <TooltipProvider delayDuration={0}>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route 
+                  path="/" 
+                  element={
+                    <Index 
+                      networkEnabled={networkEnabled} 
+                      setNetworkEnabled={setNetworkEnabled}
+                      networkTheme={networkTheme}
+                      setNetworkTheme={setNetworkTheme}
+                    />
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <Admin />
+                    </ProtectedRoute>
+                  } 
+                />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </PortfolioProvider>
       </TranslationProvider>
     </QueryClientProvider>
   );
