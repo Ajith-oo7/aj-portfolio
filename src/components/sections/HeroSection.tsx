@@ -1,8 +1,10 @@
+
 import React, { Suspense } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import DataViz3D from '@/components/DataViz3D';
 import { useTranslation } from '@/context/TranslationContext';
+import { usePortfolio } from '@/context/PortfolioContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion } from 'framer-motion';
 
@@ -13,6 +15,7 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }) => {
   const { t } = useTranslation();
+  const { data } = usePortfolio();
   const isMobile = useIsMobile();
   
   return (
@@ -32,7 +35,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
           >
             <span className="text-white mr-2">Hi, I'm</span>
             <span className="text-gradient text-glow text-white">
-              {t('hero.name')}
+              {data.hero.name}
             </span>
           </motion.h1>
           
@@ -49,32 +52,41 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScroll, onScrollToContent }
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            {t('hero.subtitle')}
+            {data.hero.title}
           </motion.h2>
+          
+          <motion.p 
+            className="text-xl md:text-2xl text-neon-blue mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+          >
+            {data.hero.subtitle}
+          </motion.p>
           
           <motion.p 
             className="text-gray-400 max-w-lg mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
           >
-            {t('hero.description')}
+            {data.hero.description}
           </motion.p>
           
           <motion.p 
             className="text-gray-300 mb-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
           >
-            {t('hero.openTo')}
+            {data.hero.openTo}
           </motion.p>
           
           <motion.div 
             className="flex flex-wrap gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
+            transition={{ delay: 1.0, duration: 0.8 }}
           >
             <Button 
               className="bg-neon-blue hover:bg-neon-blue/80 text-white"

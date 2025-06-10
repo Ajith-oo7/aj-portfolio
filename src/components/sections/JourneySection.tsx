@@ -2,22 +2,24 @@
 import React from 'react';
 import SectionContainer from '../layout/SectionContainer';
 import { useTranslation } from '@/context/TranslationContext';
+import { usePortfolio } from '@/context/PortfolioContext';
 
 const JourneySection: React.FC = () => {
   const { t } = useTranslation();
+  const { data } = usePortfolio();
   
   return (
     <SectionContainer 
       id="story" 
-      title={t('journey.title')}
-      description={t('journey.description')}
+      title={data.journey.title}
+      description={data.journey.description}
     >
       <div className="neo-blur border border-white/10 rounded-lg p-8">
         <p className="text-gray-300 mb-6">
-          {t('journey.paragraph1')}
+          {data.journey.paragraph1}
         </p>
         <p className="text-gray-300">
-          {t('journey.paragraph2')}
+          {data.journey.paragraph2}
         </p>
       </div>
     </SectionContainer>

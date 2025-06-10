@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, Save, Eye, Edit3, ArrowLeft } from 'lucide-react';
-import AdminEditableSection from '@/components/AdminEditableSection';
+import AdminContentEditor from '@/components/AdminContentEditor';
+import { usePortfolio } from '@/context/PortfolioContext';
 
 const Admin: React.FC = () => {
   const navigate = useNavigate();
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const { data } = usePortfolio();
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('adminAuth');
@@ -37,10 +38,9 @@ const Admin: React.FC = () => {
   };
 
   const handleSave = () => {
-    // Save logic would go here
-    setHasUnsavedChanges(false);
+    // Data is already saved in real-time through context
     setLastSaved(new Date());
-    console.log('Saving changes...');
+    console.log('Portfolio data saved successfully');
   };
 
   const handlePublish = () => {
@@ -66,9 +66,6 @@ const Admin: React.FC = () => {
               </Button>
               <div className="h-6 w-px bg-white/20" />
               <h1 className="text-lg font-bold text-white">Portfolio Admin</h1>
-              {hasUnsavedChanges && (
-                <span className="text-yellow-400 text-sm">• Unsaved changes</span>
-              )}
             </div>
 
             <div className="flex items-center gap-3">
@@ -77,22 +74,11 @@ const Admin: React.FC = () => {
                   Last saved: {lastSaved.toLocaleTimeString()}
                 </span>
               )}
-              
-              <Button
-                onClick={() => setIsPreviewMode(!isPreviewMode)}
-                variant="outline"
-                size="sm"
-                className="border-white/20 text-white hover:bg-white/10"
-              >
-                {isPreviewMode ? <Edit3 className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-                {isPreviewMode ? 'Edit' : 'Preview'}
-              </Button>
 
               <Button
                 onClick={handleSave}
                 size="sm"
                 className="bg-blue-600 hover:bg-blue-700 text-white"
-                disabled={!hasUnsavedChanges}
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save
@@ -124,54 +110,12 @@ const Admin: React.FC = () => {
       <div className="pt-20 pb-8">
         <div className="container mx-auto px-4 space-y-8">
           <div className="bg-gray-900/50 border border-white/10 rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Content Management</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Portfolio Content Management</h2>
             <p className="text-gray-300 mb-6">
-              Edit your portfolio content in real-time. Changes will be reflected immediately on the live site.
+              Edit your portfolio content in real-time. Changes are saved automatically and will be reflected immediately on the live site.
             </p>
 
-            <div className="grid gap-6">
-              <AdminEditableSection
-                title="Hero Section"
-                description="Main landing area with introduction"
-                isPreviewMode={isPreviewMode}
-                onContentChange={() => setHasUnsavedChanges(true)}
-              />
-
-              <AdminEditableSection
-                title="About Section"
-                description="Personal information and bio"
-                isPreviewMode={isPreviewMode}
-                onContentChange={() => setHasUnsavedChanges(true)}
-              />
-
-              <AdminEditableSection
-                title="Experience Section"
-                description="Work history and professional experience"
-                isPreviewMode={isPreviewMode}
-                onContentChange={() => setHasUnsavedChanges(true)}
-              />
-
-              <AdminEditableSection
-                title="Projects Section"
-                description="Portfolio projects and case studies"
-                isPreviewMode={isPreviewMode}
-                onContentChange={() => setHasUnsavedChanges(true)}
-              />
-
-              <AdminEditableSection
-                title="Skills Section"
-                description="Technical skills and expertise"
-                isPreviewMode={isPreviewMode}
-                onContentChange={() => setHasUnsavedChanges(true)}
-              />
-
-              <AdminEditableSection
-                title="Contact Section"
-                description="Contact information and form"
-                isPreviewMode={isPreviewMode}
-                onContentChange={() => setHasUnsavedChanges(true)}
-              />
-            </div>
+            <AdminContentEditor />
           </div>
         </div>
       </div>

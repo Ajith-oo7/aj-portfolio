@@ -4,9 +4,11 @@ import { Mail, Github, Linkedin } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import SectionContainer from '../layout/SectionContainer';
 import { useTranslation } from '@/context/TranslationContext';
+import { usePortfolio } from '@/context/PortfolioContext';
 
 const ContactSection: React.FC = () => {
   const { t } = useTranslation();
+  const { data } = usePortfolio();
   
   return (
     <SectionContainer 
@@ -19,7 +21,7 @@ const ContactSection: React.FC = () => {
           <div>
             <h3 className="text-xl font-bold text-white mb-4">{t('contact.title')}</h3>
             <p className="text-gray-300 mb-6">
-              {t('contact.paragraph')}
+              {data.contact.paragraph}
             </p>
             
             <div className="space-y-6">
@@ -27,8 +29,8 @@ const ContactSection: React.FC = () => {
                 <Mail className="w-5 h-5 text-neon-blue mt-1 mr-3" />
                 <div>
                   <h4 className="text-white font-medium">{t('contact.email')}</h4>
-                  <a href="mailto:ajith.anna5599@gmail.com" className="text-gray-400 hover:text-neon-blue">
-                    ajith.anna5599@gmail.com
+                  <a href={`mailto:${data.contact.email}`} className="text-gray-400 hover:text-neon-blue">
+                    {data.contact.email}
                   </a>
                 </div>
               </div>
@@ -38,7 +40,7 @@ const ContactSection: React.FC = () => {
                 <div>
                   <h4 className="text-white font-medium">{t('contact.linkedin')}</h4>
                   <a 
-                    href="https://www.linkedin.com/in/aajith7/" 
+                    href={data.contact.linkedin} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-gray-400 hover:text-neon-blue"
@@ -53,7 +55,7 @@ const ContactSection: React.FC = () => {
                 <div>
                   <h4 className="text-white font-medium">{t('contact.github')}</h4>
                   <a 
-                    href="https://github.com/Ajith-oo7" 
+                    href={data.contact.github} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-gray-400 hover:text-neon-blue"
