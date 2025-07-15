@@ -418,8 +418,9 @@ const defaultData: PortfolioData = {
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<PortfolioData>(() => {
-    const savedData = localStorage.getItem('portfolioData');
-    return savedData ? JSON.parse(savedData) : defaultData;
+    // Clear localStorage and use fresh default data
+    localStorage.removeItem('portfolioData');
+    return defaultData;
   });
 
   useEffect(() => {
