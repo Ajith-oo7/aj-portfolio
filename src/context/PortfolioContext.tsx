@@ -127,8 +127,8 @@ const defaultData: PortfolioData = {
   experience: [
     {
       id: '1',
-      company: 'Accenture',
-      role: 'Data Engineer',
+      company: 'Infokeys',
+      role: 'AI Data Engineer',
       period: 'Apr 2024–Present',
       description: 'Led migration of ETL workflows to Databricks, developed data governance frameworks, and implemented AI-driven monitoring systems.',
       responsibilities: [
