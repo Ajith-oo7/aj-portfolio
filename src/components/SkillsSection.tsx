@@ -3,7 +3,6 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from '@/components/ui/progress';
 import { usePortfolio } from '@/context/PortfolioContext';
 
 const SkillsSection: React.FC = () => {
@@ -24,18 +23,15 @@ const SkillsSection: React.FC = () => {
             </CardHeader>
             <CardContent>
               <Separator className="mb-4 bg-white/10" />
-              <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIdx) => (
-                  <div key={skillIdx} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300 text-sm">{skill.name}</span>
-                      <span className="text-neon-blue text-xs">{skill.level}%</span>
-                    </div>
-                    <Progress 
-                      value={skill.level} 
-                      className="h-2 bg-gray-800"
-                    />
-                  </div>
+                  <Badge
+                    key={skillIdx}
+                    variant="outline"
+                    className="bg-neon-blue/10 text-neon-blue border-neon-blue/20 hover:bg-neon-blue/20 transition-colors"
+                  >
+                    {skill.name}
+                  </Badge>
                 ))}
               </div>
             </CardContent>
