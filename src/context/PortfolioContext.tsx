@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface HeroData {
   name: string;
@@ -417,66 +418,151 @@ const defaultData: PortfolioData = {
 };
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<PortfolioData>(() => {
-    // Clear localStorage and use fresh default data
-    localStorage.removeItem('portfolioData');
-    return defaultData;
-  });
+  const [data, setData] = useState<PortfolioData>(defaultData);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load data from Supabase on mount
   useEffect(() => {
-    localStorage.setItem('portfolioData', JSON.stringify(data));
-  }, [data]);
+    loadPortfolioData();
+  }, []);
+
+  const loadPortfolioData = async () => {
+    try {
+      const { data: portfolioData, error } = await supabase
+        .from('portfolio_data')
+        .select('data')
+        .order('updated_at', { ascending: false })
+        .limit(1) as any;
+
+      if (error) {
+        console.error('Error loading portfolio data:', error);
+        return;
+      }
+
+      if (portfolioData && portfolioData.length > 0) {
+        setData(portfolioData[0].data as PortfolioData);
+      }
+    } catch (error) {
+      console.error('Error loading portfolio data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const savePortfolioData = async (newData: PortfolioData) => {
+    try {
+      // Try to update existing record first
+      const { data: existingData, error: selectError } = await supabase
+        .from('portfolio_data')
+        .select('id')
+        .limit(1) as any;
+
+      if (selectError) {
+        console.error('Error checking existing data:', selectError);
+        return;
+      }
+
+      if (existingData && existingData.length > 0) {
+        // Update existing record
+        const { error } = await supabase
+          .from('portfolio_data')
+          .update({ data: newData as any })
+          .eq('id', existingData[0].id) as any;
+
+        if (error) {
+          console.error('Error updating portfolio data:', error);
+        }
+      } else {
+        // Insert new record
+        const { error } = await supabase
+          .from('portfolio_data')
+          .insert({ data: newData as any }) as any;
+
+        if (error) {
+          console.error('Error inserting portfolio data:', error);
+        }
+      }
+    } catch (error) {
+      console.error('Error saving portfolio data:', error);
+    }
+  };
 
   const updateHero = (hero: Partial<HeroData>) => {
-    setData(prev => ({ ...prev, hero: { ...prev.hero, ...hero } }));
+    const newData = { ...data, hero: { ...data.hero, ...hero } };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateAbout = (about: Partial<AboutData>) => {
-    setData(prev => ({ ...prev, about: { ...prev.about, ...about } }));
+    const newData = { ...data, about: { ...data.about, ...about } };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateExperience = (experience: ExperienceItem[]) => {
-    setData(prev => ({ ...prev, experience }));
+    const newData = { ...data, experience };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateProjects = (projects: ProjectItem[]) => {
-    setData(prev => ({ ...prev, projects }));
+    const newData = { ...data, projects };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateSkills = (skills: SkillCategory[]) => {
-    setData(prev => ({ ...prev, skills }));
+    const newData = { ...data, skills };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateCertifications = (certifications: CertificationItem[]) => {
-    setData(prev => ({ ...prev, certifications }));
+    const newData = { ...data, certifications };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateContact = (contact: Partial<ContactData>) => {
-    setData(prev => ({ ...prev, contact: { ...prev.contact, ...contact } }));
+    const newData = { ...data, contact: { ...data.contact, ...contact } };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const updateJourney = (journey: Partial<JourneyData>) => {
-    setData(prev => ({ ...prev, journey: { ...prev.journey, ...journey } }));
+    const newData = { ...data, journey: { ...data.journey, ...journey } };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const addExperience = (experience: ExperienceItem) => {
-    setData(prev => ({ ...prev, experience: [...prev.experience, experience] }));
+    const newData = { ...data, experience: [...data.experience, experience] };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const removeExperience = (id: string) => {
-    setData(prev => ({ ...prev, experience: prev.experience.filter(exp => exp.id !== id) }));
+    const newData = { ...data, experience: data.experience.filter(exp => exp.id !== id) };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const addProject = (project: ProjectItem) => {
-    setData(prev => ({ ...prev, projects: [...prev.projects, project] }));
+    const newData = { ...data, projects: [...data.projects, project] };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const removeProject = (id: string) => {
-    setData(prev => ({ ...prev, projects: prev.projects.filter(proj => proj.id !== id) }));
+    const newData = { ...data, projects: data.projects.filter(proj => proj.id !== id) };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const addSkillCategory = (category: SkillCategory) => {
-    setData(prev => ({ ...prev, skills: [...prev.skills, category] }));
+    const newData = { ...data, skills: [...data.skills, category] };
+    setData(newData);
+    savePortfolioData(newData);
   };
 
   const removeSkillCategory = (id: string) => {
