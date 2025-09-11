@@ -89,6 +89,7 @@ export interface PortfolioData {
 
 interface PortfolioContextType {
   data: PortfolioData;
+  isLoading: boolean;
   updateHero: (hero: Partial<HeroData>) => void;
   updateAbout: (about: Partial<AboutData>) => void;
   updateExperience: (experience: ExperienceItem[]) => void;
@@ -571,6 +572,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const value: PortfolioContextType = {
     data,
+    isLoading,
     updateHero,
     updateAbout,
     updateExperience,
@@ -586,6 +588,14 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     addSkillCategory,
     removeSkillCategory
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <PortfolioContext.Provider value={value}>
